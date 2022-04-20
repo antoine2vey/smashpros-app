@@ -1,0 +1,16 @@
+{
+    "findCrew": "Find your crew",
+    "nextTournament": "Next tournament",
+    "upcomingTournaments": "Upcoming tournaments",
+    "findWay": "Find your way",
+    "filters": "Filters",
+    "validate": "Validate",
+    "characters": "Characters",
+    "facePlayer": "Face a player",
+    "previousMatches": "Previous matches",
+    "player": "Player",
+    "tournaments": "Tournaments",
+    "day": "day",
+    "days": "days",
+    "andOthers": "and {{ amount }} others"
+}
