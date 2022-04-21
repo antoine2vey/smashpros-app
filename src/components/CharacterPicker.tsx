@@ -39,7 +39,7 @@ export const CharacterPicker = forwardRef<BottomSheetModal, Props>(({ setCharact
 			ref={ref}
 			index={1}
 		>
-		<View style={tailwind('p-6 py-0 flex-1 justify-between bg-white-300 dark:bg-black-300')}>
+		<View style={tailwind('p-6 py-0 flex-1 justify-start bg-white-300 dark:bg-black-300')}>
 			<Text style={tailwind('text-2xl font-bold mb-1')}>{t('characters')}</Text>
 			
 			<View style={tailwind('flex-1')}>

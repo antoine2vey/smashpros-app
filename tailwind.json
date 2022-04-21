@@ -149,9 +149,9 @@
 			"display": "none"
 		}
 	},
-	"h-12": {
+	"h-14": {
 		"style": {
-			"height": 48
+			"height": 56
 		}
 	},
 	"h-40": {
@@ -172,21 +172,6 @@
 	"h-28": {
 		"style": {
 			"height": 112
-		}
-	},
-	"h-24": {
-		"style": {
-			"height": 96
-		}
-	},
-	"h-16": {
-		"style": {
-			"height": 64
-		}
-	},
-	"h-14": {
-		"style": {
-			"height": 56
 		}
 	},
 	"w-24": {
@@ -236,6 +221,11 @@
 			"alignItems": "center"
 		}
 	},
+	"justify-start": {
+		"style": {
+			"justifyContent": "flex-start"
+		}
+	},
 	"justify-center": {
 		"style": {
 			"justifyContent": "center"
@@ -244,6 +234,16 @@
 	"justify-between": {
 		"style": {
 			"justifyContent": "space-between"
+		}
+	},
+	"justify-around": {
+		"style": {
+			"justifyContent": "space-around"
+		}
+	},
+	"justify-evenly": {
+		"style": {
+			"justifyContent": "space-evenly"
 		}
 	},
 	"rounded-md": {
@@ -334,20 +334,20 @@
 			"paddingLeft": 12
 		}
 	},
-	"p-4": {
-		"style": {
-			"paddingTop": 16,
-			"paddingRight": 16,
-			"paddingBottom": 16,
-			"paddingLeft": 16
-		}
-	},
 	"p-6": {
 		"style": {
 			"paddingTop": 24,
 			"paddingRight": 24,
 			"paddingBottom": 24,
 			"paddingLeft": 24
+		}
+	},
+	"p-4": {
+		"style": {
+			"paddingTop": 16,
+			"paddingRight": 16,
+			"paddingBottom": 16,
+			"paddingLeft": 16
 		}
 	},
 	"p-2": {

@@ -1,11 +1,11 @@
-import { gql, useLazyQuery, useMutation } from "@apollo/client";
-import { Image, SafeAreaView, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { ApolloError, gql, isApolloError, useLazyQuery, useMutation } from "@apollo/client";
+import { Image, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { useTailwind } from "tailwind-rn/dist";
 import { Text } from "../components/Text";
 import { usePicture } from "../hooks/usePicture";
 import { useFormik } from 'formik';
 import { useEffect, useRef, useState } from "react";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { CharacterPicker } from "../components/CharacterPicker"
 import { CharacterIcon } from "../components/CharacterIcon";
 import { Input } from "../components/Input";
@@ -72,14 +72,11 @@ const REGISTER = gql`
 `
 
 export const Register = () => {
+  const {top} = useSafeAreaInsets()
   const tailwind = useTailwind()
   const { navigate, goBack } = useNavigation()
   const { pick, image, generateFile, setImage } = usePicture()
-  const [register, { loading }] = useMutation(REGISTER, {
-    onError: (err) => {
-      console.log(err)
-    }
-  })
+  const [register, { loading }] = useMutation(REGISTER)
   const [getName] = useLazyQuery(SUGGESTION)
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const bottomSheetSGGRef = useRef<BottomSheetModal>(null)
@@ -98,52 +95,59 @@ export const Register = () => {
       smashGGUserId: null
     },
     onSubmit: async values => {
-      const file = generateFile(image, `profile.png`)
-      const { data } = await register({
-        variables: {
-          payload: {
-            email: values.email,
-            password: values.password,
-            profilePicture: file,
-            tag: values.tag,
-            characters: values.characters,
-            smashGGPlayerId: values.smashGGPlayerId,
-            smashGGSlug: values.smashGGSlug,
-            smashGGUserId: values.smashGGUserId
+      try {
+        const file = generateFile(image, `profile.png`)
+        const { data } = await register({
+          variables: {
+            payload: {
+              email: values.email,
+              password: values.password,
+              profilePicture: file,
+              tag: values.tag,
+              characters: values.characters,
+              smashGGPlayerId: values.smashGGPlayerId,
+              smashGGSlug: values.smashGGSlug,
+              smashGGUserId: values.smashGGUserId
+            }
           }
-        }
-      })
-
-      console.log(data)
+        })
+      } catch (error) {
+        const err = error as ApolloError
+        console.log(err.message)
+      }
     }
   })
 
-  // useEffect(() => {
-  //   if (image) {
-  //     setFieldValue('profilePicture', image)
-  //   }
-  // }, [image])
+  useEffect(() => {
+    if (image) {
+      setFieldValue('profilePicture', image)
+    }
+  }, [image])
 
   const onIdChange = async (text: string) => {
     handleChange('smashGGSlug')(text)
-
+ 
     // Valid smash GG id length
     if (text.length === 8) {
-      const { data } = await getName({ variables: { slug: text }})
+      try {
+        const { data } = await getName({ variables: { slug: text }})
 
-      if (data.suggestedName) {
-        const { smashGGPlayerId, smashGGUserId, tag, profilePicture } = data.suggestedName
+        if (data.suggestedName) {
+          const { smashGGPlayerId, smashGGUserId, tag, profilePicture } = data.suggestedName
 
-        setFieldValue('tag', tag)
-        setFieldValue('smashGGPlayerId', smashGGPlayerId)
-        setFieldValue('smashGGUserId', smashGGUserId)
-        
-        // if (profilePicture) {
-        //   setFieldValue('profilePicture', profilePicture)
-        //   setImage(profilePicture)
-        // }
-      } else {
-        setFieldError('smashGGSlug', 'Found nothing for this smash.gg id')
+          setFieldValue('tag', tag)
+          setFieldValue('smashGGPlayerId', smashGGPlayerId)
+          setFieldValue('smashGGUserId', smashGGUserId)
+          
+          // if (profilePicture) {
+          //   setFieldValue('profilePicture', profilePicture)
+          //   setImage(profilePicture)
+          // }
+        }
+      } catch (error) {
+        const err = error as ApolloError
+        console.log(err.message)
+        setFieldError('smashGGSlug', err.message)
       }
     } else {
       setFieldValue('tag', null)
@@ -159,8 +163,9 @@ export const Register = () => {
   }
 
   return (
-    <SafeAreaView style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
-      <HeaderBackButton label="Back" tintColor={'#45D37E'} onPress={goBack} />
+    <ScrollView style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
+      <HeaderBackButton label="Back" tintColor={'#45D37E'} onPress={goBack} style={{ marginTop: Math.max(top, 15)}} />
+
       <View style={tailwind('p-6 flex-1')}>
         <View style={tailwind('flex mb-5 items-start relative rounded-full h-32 w-32')}>
           <TouchableOpacity onPress={pick} activeOpacity={0.9}>
@@ -229,7 +234,7 @@ export const Register = () => {
         <Button
           text="Validate"
           loading={loading}
-          // disabled={!isValid || loading}
+          disabled={!isValid || loading}
           onPress={submitForm}
         />
       </View>
@@ -283,6 +288,6 @@ export const Register = () => {
           )}
         </View>
       </BottomSheetModal>
-    </SafeAreaView>
+    </ScrollView>
   )
 }

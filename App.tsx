@@ -1,6 +1,6 @@
 import './src/i18n'
 import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { CompositeScreenProps, NavigationContainer } from '@react-navigation/native';
+import { CompositeScreenProps, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import React, { useContext, useEffect, useState } from 'react';
@@ -20,7 +20,6 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import { Register } from './src/screens/Register';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
-import { useAuthState } from './src/hooks/useAuthState';
 import { AuthContext, AuthContextProvider } from './src/contexts/AuthContext';
 
 type HomeStackParamList = {
@@ -47,7 +46,7 @@ const LogoutStackNavigator = createNativeStackNavigator<LogoutStackParamList>()
 const Tab = createBottomTabNavigator<RootStackParamList>()
 
 const client = new ApolloClient({
-  link: createUploadLink({ uri: 'http://localhost:4000' }),
+  link: createUploadLink({ uri: 'http://10.0.2.2:4000' }),
   cache: new InMemoryCache()
 })
 
@@ -59,7 +58,7 @@ const LogoutStack = () => {
         name="Login"
         component={Login}
         options={{
-          header: () => undefined
+          header: () => undefined,
         }}
       />
       <LogoutStackNavigator.Screen
@@ -170,17 +169,20 @@ const Switchr = ({ dark, setDark }) => {
 
 export function Root() {
   const { ready, loggedIn, guest } = useContext(AuthContext)
+  const tailwind = useTailwind()
 
   return (
-    <NavigationContainer>
-      <BottomSheetModalProvider>
-        {loggedIn ? (
-          <Router />
-        ) : (
-          <LogoutStack />
-        )}
-      </BottomSheetModalProvider>
-    </NavigationContainer>
+    <View style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
+      <NavigationContainer>
+        <BottomSheetModalProvider>
+          {loggedIn ? (
+            <Router />
+          ) : (
+            <LogoutStack />
+          )}
+        </BottomSheetModalProvider>
+      </NavigationContainer>
+    </View>
   )
 }
 
