@@ -1,6 +1,6 @@
 import './src/i18n'
 import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { CompositeScreenProps, DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { CompositeScreenProps, DefaultTheme, NavigationContainer, RouteProp } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import React, { useContext, useEffect, useState } from 'react';
@@ -11,20 +11,25 @@ import { Home } from './src/screens/Home';
 import {colors} from './src/colors'
 import Feather from '@expo/vector-icons/Feather'
 import { NoopScreen } from './src/screens/NoopScreen';
-import { TournamentsDetail } from './src/screens/TournamentDetail';
+import { Tournaments } from './src/screens/Tournament';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import {TailwindProvider, useTailwind} from 'tailwind-rn';
 import utilities from './tailwind.json';
 import { Login } from './src/screens/Login';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloLink, ApolloProvider, concat, from, gql, InMemoryCache, useMutation } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import { Register } from './src/screens/Register';
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
-import { AuthContext, AuthContextProvider } from './src/contexts/AuthContext';
+import AsyncStorageLib, { useAsyncStorage } from '@react-native-async-storage/async-storage';
+import { AuthContext, AuthContextProvider, JwtPayload } from './src/contexts/AuthContext';
+import { setContext } from '@apollo/client/link/context';
+import decode from 'jwt-decode'
+import dayjs from 'dayjs'
 
 type HomeStackParamList = {
   HomeStack: undefined
-  TournamentDetail: undefined
+  Tournament: {
+    id: string
+  }
 }
 
 type LogoutStackParamList = {
@@ -39,14 +44,76 @@ type RootStackParamList = {
   ProfileTab: undefined
 }
 
+const REFRESH = gql`
+  mutation refresh ($refreshToken: String!) {
+      refresh (refreshToken: $refreshToken) {
+          accessToken
+      }
+  }
+`
+
 export type LoginScreenNavigationProp = NativeStackNavigationProp<LogoutStackParamList>
+export type HomeScreenNavigateProp = NativeStackNavigationProp<HomeStackParamList>
+export type RootRouteProps<RouteName extends keyof HomeStackParamList> = RouteProp<
+  HomeStackParamList,
+  RouteName
+>;
 
 const Stack = createNativeStackNavigator<HomeStackParamList>()
 const LogoutStackNavigator = createNativeStackNavigator<LogoutStackParamList>()
 const Tab = createBottomTabNavigator<RootStackParamList>()
 
+// Reference to prevent infinite querying
+let isRequestPending = false
+
+const doRefreshToken = async (refreshToken: string) => {
+  return client.mutate<{ refresh: { accessToken: string }}>({
+    mutation: REFRESH,
+    variables: {
+      refreshToken
+    },
+    fetchPolicy: 'no-cache'
+  })
+}
+
+const authLink = setContext(async (_, { headers }) => {
+  let token = await AsyncStorageLib.getItem('token:access')
+
+  // Check if token is expired
+  if (token) {
+    const { exp } = decode<JwtPayload>(token)
+    const now = dayjs().unix()
+    
+    if (exp < now) {
+      // If expired, set token to null so we can request a new one
+      await AsyncStorageLib.removeItem('token:access')
+      token = null
+
+      if (!isRequestPending) {
+        // Block any request incoming
+        isRequestPending = true
+        const refreshToken = await AsyncStorageLib.getItem('token:refresh')
+        const { data } = await doRefreshToken(refreshToken!)
+        token = data!.refresh.accessToken
+        await AsyncStorageLib.setItem('token:access', token)
+        isRequestPending = false
+      }
+    }
+  }
+  
+  return {
+    headers: {
+      ...headers,
+      authorization: token || ""
+    }
+  }
+})
+
 const client = new ApolloClient({
-  link: createUploadLink({ uri: 'http://10.0.2.2:4000' }),
+  link: from([
+    authLink,
+    createUploadLink({ uri: 'http://127.0.0.1:4000' })
+  ]),
   cache: new InMemoryCache()
 })
 
@@ -81,7 +148,11 @@ const HomeStack = () => (
         header: (props) => <Header {...props} />
       }}
     />
-    <Stack.Screen name="TournamentDetail" component={TournamentsDetail} options={{ headerShown: false }} />
+    <Stack.Screen
+      name="Tournament"
+      component={Tournaments}
+      options={{ headerShown: false }}
+    />
   </Stack.Navigator>
 )
 
@@ -96,9 +167,12 @@ const Router = () => {
         options={{
           header: () => undefined,
           tabBarLabel: () => undefined,
-          tabBarStyle: tailwind('bg-white-300 dark:bg-black-300'),
-          tabBarInactiveTintColor: colors.green2,
-          tabBarActiveTintColor: colors.green,
+          tabBarStyle: {
+            ...tailwind('bg-white-300 dark:bg-black-300'),
+            borderTopWidth: 0
+          },
+          tabBarInactiveTintColor: colors.green,
+          tabBarActiveTintColor: colors.green2,
           tabBarIcon: ({ color }) => (
             <Feather name='home' color={color} size={26} />
           )
@@ -110,9 +184,12 @@ const Router = () => {
         options={{
           header: () => undefined,
           tabBarLabel: () => undefined,
-          tabBarStyle: tailwind('bg-white-300 dark:bg-black-300'),
-          tabBarInactiveTintColor: colors.green2,
-          tabBarActiveTintColor: colors.green,
+          tabBarStyle: {
+            ...tailwind('bg-white-300 dark:bg-black-300'),
+            borderTopWidth: 0
+          },
+          tabBarInactiveTintColor: colors.green,
+          tabBarActiveTintColor: colors.green2,
           tabBarIcon: ({ color }) => (
             <Feather name='dollar-sign' color={color} size={26} />
           )
@@ -124,9 +201,12 @@ const Router = () => {
         options={{
           header: () => undefined,
           tabBarLabel: () => undefined,
-          tabBarStyle: tailwind('bg-white-300 dark:bg-black-300'),
-          tabBarInactiveTintColor: colors.green2,
-          tabBarActiveTintColor: colors.green,
+          tabBarStyle: {
+            ...tailwind('bg-white-300 dark:bg-black-300'),
+            borderTopWidth: 0
+          },
+          tabBarInactiveTintColor: colors.green,
+          tabBarActiveTintColor: colors.green2,
           tabBarIcon: ({ color }) => (
             <Feather name='message-square' color={color} size={26} />
           )
@@ -138,9 +218,12 @@ const Router = () => {
         options={{
           header: () => undefined,
           tabBarLabel: () => undefined,
-          tabBarStyle: tailwind('bg-white-300 dark:bg-black-300'),
-          tabBarInactiveTintColor: colors.green2,
-          tabBarActiveTintColor: colors.green,
+          tabBarStyle: {
+            ...tailwind('bg-white-300 dark:bg-black-300'),
+            borderTopWidth: 0
+          },
+          tabBarInactiveTintColor: colors.green,
+          tabBarActiveTintColor: colors.green2,
           tabBarIcon: ({ color }) => (
             <Feather name='users' color={color} size={26} />
           )

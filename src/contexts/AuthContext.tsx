@@ -8,7 +8,7 @@ type Props = {
   children: React.ReactNode
 }
 
-type JwtPayload = {
+export type JwtPayload = {
   exp: number
   iat: number
   userId: string
@@ -54,7 +54,7 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
   // Refresh token
   async function doRefresh() {
     const refreshToken = await getRefreshToken()
-
+    
     return refresh({
       variables: {
         refreshToken
@@ -68,7 +68,6 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
       // await removeAccessToken()
 
       const accessToken = await getAccessToken()
-      
       // Check if we have a token
       if (accessToken) {
         const { exp } = decode<JwtPayload>(accessToken)
@@ -76,12 +75,16 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
 
         // If our token is expired, try to refresh it
         if (exp < now) {
-          const { data } = await doRefresh()
-
-          if (data) {
-            const { accessToken } = data.refresh
-            setItem(accessToken)
-            setLoggedIn(true)
+          try {
+            const { data } = await doRefresh()
+          
+            if (data) {
+              const { accessToken } = data.refresh
+              setItem(accessToken)
+              setLoggedIn(true)
+            }
+          } catch (error) {
+            setLoggedIn(false)
           }
         } else {
           // Token is not expired, log user in

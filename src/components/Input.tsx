@@ -18,6 +18,7 @@ export const Input: React.FC<Props> = ({ label, secureTextEntry, ...props }) => 
     <Animated.View style={tailwind('relative mb-2 rounded-md bg-grey-300 dark:bg-black-200')}>
       <TextInput
         autoCapitalize="none"
+        autoCorrect={false}
         style={tailwind('rounded-md p-2 pt-6 text-base font-bold text-black-300 dark:text-white-300')}
         secureTextEntry={visible}
         {...props}

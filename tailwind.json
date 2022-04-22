@@ -94,11 +94,6 @@
 			"marginBottom": -4
 		}
 	},
-	"mt-2.5": {
-		"style": {
-			"marginTop": 10
-		}
-	},
 	"mt-2": {
 		"style": {
 			"marginTop": 8
@@ -109,9 +104,14 @@
 			"marginRight": 4
 		}
 	},
-	"mt-5": {
+	"mb-5": {
 		"style": {
-			"marginTop": 20
+			"marginBottom": 20
+		}
+	},
+	"mt-2.5": {
+		"style": {
+			"marginTop": 10
 		}
 	},
 	"mb-10": {
@@ -119,14 +119,14 @@
 			"marginBottom": 40
 		}
 	},
+	"mt-5": {
+		"style": {
+			"marginTop": 20
+		}
+	},
 	"ml-1": {
 		"style": {
 			"marginLeft": 4
-		}
-	},
-	"mb-5": {
-		"style": {
-			"marginBottom": 20
 		}
 	},
 	"mt-3": {
@@ -201,6 +201,11 @@
 			"flexBasis": "0%"
 		}
 	},
+	"flex-shrink": {
+		"style": {
+			"flexShrink": 1
+		}
+	},
 	"flex-row": {
 		"style": {
 			"flexDirection": "row"
@@ -236,16 +241,6 @@
 			"justifyContent": "space-between"
 		}
 	},
-	"justify-around": {
-		"style": {
-			"justifyContent": "space-around"
-		}
-	},
-	"justify-evenly": {
-		"style": {
-			"justifyContent": "space-evenly"
-		}
-	},
 	"rounded-md": {
 		"style": {
 			"borderTopLeftRadius": 6,
@@ -278,10 +273,34 @@
 			"borderBottomLeftRadius": 16
 		}
 	},
+	"rounded-xl": {
+		"style": {
+			"borderTopLeftRadius": 12,
+			"borderTopRightRadius": 12,
+			"borderBottomRightRadius": 12,
+			"borderBottomLeftRadius": 12
+		}
+	},
+	"rounded": {
+		"style": {
+			"borderTopLeftRadius": 4,
+			"borderTopRightRadius": 4,
+			"borderBottomRightRadius": 4,
+			"borderBottomLeftRadius": 4
+		}
+	},
 	"rounded-t-3xl": {
 		"style": {
 			"borderTopLeftRadius": 24,
 			"borderTopRightRadius": 24
+		}
+	},
+	"border-2": {
+		"style": {
+			"borderTopWidth": 2,
+			"borderRightWidth": 2,
+			"borderBottomWidth": 2,
+			"borderLeftWidth": 2
 		}
 	},
 	"bg-green-300": {
@@ -523,6 +542,13 @@
 		"style": {
 			"--tw-bg-opacity": 1,
 			"backgroundColor": "rgb(41 41 41 / var(--tw-bg-opacity))"
+		},
+		"media": "(prefers-color-scheme: dark)"
+	},
+	"dark:bg-black-400": {
+		"style": {
+			"--tw-bg-opacity": 1,
+			"backgroundColor": "rgb(0 0 0 / var(--tw-bg-opacity))"
 		},
 		"media": "(prefers-color-scheme: dark)"
 	},
