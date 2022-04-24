@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import { ScrollView, View } from "react-native"
+import { ActivityIndicator, FlatList, ScrollView, View } from "react-native"
 import { useTailwind } from "tailwind-rn/dist"
 import { HomeScreenNavigateProp } from "../../App"
 import { Crew } from "../components/Crew"
@@ -10,8 +10,8 @@ import { Text } from "../components/Text"
 import { Tournament } from "../components/Tournament"
 
 const TOURNAMENTS = gql`
-  query Tournaments {
-    tournaments(first: 10) {
+  query Tournaments($cursor: String) {
+    tournaments(first: 10, after: $cursor) {
       edges {
         cursor
         node {
@@ -21,7 +21,7 @@ const TOURNAMENTS = gql`
           num_attendees
           start_at
           images
-          participants(first: 50) {
+          participants(first: 3) {
             edges {
               cursor
               node {
@@ -30,12 +30,13 @@ const TOURNAMENTS = gql`
                 profile_picture
               }
             }
+            totalCount
           }
         }
       }
-      pageInfo {  
-        startCursor
+      pageInfo {
         endCursor
+        hasNextPage
       }
     }
     crew {
@@ -54,81 +55,87 @@ export const Home = () => {
   const { navigate } = useNavigation<HomeScreenNavigateProp>()
   const tailwind = useTailwind()
   const { t } = useTranslation()
-  const {data, error, loading} = useQuery(TOURNAMENTS)
-
-  const stickyHeaderIndices = useMemo(() => {
-    if (data?.crew) {
-      return [1, 3]
-    }
-    return [1, 4, 6]
-  }, [data])
+  const {data, error, loading, fetchMore} = useQuery(TOURNAMENTS)
+  const pageInfo = data?.tournaments.pageInfo
 
   return (
-    <ScrollView
+    <FlatList
       style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}
-      stickyHeaderIndices={stickyHeaderIndices}
       contentContainerStyle={tailwind('p-2')}
-    >
-      {!data?.crew && (
-        <Text style={tailwind('text-4xl font-bold')}>Crews</Text>
-      )}
+      ListHeaderComponent={() => (
+        <>
+          {!data?.crew && (
+            <Text style={tailwind('text-4xl font-bold')}>Crews</Text>
+          )}
 
-      {!data?.crew && (
-        <View style={tailwind('bg-white-300 dark:bg-black-300 pb-1')}>
-          <Text style={tailwind('text-xl')}>{t('findCrew')}</Text>
-        </View>
-      )}
+          {!data?.crew && (
+            <View style={tailwind('bg-white-300 dark:bg-black-300 pb-1')}>
+              <Text style={tailwind('text-xl')}>{t('findCrew')}</Text>
+            </View>
+          )}
 
-      {!data?.crew && (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={tailwind('mb-5')}>
-          {data?.crews.map((crew) => (
-            <Crew key={crew.id} crew={crew} />
-          ))}
-        </ScrollView>
-      )}
+          {!data?.crew && (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={tailwind('mb-5')}>
+              {data?.crews.map((crew) => (
+                <Crew key={crew.id} crew={crew} />
+              ))}
+            </ScrollView>
+          )}
 
-      <Text style={tailwind('text-4xl font-bold')}>{t('tournaments')}</Text>
-      <View style={tailwind('bg-white-300 dark:bg-black-300 pb-1')}>
-        <Text style={tailwind('text-xl')}>
-          {t('nextTournament')} - <Text style={tailwind('font-bold')}>3 {t('days')}</Text>
-        </Text>
-      </View>
+          <Text style={tailwind('text-4xl font-bold')}>{t('tournaments')}</Text>
+          <View style={tailwind('bg-white-300 dark:bg-black-300 pb-1')}>
+            <Text style={tailwind('text-xl')}>
+              {t('nextTournament')} - <Text style={tailwind('font-bold')}>3 {t('days')}</Text>
+            </Text>
+          </View>
 
-      {data?.tournaments.edges.length && (
-        <View style={tailwind('mt-2.5')}>
-          <Tournament
-            tournament={data?.tournaments.edges[0].node}
-            big
-            onPress={async () => {
-              navigate('Tournament', { id: data?.tournaments.edges[0].node.id })
-            }}
-          /> 
-        </View>
-      )}
-
-      <View style={tailwind('bg-white-300 dark:bg-black-300 pb-1 mt-2.5')}>
-        <Text style={tailwind('text-xl')}>{t('upcomingTournaments')}</Text>
-      </View>
-
-      {data?.tournaments.edges.length && (
-        <View style={tailwind('mt-2.5')}>
-          {data?.tournaments.edges.map((edge, index) => {
-            if (index === 0) {
-              return null
-            }
-
-            return (
+          {data?.tournaments.edges.length && (
+            <View style={tailwind('mt-2.5')}>
               <Tournament
-                key={edge.cursor}
-                tournament={edge.node}
-                onPress={() => {
-                  navigate('Tournament', { id: edge.node.id })
+                tournament={data?.tournaments.edges[0].node}
+                big
+                onPress={async () => {
+                  navigate('Tournament', { id: data?.tournaments.edges[0].node.id })
                 }}
-              />
-            )
-          })}
-        </View>
+              /> 
+            </View>
+          )}
+
+          <View style={tailwind('bg-white-300 dark:bg-black-300 pb-1 mt-2.5')}>
+            <Text style={tailwind('text-xl')}>{t('upcomingTournaments')}</Text>
+          </View>
+        </>
       )}
-    </ScrollView>
+      data={data?.tournaments.edges}
+      keyExtractor={edge => edge.cursor}
+      ListFooterComponent={(
+        <ActivityIndicator
+          animating
+        />
+      )}
+      onEndReachedThreshold={0.4}
+      onEndReached={() => {
+        const {} = fetchMore({
+          variables: {
+            cursor: pageInfo.endCursor
+          }
+        })
+      }}
+      renderItem={({ item: edge, index }) => {
+        if (index === 0) {
+          return null
+        }
+
+        return (
+          <Tournament
+            key={edge.cursor}
+            tournament={edge.node}
+            onPress={() => {
+              navigate('Tournament', { id: edge.node.id })
+            }}
+          />
+        )
+      }}
+    />
   )
 }

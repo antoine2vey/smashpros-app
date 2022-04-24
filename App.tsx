@@ -4,7 +4,7 @@ import { CompositeScreenProps, DefaultTheme, NavigationContainer, RouteProp } fr
 import { createNativeStackNavigator, NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import React, { useContext, useEffect, useState } from 'react';
-import { Switch, useColorScheme, View } from 'react-native';
+import { LogBox, Switch, useColorScheme, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Header } from './src/components/Header';
 import { Home } from './src/screens/Home';
@@ -24,6 +24,11 @@ import { AuthContext, AuthContextProvider, JwtPayload } from './src/contexts/Aut
 import { setContext } from '@apollo/client/link/context';
 import decode from 'jwt-decode'
 import dayjs from 'dayjs'
+import { relayStylePagination } from '@apollo/client/utilities';
+
+LogBox.ignoreLogs([
+  '[Reanimated] You can\'t use \'scrollTo'
+])
 
 type HomeStackParamList = {
   HomeStack: undefined
@@ -114,7 +119,20 @@ const client = new ApolloClient({
     authLink,
     createUploadLink({ uri: 'http://127.0.0.1:4000' })
   ]),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          tournaments: relayStylePagination()
+        }
+      },
+      Tournament: {
+        fields: {
+          participants: relayStylePagination()
+        }
+      }
+    }
+  })
 })
 
 const LogoutStack = () => {
@@ -271,7 +289,7 @@ export function Root() {
 
 export default function App() {
   const scheme = useColorScheme()
-  const [dark, setDark] = useState(scheme !== 'dark')
+  const [dark, setDark] = useState(scheme === 'dark')
 
   return (
     <TailwindProvider utilities={utilities} colorScheme={dark ? 'dark' : 'light'}>

@@ -17,13 +17,13 @@ export const CharacterIcon: React.FC<Props> = ({ selected, uri, style, onPress }
       style={[
         tailwind(`
           ${selected ? 'bg-green-300' : 'bg-black-300 dark:bg-white-300'}
-          p-3
+          p-1
           rounded-full
         `),
         style
       ]}
     >
-      <Image source={{ uri }} style={{ width: 30, height: 30 }} resizeMode="cover" />
+      <Image source={{ uri }} style={{ width: 25, height: 25 }} resizeMode="cover" />
     </TouchableOpacity>
   )
 }

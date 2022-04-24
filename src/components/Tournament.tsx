@@ -7,9 +7,6 @@ import { useTranslation } from "react-i18next"
 import dayjs from 'dayjs'
 import { useCallback, useMemo } from "react"
 
-const icon = require('../assets/azuria.png')
-const zss = require('../assets/icon.png')
-
 type Props = TouchableOpacityProps & {
   big?: boolean
   tournament: any
@@ -35,7 +32,7 @@ export const Tournament = ({
 
   const restOfParticipants = useMemo(() => {
     if (tournament) {
-      return tournament.participants.edges.length - 3
+      return tournament.participants.totalCount - 3
     }
   }, [tournament])
 

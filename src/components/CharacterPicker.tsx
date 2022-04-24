@@ -1,16 +1,27 @@
-import BottomSheet, { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetFlatList, BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { forwardRef, ForwardRefExoticComponent, RefAttributes, RefObject, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTailwind } from 'tailwind-rn/dist';
 import { Text } from './Text';
-import { LinearGradient } from 'expo-linear-gradient';
 
-import data from '../assets/characters.json'
 import { CharacterIcon } from './CharacterIcon';
 import { useTranslation } from 'react-i18next';
 import { Backdrop } from './Backdrop';
 import { Character } from '../screens/Register';
+import { gql, useQuery } from '@apollo/client'
+import { chunk } from 'lodash';
+import { Button } from './Button';
+
+const QUERY = gql`
+	query Characters {
+    characters {
+			id
+			name
+			picture
+    }
+	}
+`
 
 type Props = {
   setCharacters: React.Dispatch<React.SetStateAction<Character[]>>
@@ -22,6 +33,7 @@ export const CharacterPicker = forwardRef<BottomSheetModal, Props>(({ setCharact
   const tailwind = useTailwind()
 	const { bottom } = useSafeAreaInsets()
 	const { t } = useTranslation()
+	const { data } = useQuery(QUERY)
 
 	const handleCharacterPress = useCallback((character: Character) => {
 		if (characters.some(c => c.id === character.id)) {
@@ -31,47 +43,75 @@ export const CharacterPicker = forwardRef<BottomSheetModal, Props>(({ setCharact
 		}
 	}, [characters])
 
+	const charactersRows = useMemo(() => {
+		if (data) {
+			return chunk<Character>(data.characters, 6)
+		}
+
+		return []
+	}, [data])
+
 	return (
 		<BottomSheetModal
 			backgroundStyle={tailwind('bg-white-300 dark:bg-black-300')}
-			backdropComponent={Backdrop}
-			snapPoints={['1%', '75%']}
+			snapPoints={['50%', '80%']}
+			index={0}
 			ref={ref}
-			index={1}
+			style={{
+				shadowColor: "#000",
+				shadowOffset: {
+					width: 0,
+					height: 12,
+				},
+				shadowOpacity: 0.58,
+				shadowRadius: 16.00,
+				elevation: 24,
+			}}
 		>
-		<View style={tailwind('p-6 py-0 flex-1 justify-start bg-white-300 dark:bg-black-300')}>
-			<Text style={tailwind('text-2xl font-bold mb-1')}>{t('characters')}</Text>
-			
+		<View style={tailwind('flex-1 p-6 py-0 bg-white-300 dark:bg-black-300')}>
 			<View style={tailwind('flex-1')}>
-				<BottomSheetScrollView contentContainerStyle={tailwind('flex-row flex-wrap justify-between')}>
-					{data.data.characters.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1).map(character => (
-						<CharacterIcon
-							uri={character.picture}
-							key={character.id}
-							selected={characters.includes(character)}
-							style={tailwind('mb-2 mx-1')}
-							onPress={() => handleCharacterPress(character)}
-						/>
-					))}
-				</BottomSheetScrollView>
-
-				{/* <LinearGradient
-					style={{ position:'absolute', top: 0, left: 0, right: 0, height: 15}}
-					colors={['#F1F1F190', '#F1F1F100']}
-					pointerEvents={'none'}
-				/> */}
+				<Text style={tailwind('text-2xl font-bold mb-1')}>Filters</Text>
 			</View>
 
-			<TouchableOpacity
-				style={[
-					tailwind('bg-green-300 items-center p-4 rounded-lg'),
-					{ marginBottom: bottom }
-				]}
-				activeOpacity={0.8}
+			<Text style={tailwind('text-2xl font-bold mb-1')}>{t('characters')}</Text>
+
+			<View style={tailwind('h-64')}>
+				{data?.characters.length && (
+					<BottomSheetScrollView
+						horizontal
+						showsHorizontalScrollIndicator={false}
+						style={tailwind('-mx-6')}
+						contentContainerStyle={tailwind('pl-6')}
+					>
+						{charactersRows.map((row, i) => (
+							<View style={{ flex: 1}} key={i}>
+								{row.map(character => (
+									<CharacterIcon
+										uri={character.picture}
+										key={character.id}
+										selected={characters.includes(character)}
+										style={tailwind('mb-2 mx-0.5')}
+										onPress={() => handleCharacterPress(character)}
+									/>
+								))}
+							</View>
+						))}
+					</BottomSheetScrollView>
+				)}
+			</View>
+
+			<Button
+				text="Valider"
 				onPress={onValidation}
-			>
-				<Text style={tailwind('text-base text-white-400')}>{t('validate')}</Text>
-			</TouchableOpacity>
+			/>
+			<Button
+				onPress={() => ref?.current.dismiss()}
+				outlined
+				text="Fermer"
+				style={{
+					marginBottom: bottom
+				}}
+			/>
 		</View>
 		</BottomSheetModal>
 	)
