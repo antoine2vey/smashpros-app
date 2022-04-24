@@ -1,6 +1,4 @@
-import { gql, useQuery } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
-import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { ActivityIndicator, FlatList, ScrollView, View } from "react-native"
 import { useTailwind } from "tailwind-rn/dist"
@@ -8,55 +6,14 @@ import { HomeScreenNavigateProp } from "../../App"
 import { Crew } from "../components/Crew"
 import { Text } from "../components/Text"
 import { Tournament } from "../components/Tournament"
-
-const TOURNAMENTS = gql`
-  query Tournaments($cursor: String) {
-    tournaments(first: 10, after: $cursor) {
-      edges {
-        cursor
-        node {
-          id
-          name
-          city
-          num_attendees
-          start_at
-          images
-          participants(first: 3) {
-            edges {
-              cursor
-              node {
-                id
-                tag
-                profile_picture
-              }
-            }
-            totalCount
-          }
-        }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-    }
-    crew {
-      id
-    }
-    crews {
-      banner
-      icon
-      id
-      name
-    }
-  }
-`
+import { useTournamentsQuery } from "../generated/graphql"
 
 export const Home = () => {
   const { navigate } = useNavigation<HomeScreenNavigateProp>()
   const tailwind = useTailwind()
   const { t } = useTranslation()
-  const {data, error, loading, fetchMore} = useQuery(TOURNAMENTS)
-  const pageInfo = data?.tournaments.pageInfo
+  const {data, error, loading, fetchMore} = useTournamentsQuery()
+  const pageInfo = data?.tournaments?.pageInfo
 
   return (
     <FlatList
@@ -76,8 +33,8 @@ export const Home = () => {
 
           {!data?.crew && (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={tailwind('mb-5')}>
-              {data?.crews.map((crew) => (
-                <Crew key={crew.id} crew={crew} />
+              {data?.crews?.map((crew) => (
+                <Crew key={crew?.id} crew={crew} />
               ))}
             </ScrollView>
           )}
@@ -89,13 +46,13 @@ export const Home = () => {
             </Text>
           </View>
 
-          {data?.tournaments.edges.length && (
+          {data?.tournaments?.edges?.length && (
             <View style={tailwind('mt-2.5')}>
               <Tournament
-                tournament={data?.tournaments.edges[0].node}
+                tournament={data?.tournaments?.edges[0]?.node}
                 big
                 onPress={async () => {
-                  navigate('Tournament', { id: data?.tournaments.edges[0].node.id })
+                  navigate('Tournament', { id: data?.tournaments?.edges[0]?.node?.id })
                 }}
               /> 
             </View>
@@ -106,8 +63,8 @@ export const Home = () => {
           </View>
         </>
       )}
-      data={data?.tournaments.edges}
-      keyExtractor={edge => edge.cursor}
+      data={data?.tournaments?.edges}
+      keyExtractor={(edge, i) => edge?.cursor || i.toString()}
       ListFooterComponent={(
         <ActivityIndicator
           animating
@@ -117,7 +74,7 @@ export const Home = () => {
       onEndReached={() => {
         const {} = fetchMore({
           variables: {
-            cursor: pageInfo.endCursor
+            cursor: pageInfo?.endCursor
           }
         })
       }}
@@ -128,10 +85,10 @@ export const Home = () => {
 
         return (
           <Tournament
-            key={edge.cursor}
-            tournament={edge.node}
+            key={edge?.cursor}
+            tournament={edge?.node}
             onPress={() => {
-              navigate('Tournament', { id: edge.node.id })
+              navigate('Tournament', { id: edge?.node?.id })
             }}
           />
         )

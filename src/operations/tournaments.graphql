@@ -1,0 +1,80 @@
+query Tournaments($cursor: String) {
+  tournaments(first: 10, after: $cursor) {
+    edges {
+      cursor
+      node {
+        id
+        name
+        city
+        num_attendees
+        start_at
+        images
+        participants(first: 3) {
+          edges {
+            cursor
+            node {
+              id
+              tag
+              profile_picture
+            }
+          }
+          totalCount
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+  crew {
+    id
+  }
+  crews {
+    banner
+    icon
+    id
+    name
+  }
+}
+
+query SingleTournament($id: ID!, $cursor: String, $characters: [ID!]) {
+  tournament (id: $id) {
+    id
+    city
+    end_at
+    lat
+    lng
+    name
+    images
+    num_attendees
+    participants(first: 10, after: $cursor, characters: $characters) {
+      edges {
+        cursor
+        node {
+          id
+          tag
+          profile_picture
+          crew {
+            prefix
+          }
+          characters {
+            id
+            name
+            picture
+          }
+        }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      totalCount
+    }
+    slug
+    state
+    tournament_id
+    venue_address
+    venue_name
+  }
+}

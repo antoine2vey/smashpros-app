@@ -1,8 +1,8 @@
-import { gql, useMutation } from "@apollo/client";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { createContext, useEffect, useState } from "react";
 import decode from 'jwt-decode'
 import dayjs from 'dayjs'
+import { useRefreshMutation } from "../generated/graphql";
 
 type Props = {
   children: React.ReactNode
@@ -14,14 +14,6 @@ export type JwtPayload = {
   userId: string
   userRoles: string[]
 }
-
-const REFRESH = gql`
-  mutation refresh ($refreshToken: String!) {
-      refresh (refreshToken: $refreshToken) {
-          accessToken
-      }
-  }
-`
 
 export const AuthContext = createContext<{
   ready: boolean
@@ -40,7 +32,8 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
   const { getItem: getRefreshToken, removeItem: removeRefreshToken } = useAsyncStorage('token:refresh')
   const [ready, setReady] = useState(false)
   const [loggedIn, setLoggedIn] = useState(false)
-  const [refresh, { error }] = useMutation(REFRESH, {
+  const guest = true
+  const [refresh, { error }] = useRefreshMutation({
     onError: async (err) => {
       // If we end up here, token is not in cache anymore, means we have to get disconnected,
       // remove all tokens and log user out
@@ -49,7 +42,6 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
       setLoggedIn(false)
     }
   })
-  const guest = true
 
   // Refresh token
   async function doRefresh() {
@@ -57,7 +49,7 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
     
     return refresh({
       variables: {
-        refreshToken
+        refreshToken: refreshToken!
       }
     })
   }
@@ -79,8 +71,7 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
             const { data } = await doRefresh()
           
             if (data) {
-              const { accessToken } = data.refresh
-              setItem(accessToken)
+              setItem(data.refresh?.accessToken!)
               setLoggedIn(true)
             }
           } catch (error) {

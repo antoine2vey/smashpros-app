@@ -1,0 +1,7 @@
+query Characters {
+  characters {
+    id
+    name
+    picture
+  }
+}

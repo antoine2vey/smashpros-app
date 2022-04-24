@@ -1,21 +1,23 @@
-import { ApolloError, gql, isApolloError, useLazyQuery, useMutation } from "@apollo/client";
-import { Image, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { ApolloError } from "@apollo/client";
+import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { useTailwind } from "tailwind-rn/dist";
 import { Text } from "../components/Text";
 import { usePicture } from "../hooks/usePicture";
 import { useFormik } from 'formik';
 import { useEffect, useRef, useState } from "react";
-import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { CharacterPicker } from "../components/CharacterPicker"
 import { CharacterIcon } from "../components/CharacterIcon";
 import { Input } from "../components/Input";
-import smashgg from '../assets/smashgg.png'
 import { Backdrop } from "../components/Backdrop";
 import { Button } from "../components/Button";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Header, HeaderBackButton } from '@react-navigation/elements';
+import { HeaderBackButton } from '@react-navigation/elements';
 import { useNavigation } from "@react-navigation/native";
-import { object, string, mixed, array, number } from 'yup'
+import { object, string, array, number } from 'yup'
+import { Character, useRegisterMutation, useSuggestedNameLazyQuery } from "../generated/graphql"
+
+const smashgg = require('../assets/smashgg.png')
 
 export const registerSchema = object({
   email: string().email().required(),
@@ -28,12 +30,6 @@ export const registerSchema = object({
   smashGGUserId: string().nullable().notRequired()
 })
 
-export type Character = {
-  id: string
-  name: string
-  picture: string
-}
-
 interface FormValues {
   email: string
   password: string
@@ -45,39 +41,13 @@ interface FormValues {
   smashGGUserId?: number | null
 }
 
-const SUGGESTION = gql`
-  query suggestedName($slug: String!) {
-    suggestedName(slug: $slug) {
-        tag
-        smashGGUserId
-        smashGGPlayerId
-        profilePicture
-    }
-  }
-`
-
-const REGISTER = gql`
-  mutation register ($payload: UserRegisterPayload!) {
-    register (payload: $payload) {
-      id
-      profile_picture
-      tag
-      characters {
-        id
-        name
-        picture
-      }
-    }
-  }
-`
-
 export const Register = () => {
   const {top} = useSafeAreaInsets()
   const tailwind = useTailwind()
   const { navigate, goBack } = useNavigation()
   const { pick, image, generateFile, setImage } = usePicture()
-  const [register, { loading }] = useMutation(REGISTER)
-  const [getName] = useLazyQuery(SUGGESTION)
+  const [register, { loading }] = useRegisterMutation()
+  const [getName] = useSuggestedNameLazyQuery()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const bottomSheetSGGRef = useRef<BottomSheetModal>(null)
   const [characters, setCharacters] = useState<Character[]>([])
@@ -97,7 +67,7 @@ export const Register = () => {
     onSubmit: async values => {
       try {
         const file = generateFile(image, `profile.png`)
-        const { data } = await register({
+        await register({
           variables: {
             payload: {
               email: values.email,
@@ -132,7 +102,7 @@ export const Register = () => {
       try {
         const { data } = await getName({ variables: { slug: text }})
 
-        if (data.suggestedName) {
+        if (data?.suggestedName) {
           const { smashGGPlayerId, smashGGUserId, tag, profilePicture } = data.suggestedName
 
           setFieldValue('tag', tag)

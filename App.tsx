@@ -33,7 +33,7 @@ LogBox.ignoreLogs([
 type HomeStackParamList = {
   HomeStack: undefined
   Tournament: {
-    id: string
+    id: string | undefined
   }
 }
 

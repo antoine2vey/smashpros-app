@@ -1,37 +1,27 @@
-import { SafeAreaView, TextInput, TouchableOpacity, View } from "react-native"
+import { SafeAreaView, TouchableOpacity, View } from "react-native"
 import { useTailwind } from "tailwind-rn"
 import { Text } from "../components/Text"
 import { useFormik } from 'formik'
-import { gql, useMutation } from "@apollo/client"
 import { useNavigation } from "@react-navigation/native"
 import { Input } from "../components/Input"
-import Ionicons from '@expo/vector-icons/Ionicons'
 import { Button } from "../components/Button"
 import { LoginScreenNavigationProp } from "../../App"
 import { useContext, useEffect } from "react"
 import { object, string } from 'yup'
 import { AuthContext } from "../contexts/AuthContext"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useLoginMutation } from "../generated/graphql"
 
 export const loginSchema = object({
   email: string().email().required(),
   password: string().required()
 })
 
-const LOGIN = gql`
-  mutation login ($email: String!, $password: String!) {
-    login (email: $email, password: $password) {
-      accessToken
-      refreshToken
-    }
-  }
-`
-
 export const Login = () => {
   const tailwind = useTailwind()
   const { navigate } = useNavigation<LoginScreenNavigationProp>()
   const { setLoggedIn } = useContext(AuthContext)
-  const [login, { data, loading, error }] = useMutation(LOGIN, {
+  const [login, { data, loading, error }] = useLoginMutation({
     onError: (err) => {
       console.log(err)
     }
@@ -46,8 +36,8 @@ export const Login = () => {
     onSubmit: async values => {
       await login({
         variables: {
-          email: values.email,
-          password: values.password
+          email: values.email!,
+          password: values.password!
         }
       })
     }
@@ -56,9 +46,9 @@ export const Login = () => {
   useEffect(() => {
     async function init() {
       if (data) {
-        const { accessToken, refreshToken } = data.login
-        await AsyncStorage.setItem('token:access', accessToken)
-        await AsyncStorage.setItem('token:refresh', refreshToken)
+        const { accessToken, refreshToken } = data.login!
+        await AsyncStorage.setItem('token:access', accessToken!)
+        await AsyncStorage.setItem('token:refresh', refreshToken!)
 
         setLoggedIn(true)
       }
@@ -78,7 +68,7 @@ export const Login = () => {
         <Input
           onChangeText={handleChange('email')}
           onBlur={handleBlur('email')}
-          value={values.email}
+          value={values.email!}
           label="Email"
           keyboardType="email-address"
         />
@@ -87,7 +77,7 @@ export const Login = () => {
           onChangeText={handleChange('password')}
           onBlur={handleBlur('password')}
           secureTextEntry={true}
-          value={values.password}
+          value={values.password!}
           label="Password"
         />
 

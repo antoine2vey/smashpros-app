@@ -1,0 +1,34 @@
+mutation refresh ($refreshToken: String!) {
+  refresh (refreshToken: $refreshToken) {
+    accessToken
+  }
+}
+
+mutation login ($email: String!, $password: String!) {
+  login (email: $email, password: $password) {
+    accessToken
+    refreshToken
+  }
+}
+
+mutation register ($payload: UserRegisterPayload!) {
+  register (payload: $payload) {
+    id
+    profile_picture
+    tag
+    characters {
+      id
+      name
+      picture
+    }
+  }
+}
+
+query suggestedName($slug: String!) {
+  suggestedName(slug: $slug) {
+      tag
+      smashGGUserId
+      smashGGPlayerId
+      profilePicture
+  }
+}

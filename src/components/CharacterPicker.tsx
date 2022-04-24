@@ -8,20 +8,10 @@ import { Text } from './Text';
 import { CharacterIcon } from './CharacterIcon';
 import { useTranslation } from 'react-i18next';
 import { Backdrop } from './Backdrop';
-import { Character } from '../screens/Register';
 import { gql, useQuery } from '@apollo/client'
 import { chunk } from 'lodash';
 import { Button } from './Button';
-
-const QUERY = gql`
-	query Characters {
-    characters {
-			id
-			name
-			picture
-    }
-	}
-`
+import { Character, useCharactersQuery } from '../generated/graphql';
 
 type Props = {
   setCharacters: React.Dispatch<React.SetStateAction<Character[]>>
@@ -33,7 +23,7 @@ export const CharacterPicker = forwardRef<BottomSheetModal, Props>(({ setCharact
   const tailwind = useTailwind()
 	const { bottom } = useSafeAreaInsets()
 	const { t } = useTranslation()
-	const { data } = useQuery(QUERY)
+	const { data } = useCharactersQuery()
 
 	const handleCharacterPress = useCallback((character: Character) => {
 		if (characters.some(c => c.id === character.id)) {
@@ -45,7 +35,7 @@ export const CharacterPicker = forwardRef<BottomSheetModal, Props>(({ setCharact
 
 	const charactersRows = useMemo(() => {
 		if (data) {
-			return chunk<Character>(data.characters, 6)
+			return chunk(data.characters, 6)
 		}
 
 		return []
@@ -76,7 +66,7 @@ export const CharacterPicker = forwardRef<BottomSheetModal, Props>(({ setCharact
 			<Text style={tailwind('text-2xl font-bold mb-1')}>{t('characters')}</Text>
 
 			<View style={tailwind('h-64')}>
-				{data?.characters.length && (
+				{data?.characters?.length && (
 					<BottomSheetScrollView
 						horizontal
 						showsHorizontalScrollIndicator={false}
@@ -87,8 +77,8 @@ export const CharacterPicker = forwardRef<BottomSheetModal, Props>(({ setCharact
 							<View style={{ flex: 1}} key={i}>
 								{row.map(character => (
 									<CharacterIcon
-										uri={character.picture}
-										key={character.id}
+										uri={character?.picture!}
+										key={character?.id}
 										selected={characters.includes(character)}
 										style={tailwind('mb-2 mx-0.5')}
 										onPress={() => handleCharacterPress(character)}
@@ -109,7 +99,7 @@ export const CharacterPicker = forwardRef<BottomSheetModal, Props>(({ setCharact
 				outlined
 				text="Fermer"
 				style={{
-					marginBottom: bottom
+					marginBottom: Math.max(5, bottom)
 				}}
 			/>
 		</View>
