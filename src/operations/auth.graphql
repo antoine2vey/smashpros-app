@@ -13,14 +13,7 @@ mutation login ($email: String!, $password: String!) {
 
 mutation register ($payload: UserRegisterPayload!) {
   register (payload: $payload) {
-    id
-    profile_picture
-    tag
-    characters {
-      id
-      name
-      picture
-    }
+    ...UserBase
   }
 }
 
@@ -30,5 +23,64 @@ query suggestedName($slug: String!) {
       smashGGUserId
       smashGGPlayerId
       profilePicture
+  }
+}
+
+query profile($id: ID) {
+  user(id: $id) {
+    ...UserBase
+    twitch_username
+    twitter_username
+    smashgg_slug
+    allow_notifications
+    allow_searchability
+    updated_at
+    created_at
+    crew {
+      banner
+      icon
+      id
+      name
+      prefix
+      members {
+        id
+        tag
+      }
+    }
+    waiting_crew {
+      id
+    }
+    tournaments {
+      id
+      name
+      images
+    }
+    favorited_tournaments {
+      id
+      name
+      images
+    }
+  }
+}
+
+query header {
+  user {
+    id
+    tag
+    crew {
+      id
+      prefix
+    }
+  }
+}
+
+fragment UserBase on User {
+  id
+  profile_picture
+  tag
+  characters {
+    id
+    name
+    picture
   }
 }

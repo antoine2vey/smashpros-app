@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { ActivityIndicator, TouchableOpacity, TouchableOpacityProps } from "react-native"
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated"
 import { useTailwind } from "tailwind-rn"
+import { colors } from "../colors"
 import { Text } from "./Text"
 
 type Props = TouchableOpacityProps & {
@@ -39,7 +40,7 @@ export const Button: React.FC<Props> = ({ loading, text, outlined, style, disabl
         {...props}
       >
         {loading ? (
-          <ActivityIndicator animating={loading} color="#fff" />
+          <ActivityIndicator animating={loading} color={colors.fullwhite} />
         ) : (
           <Text style={
             outlined

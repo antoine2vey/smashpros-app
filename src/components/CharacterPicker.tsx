@@ -12,6 +12,7 @@ import { gql, useQuery } from '@apollo/client'
 import { chunk } from 'lodash';
 import { Button } from './Button';
 import { Character, useCharactersQuery } from '../generated/graphql';
+import { colors } from '../colors';
 
 type Props = {
   setCharacters: React.Dispatch<React.SetStateAction<Character[]>>
@@ -48,7 +49,7 @@ export const CharacterPicker = forwardRef<BottomSheetModal, Props>(({ setCharact
 			index={0}
 			ref={ref}
 			style={{
-				shadowColor: "#000",
+				shadowColor: colors.fullblack,
 				shadowOffset: {
 					width: 0,
 					height: 12,
@@ -59,13 +60,13 @@ export const CharacterPicker = forwardRef<BottomSheetModal, Props>(({ setCharact
 			}}
 		>
 		<View style={tailwind('flex-1 p-6 py-0 bg-white-300 dark:bg-black-300')}>
-			<View style={tailwind('flex-1')}>
+			{/* <View style={tailwind('flex-1')}>
 				<Text style={tailwind('text-2xl font-bold mb-1')}>Filters</Text>
-			</View>
+			</View> */}
 
 			<Text style={tailwind('text-2xl font-bold mb-1')}>{t('characters')}</Text>
 
-			<View style={tailwind('h-64')}>
+			<View style={tailwind('h-72 flex-1')}>
 				{data?.characters?.length && (
 					<BottomSheetScrollView
 						horizontal

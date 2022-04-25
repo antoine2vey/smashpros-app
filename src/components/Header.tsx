@@ -1,11 +1,14 @@
 import { NativeStackHeaderProps } from '@react-navigation/native-stack'
 import React from 'react'
-import { Image, ImageSourcePropType, View } from 'react-native'
+import { Image, ImageSourcePropType, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Text } from './Text'
 import Feather from '@expo/vector-icons/Feather'
 import { useTailwind } from 'tailwind-rn/dist'
 import { colors } from '../colors'
+import { useNavigation } from '@react-navigation/native'
+import { HomeScreenNavigateProp } from '../../App'
+import { useHeaderQuery } from '../generated/graphql'
 
 const profile = require('../assets/icon.png')
 
@@ -18,6 +21,8 @@ const Avatar = ({ size, url }: { size: number, url: ImageSourcePropType }) => (
 export const Header = ({}: NativeStackHeaderProps) => {
   const { top } = useSafeAreaInsets()
   const tailwind = useTailwind()
+  const { navigate } = useNavigation<HomeScreenNavigateProp>()
+  const { data } = useHeaderQuery()
  
   return (
     <View style={[
@@ -26,8 +31,13 @@ export const Header = ({}: NativeStackHeaderProps) => {
     ]}>
       <View style={tailwind('flex-row justify-between')}>
         <View style={tailwind('flex-row items-center')}>
-          <Avatar size={35} url={profile} />
-          <Text style={tailwind('text-base font-bold ml-2')}>shaark</Text>
+          <TouchableOpacity onPress={() => navigate('UserProfile', { id: undefined })}>
+            <Avatar size={35} url={profile} />
+          </TouchableOpacity>
+          <Text style={tailwind('text-base font-medium ml-2')}>
+            <Text style={tailwind('text-green-300 font-bold')}>{data?.user?.crew?.prefix} | </Text>
+            {data?.user?.tag}
+          </Text>
         </View>
 
         <View style={tailwind('flex-row items-center')}>

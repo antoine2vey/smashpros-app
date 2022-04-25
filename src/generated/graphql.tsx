@@ -266,6 +266,7 @@ export type Query = {
   suggestedName?: Maybe<SuggestedName>;
   tournament?: Maybe<Tournament>;
   tournaments?: Maybe<TournamentConnection>;
+  user?: Maybe<User>;
   usersByCharacter?: Maybe<Array<User>>;
 };
 
@@ -293,6 +294,11 @@ export type QueryTournamentsArgs = {
   before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryUserArgs = {
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -405,17 +411,25 @@ export type TournamentQuery = {
 
 export type User = {
   __typename?: 'User';
+  allow_notifications: Scalars['Boolean'];
+  allow_searchability: Scalars['Boolean'];
   characters: Array<Character>;
+  created_at: Scalars['DateTime'];
   crew?: Maybe<Crew>;
   email: Scalars['String'];
+  favorited_tournaments: Array<Tournament>;
   id: Scalars['ID'];
   in_tournament: Scalars['Boolean'];
   profile_picture?: Maybe<Scalars['String']>;
   roles: Array<Role>;
   smashgg_player_id?: Maybe<Scalars['Int']>;
+  smashgg_slug?: Maybe<Scalars['String']>;
   tag: Scalars['String'];
   tournaments: Array<Tournament>;
   tournaments_organizer: Array<Tournament>;
+  twitch_username?: Maybe<Scalars['String']>;
+  twitter_username?: Maybe<Scalars['String']>;
+  updated_at: Scalars['DateTime'];
   waiting_crew?: Maybe<Crew>;
 };
 
@@ -483,6 +497,20 @@ export type SuggestedNameQueryVariables = Exact<{
 
 export type SuggestedNameQuery = { __typename?: 'Query', suggestedName?: { __typename?: 'SuggestedName', tag: string, smashGGUserId: number, smashGGPlayerId: number, profilePicture?: string | null } | null };
 
+export type ProfileQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type ProfileQuery = { __typename?: 'Query', user?: { __typename?: 'User', twitch_username?: string | null, twitter_username?: string | null, smashgg_slug?: string | null, allow_notifications: boolean, allow_searchability: boolean, updated_at: any, created_at: any, id: string, profile_picture?: string | null, tag: string, crew?: { __typename?: 'Crew', banner: string, icon: string, id: string, name: string, prefix: string, members: Array<{ __typename?: 'User', id: string, tag: string }> } | null, waiting_crew?: { __typename?: 'Crew', id: string } | null, tournaments: Array<{ __typename?: 'Tournament', id: string, name: string, images: Array<string> }>, favorited_tournaments: Array<{ __typename?: 'Tournament', id: string, name: string, images: Array<string> }>, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null };
+
+export type HeaderQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type HeaderQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, tag: string, crew?: { __typename?: 'Crew', id: string, prefix: string } | null } | null };
+
+export type UserBaseFragment = { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> };
+
 export type CharactersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -504,7 +532,18 @@ export type SingleTournamentQueryVariables = Exact<{
 
 export type SingleTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'Tournament', id: string, city?: string | null, end_at?: any | null, lat?: number | null, lng?: number | null, name: string, images: Array<string>, num_attendees?: number | null, slug: string, state: number, tournament_id: number, venue_address?: string | null, venue_name?: string | null, participants?: { __typename?: 'TournamentParticipants_Connection', totalCount?: number | null, edges?: Array<{ __typename?: 'UserEdge', cursor: string, node?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, crew?: { __typename?: 'Crew', prefix: string } | null, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null } | null };
 
-
+export const UserBaseFragmentDoc = gql`
+    fragment UserBase on User {
+  id
+  profile_picture
+  tag
+  characters {
+    id
+    name
+    picture
+  }
+}
+    `;
 export const RefreshDocument = gql`
     mutation refresh($refreshToken: String!) {
   refresh(refreshToken: $refreshToken) {
@@ -576,17 +615,10 @@ export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, Log
 export const RegisterDocument = gql`
     mutation register($payload: UserRegisterPayload!) {
   register(payload: $payload) {
-    id
-    profile_picture
-    tag
-    characters {
-      id
-      name
-      picture
-    }
+    ...UserBase
   }
 }
-    `;
+    ${UserBaseFragmentDoc}`;
 export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
 
 /**
@@ -651,6 +683,111 @@ export function useSuggestedNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type SuggestedNameQueryHookResult = ReturnType<typeof useSuggestedNameQuery>;
 export type SuggestedNameLazyQueryHookResult = ReturnType<typeof useSuggestedNameLazyQuery>;
 export type SuggestedNameQueryResult = Apollo.QueryResult<SuggestedNameQuery, SuggestedNameQueryVariables>;
+export const ProfileDocument = gql`
+    query profile($id: ID) {
+  user(id: $id) {
+    ...UserBase
+    twitch_username
+    twitter_username
+    smashgg_slug
+    allow_notifications
+    allow_searchability
+    updated_at
+    created_at
+    crew {
+      banner
+      icon
+      id
+      name
+      prefix
+      members {
+        id
+        tag
+      }
+    }
+    waiting_crew {
+      id
+    }
+    tournaments {
+      id
+      name
+      images
+    }
+    favorited_tournaments {
+      id
+      name
+      images
+    }
+  }
+}
+    ${UserBaseFragmentDoc}`;
+
+/**
+ * __useProfileQuery__
+ *
+ * To run a query within a React component, call `useProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useProfileQuery(baseOptions?: Apollo.QueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+      }
+export function useProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+        }
+export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
+export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
+export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
+export const HeaderDocument = gql`
+    query header {
+  user {
+    id
+    tag
+    crew {
+      id
+      prefix
+    }
+  }
+}
+    `;
+
+/**
+ * __useHeaderQuery__
+ *
+ * To run a query within a React component, call `useHeaderQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHeaderQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHeaderQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useHeaderQuery(baseOptions?: Apollo.QueryHookOptions<HeaderQuery, HeaderQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HeaderQuery, HeaderQueryVariables>(HeaderDocument, options);
+      }
+export function useHeaderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HeaderQuery, HeaderQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HeaderQuery, HeaderQueryVariables>(HeaderDocument, options);
+        }
+export type HeaderQueryHookResult = ReturnType<typeof useHeaderQuery>;
+export type HeaderLazyQueryHookResult = ReturnType<typeof useHeaderLazyQuery>;
+export type HeaderQueryResult = Apollo.QueryResult<HeaderQuery, HeaderQueryVariables>;
 export const CharactersDocument = gql`
     query Characters {
   characters {

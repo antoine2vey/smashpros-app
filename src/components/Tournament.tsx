@@ -6,6 +6,7 @@ import { useTailwind } from "tailwind-rn/dist"
 import { useTranslation } from "react-i18next"
 import dayjs from 'dayjs'
 import { useCallback, useMemo } from "react"
+import { ProgressiveImage } from "./ProgressiveImage"
 
 type Props = TouchableOpacityProps & {
   big?: boolean
@@ -50,7 +51,7 @@ export const Tournament = ({
     <TouchableOpacity
       style={[
         tailwind(`
-          bg-white-200
+          bg-white-400
           dark:bg-black-200
           rounded-2xl
           ${big ? 'p-3' : 'p-2'}
@@ -72,7 +73,7 @@ export const Tournament = ({
       {...rest}
     >
       <>
-        <Image
+        <ProgressiveImage
           source={{ uri: tournament.images[0] }}
           style={
             tailwind(`
@@ -83,7 +84,7 @@ export const Tournament = ({
           }
         />
       </>
-      <View style={tailwind('flex-shrink ml-2.5')}>
+      <View style={tailwind('flex-shrink ml-2.5 flex-1')}>
         <Text numberOfLines={1} style={tailwind('text-xl font-bold -mb-1 flex-shrink')}>{tournament.name}</Text>
         <Text style={tailwind('text-base font-light text-grey-400')}>{dayjs(tournament.start_at).format('DD MMMM')} - {tournament.city}</Text>
         <View style={tailwind('flex-row items-center')}>

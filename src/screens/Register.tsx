@@ -16,6 +16,7 @@ import { HeaderBackButton } from '@react-navigation/elements';
 import { useNavigation } from "@react-navigation/native";
 import { object, string, array, number } from 'yup'
 import { Character, useRegisterMutation, useSuggestedNameLazyQuery } from "../generated/graphql"
+import { colors } from "../colors";
 
 const smashgg = require('../assets/smashgg.png')
 
@@ -134,7 +135,7 @@ export const Register = () => {
 
   return (
     <ScrollView style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
-      <HeaderBackButton label="Back" tintColor={'#45D37E'} onPress={goBack} style={{ marginTop: Math.max(top, 15)}} />
+      <HeaderBackButton label="Back" tintColor={colors.green2} onPress={goBack} style={{ marginTop: Math.max(top, 15)}} />
 
       <View style={tailwind('p-6 flex-1')}>
         <View style={tailwind('flex mb-5 items-start relative rounded-full h-32 w-32')}>

@@ -1,9 +1,10 @@
-import { useNavigation } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { useTranslation } from "react-i18next"
 import { ActivityIndicator, FlatList, ScrollView, View } from "react-native"
 import { useTailwind } from "tailwind-rn/dist"
 import { HomeScreenNavigateProp } from "../../App"
 import { Crew } from "../components/Crew"
+import { TournamentPlaceholder } from "../components/placeholders/TournamentPlaceholder"
 import { Text } from "../components/Text"
 import { Tournament } from "../components/Tournament"
 import { useTournamentsQuery } from "../generated/graphql"
@@ -54,7 +55,7 @@ export const Home = () => {
                 onPress={async () => {
                   navigate('Tournament', { id: data?.tournaments?.edges[0]?.node?.id })
                 }}
-              /> 
+              />
             </View>
           )}
 

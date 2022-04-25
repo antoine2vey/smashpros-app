@@ -1,25 +1,29 @@
 import { gql, useQuery } from '@apollo/client'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useRoute } from '@react-navigation/native'
-import { StatusBar } from "expo-status-bar"
+import { StatusBar, StatusBarStyle } from "expo-status-bar"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from 'react-i18next'
-import { ScrollView, Image, TouchableOpacity, useWindowDimensions, View, SafeAreaView, useColorScheme, NativeScrollEvent, NativeSyntheticEvent, FlatList } from "react-native"
+import { ScrollView, Image, TouchableOpacity, useWindowDimensions, View, NativeScrollEvent, NativeSyntheticEvent, FlatList } from "react-native"
 import { useTailwind } from 'tailwind-rn/dist'
 import { RootRouteProps } from '../../App'
 import { CharacterPicker } from "../components/CharacterPicker"
 import { Text } from "../components/Text"
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import { Character, useSingleTournamentQuery } from '../generated/graphql'
+import { ProgressiveImage } from '../components/ProgressiveImage'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useScheme } from '../hooks/useScheme'
 
 MapboxGL.setAccessToken('pk.eyJ1IjoiYW50b2luZWRldmV5IiwiYSI6ImNsMmIxZTh0dDA1MG0zYnJ6OGNndG1ndjIifQ.diM8ot5GIU7JF0XTWqjxAg');
 
 export const Tournaments = () => {
   const { t } = useTranslation()
   const tailwind = useTailwind()
-  const defaultScheme = __DEV__ ? 'light' : useColorScheme()
+  const { top } = useSafeAreaInsets()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
-  const [scheme, setScheme] = useState(defaultScheme)
+  const {scheme} = useScheme()
+  const [statusBarScheme, setStatusBarScheme] = useState<StatusBarStyle>()
   const [characters, setCharacters] = useState<Character[]>([])
   const { params } = useRoute<RootRouteProps<'Tournament'>>()
   const { width, height } = useWindowDimensions()
@@ -30,7 +34,7 @@ export const Tournaments = () => {
   })
 
   useEffect(() => {
-    setScheme('light')
+    setStatusBarScheme('light')
   }, [])
 
   const onValidation = useCallback(() => {
@@ -43,27 +47,27 @@ export const Tournaments = () => {
   }, [characters])
 
   const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offset = height / 6 - 25
+    const offset = height / 6 - Math.max(top, 10)
     const { y } = e.nativeEvent.contentOffset
 
-    if (defaultScheme === 'dark') {
-      setScheme('light')
+    if (scheme === 'dark') {
+      setStatusBarScheme('light')
     } else {
       if (y > offset) {
-        setScheme('dark')
+        setStatusBarScheme('dark')
       } else {
-        setScheme('light')
+        setStatusBarScheme('light')
       }
     }
-  }, [])
+  }, [scheme])
 
   console.log(data)
 
   return (
     <View style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
-      <StatusBar style={scheme || 'light'} /> 
+      <StatusBar style={statusBarScheme} /> 
       {data?.tournament && (
-        <Image
+        <ProgressiveImage
           source={{ uri: data?.tournament.images[1] }}
           style={[
             {
@@ -95,7 +99,7 @@ export const Tournaments = () => {
           <>
             <View style={tailwind('flex-row items-center')}>
               <View style={tailwind('mr-2')}>
-                <Image
+                <ProgressiveImage
                   source={{ uri: data?.tournament?.images[0] }}
                   style={tailwind('w-28 h-28 rounded-xl')}
                   resizeMode="cover"
@@ -118,7 +122,7 @@ export const Tournaments = () => {
                   pitchEnabled={false}
                   compassEnabled={false}
                   styleURL={
-                    defaultScheme === 'dark'
+                    scheme === 'dark'
                     ? "mapbox://styles/antoinedevey/cl2b1uh2w001o14pfusk6kmih"
                     : "mapbox://styles/antoinedevey/cl2b1vgny002614msvph72h6w"
                   }
@@ -136,7 +140,7 @@ export const Tournaments = () => {
                         id="marker"
                         coordinate={[data.tournament.lng!, data.tournament.lat!]}
                       >
-                        <Image source={require('../assets/pin.png')} style={{ marginTop: -45 }} />
+                        <ProgressiveImage source={require('../assets/pin.png')} style={{ marginTop: -45 }} />
                       </MapboxGL.MarkerView>
                     </>
                   )}
@@ -164,7 +168,7 @@ export const Tournaments = () => {
         }}
         renderItem={({ item: edge }) => (
           <View style={tailwind('flex-row flex p-1 mt-2 bg-white-300 dark:bg-black-300 rounded-xl')}>
-            <Image source={{ uri: edge?.node?.profile_picture! }} style={tailwind('w-16 h-16 rounded-xl')} />
+            <ProgressiveImage source={{ uri: edge?.node?.profile_picture! }} style={tailwind('w-16 h-16 rounded-xl')} />
             <View style={tailwind('ml-2')}>
               <Text style={tailwind('font-semibold')}>
                 {edge?.node?.crew && (

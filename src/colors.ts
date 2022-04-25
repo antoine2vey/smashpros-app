@@ -9,5 +9,6 @@ export const colors = {
   fullwhite: '#FFFFFF',
   grey: '#969696',
   lightgrey: '#E3E3E3',
+  placeholder: '#EDEDED',
   red: '#F44336'
 }
