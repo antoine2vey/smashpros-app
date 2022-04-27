@@ -47,6 +47,7 @@ export type Character = {
 
 export type Crew = {
   __typename?: 'Crew';
+  admin: User;
   banner: Scalars['String'];
   icon: Scalars['String'];
   id: Scalars['ID'];
@@ -271,6 +272,11 @@ export type Query = {
 };
 
 
+export type QueryCrewArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
 export type QueryMatchesArgs = {
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
@@ -446,7 +452,6 @@ export type UserRegisterPayload = {
   email: Scalars['String'];
   password: Scalars['String'];
   profilePicture: Scalars['Upload'];
-  profilePictureUrl?: InputMaybe<Scalars['String']>;
   smashGGPlayerId?: InputMaybe<Scalars['Int']>;
   smashGGSlug?: InputMaybe<Scalars['String']>;
   smashGGUserId?: InputMaybe<Scalars['Int']>;
@@ -507,7 +512,7 @@ export type ProfileQuery = { __typename?: 'Query', user?: { __typename?: 'User',
 export type HeaderQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type HeaderQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, tag: string, crew?: { __typename?: 'Crew', id: string, prefix: string } | null } | null };
+export type HeaderQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, crew?: { __typename?: 'Crew', id: string, prefix: string } | null } | null };
 
 export type UserBaseFragment = { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> };
 
@@ -515,6 +520,13 @@ export type CharactersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CharactersQuery = { __typename?: 'Query', characters?: Array<{ __typename?: 'Character', id: string, name: string, picture: string } | null> | null };
+
+export type CrewQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type CrewQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, roles: Array<{ __typename?: 'Role', id: string, name: RoleEnum }>, crew?: { __typename?: 'Crew', id: string } | null } | null, crew?: { __typename?: 'Crew', id: string, banner: string, icon: string, name: string, prefix: string, admin: { __typename?: 'User', id: string }, members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> }>, waiting_members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> }> } | null };
 
 export type TournamentsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -754,6 +766,7 @@ export const HeaderDocument = gql`
   user {
     id
     tag
+    profile_picture
     crew {
       id
       prefix
@@ -824,6 +837,78 @@ export function useCharactersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type CharactersQueryHookResult = ReturnType<typeof useCharactersQuery>;
 export type CharactersLazyQueryHookResult = ReturnType<typeof useCharactersLazyQuery>;
 export type CharactersQueryResult = Apollo.QueryResult<CharactersQuery, CharactersQueryVariables>;
+export const CrewDocument = gql`
+    query Crew($id: ID) {
+  user {
+    id
+    roles {
+      id
+      name
+    }
+    crew {
+      id
+    }
+  }
+  crew(id: $id) {
+    id
+    banner
+    icon
+    name
+    prefix
+    admin {
+      id
+    }
+    members {
+      id
+      profile_picture
+      tag
+      characters {
+        id
+        name
+        picture
+      }
+    }
+    waiting_members {
+      id
+      profile_picture
+      tag
+      characters {
+        id
+        name
+        picture
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useCrewQuery__
+ *
+ * To run a query within a React component, call `useCrewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCrewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCrewQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCrewQuery(baseOptions?: Apollo.QueryHookOptions<CrewQuery, CrewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CrewQuery, CrewQueryVariables>(CrewDocument, options);
+      }
+export function useCrewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CrewQuery, CrewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CrewQuery, CrewQueryVariables>(CrewDocument, options);
+        }
+export type CrewQueryHookResult = ReturnType<typeof useCrewQuery>;
+export type CrewLazyQueryHookResult = ReturnType<typeof useCrewLazyQuery>;
+export type CrewQueryResult = Apollo.QueryResult<CrewQuery, CrewQueryVariables>;
 export const TournamentsDocument = gql`
     query Tournaments($cursor: String) {
   tournaments(first: 10, after: $cursor) {

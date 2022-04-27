@@ -4,6 +4,8 @@ import Animated from "react-native-reanimated"
 import { useTailwind } from "tailwind-rn"
 import { Text } from "./Text"
 import { Ionicons } from '@expo/vector-icons'
+import { useScheme } from "../hooks/useScheme"
+import { colors } from "../colors"
 
 type Props = TextInputProps & {
   label: string
@@ -12,13 +14,14 @@ type Props = TextInputProps & {
 export const Input: React.FC<Props> = ({ label, secureTextEntry, ...props }) => {
   const [visible, setVisible] = useState(secureTextEntry)
   const tailwind = useTailwind()
+  const { scheme } = useScheme()
 
   return (
     <Animated.View style={tailwind('relative mb-2 rounded-md bg-grey-300 dark:bg-black-200')}>
       <TextInput
         autoCapitalize="none"
         autoCorrect={false}
-        style={tailwind('rounded-md p-2 pt-6 text-base font-bold text-black-300 dark:text-white-300')}
+        style={tailwind('rounded-md p-2 pt-6 text-base font-medium text-black-300 dark:text-white-300')}
         secureTextEntry={visible}
         {...props}
       />
@@ -26,7 +29,7 @@ export const Input: React.FC<Props> = ({ label, secureTextEntry, ...props }) => 
 
       {secureTextEntry && (
         <TouchableOpacity style={tailwind('absolute top-1/4 right-5')} onPress={() => setVisible(!visible)}>
-          <Ionicons name={visible ? 'eye-outline' : 'eye-off-outline'} size={24} />
+          <Ionicons name={visible ? 'eye-outline' : 'eye-off-outline'} size={24} color={scheme === 'dark' ? colors.white : colors.black} />
         </TouchableOpacity>
       )}
     </Animated.View>

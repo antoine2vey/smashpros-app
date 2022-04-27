@@ -11,7 +11,7 @@ export const DarkContext = createContext<{
 
 export const DarkContextProvider: React.FC<any> = ({ children }) => {
   const defaultScheme = useColorScheme()
-  const [scheme, setScheme] = useState<ColorSchemeName>(defaultScheme)
+  const [scheme, setScheme] = useState<ColorSchemeName>('dark')
 
   return (
     <DarkContext.Provider value={{ scheme, setScheme }}>

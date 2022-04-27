@@ -1,0 +1,42 @@
+query Crew ($id: ID) {
+  user {
+    id
+    roles {
+      id
+      name
+    }
+    crew {
+      id
+    }
+  }
+  crew(id: $id) {
+    id
+    banner
+    icon
+    name
+    prefix
+    admin {
+      id
+    }
+    members {
+      id
+      profile_picture
+      tag
+      characters {
+        id
+        name
+        picture
+      }
+    }
+    waiting_members {
+      id
+      profile_picture
+      tag
+      characters {
+        id
+        name
+        picture
+      }
+    }
+  }
+}

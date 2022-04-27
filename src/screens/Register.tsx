@@ -24,7 +24,7 @@ export const registerSchema = object({
   email: string().email().required(),
   password: string().required(),
   tag: string().nullable().required(),
-  profilePicture: string().notRequired(),
+  profilePicture: string().required(),
   characters: array().of(string()).min(1).required(),
   smashGGPlayerId: number().nullable().notRequired(),
   smashGGSlug: string().nullable().notRequired(),
@@ -35,7 +35,7 @@ interface FormValues {
   email: string
   password: string
   tag: string
-  profilePicture: string
+  profilePicture: string | null
   characters: string[]
   smashGGPlayerId?: number | null
   smashGGSlug?: string | null
@@ -43,7 +43,7 @@ interface FormValues {
 }
 
 export const Register = () => {
-  const {top} = useSafeAreaInsets()
+  const {top} = useSafeAreaInsets()
   const tailwind = useTailwind()
   const { navigate, goBack } = useNavigation()
   const { pick, image, generateFile, setImage } = usePicture()
@@ -52,17 +52,17 @@ export const Register = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const bottomSheetSGGRef = useRef<BottomSheetModal>(null)
   const [characters, setCharacters] = useState<Character[]>([])
-  const { handleBlur, handleChange, values, setFieldValue, submitForm, setFieldError, errors, isValid } = useFormik<FormValues>({
+  const { handleBlur, handleChange, values, setFieldValue, submitForm, setFieldError, errors } = useFormik<FormValues>({
     validationSchema: registerSchema,
     validateOnMount: true,
     initialValues: {
       email: '',
       password: '',
       tag: '',
-      profilePicture: '',
+      profilePicture: null,
       characters: [],
       smashGGPlayerId: null,
-      smashGGSlug: null,
+      smashGGSlug: '',
       smashGGUserId: null
     },
     onSubmit: async values => {
@@ -110,10 +110,10 @@ export const Register = () => {
           setFieldValue('smashGGPlayerId', smashGGPlayerId)
           setFieldValue('smashGGUserId', smashGGUserId)
           
-          // if (profilePicture) {
-          //   setFieldValue('profilePicture', profilePicture)
-          //   setImage(profilePicture)
-          // }
+          if (profilePicture) {
+            setFieldValue('profilePicture', null)
+            setImage(profilePicture)
+          }
         }
       } catch (error) {
         const err = error as ApolloError
@@ -205,7 +205,7 @@ export const Register = () => {
         <Button
           text="Validate"
           loading={loading}
-          disabled={!isValid || loading}
+          // disabled={!isValid || loading}
           onPress={submitForm}
         />
       </View>

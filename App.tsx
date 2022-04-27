@@ -26,6 +26,7 @@ import updateLocale from 'dayjs/plugin/updateLocale'
 import dayjs from 'dayjs';
 import { DarkContext, DarkContextProvider } from './src/contexts/DarkContext';
 import { useScheme } from './src/hooks/useScheme';
+import { CrewScreen } from './src/screens/CrewScreen';
 
 dayjs.extend(updateLocale)
 dayjs.extend(relativeTime)
@@ -37,6 +38,9 @@ LogBox.ignoreLogs([
 
 type HomeStackParamList = {
   HomeStack: undefined
+  Crew: undefined | {
+    id: string | undefined
+  }
   Tournament: {
     id: string | undefined
   }
@@ -106,14 +110,24 @@ const HomeStack = () => (
         component={Tournaments}
         options={{ headerShown: false }}
       />
-    </Stack.Group>
-    <Stack.Group screenOptions={{ presentation: 'modal' }}>
       <Stack.Screen
         name="UserProfile"
         component={UserProfile}  
-        options={{ headerShown: false }}
+        options={{
+          header: (props) => <Header {...props} />
+        }}
+      />
+      <Stack.Screen
+        name="Crew"
+        component={CrewScreen}  
+        options={{
+          headerShown: false
+        }}
       />
     </Stack.Group>
+    {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
+      
+    </Stack.Group> */}
   </Stack.Navigator>
 )
 

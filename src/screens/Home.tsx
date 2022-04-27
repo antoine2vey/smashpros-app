@@ -1,24 +1,44 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { ActivityIndicator, FlatList, ScrollView, View } from "react-native"
+import { ActivityIndicator, FlatList, RefreshControl, ScrollView, View } from "react-native"
 import { useTailwind } from "tailwind-rn/dist"
 import { HomeScreenNavigateProp } from "../../App"
+import { colors } from "../colors"
 import { Crew } from "../components/Crew"
-import { TournamentPlaceholder } from "../components/placeholders/TournamentPlaceholder"
 import { Text } from "../components/Text"
 import { Tournament } from "../components/Tournament"
 import { useTournamentsQuery } from "../generated/graphql"
+import { useScheme } from "../hooks/useScheme"
+
 
 export const Home = () => {
+  const [refreshing, setRefreshing] = useState(false)
   const { navigate } = useNavigation<HomeScreenNavigateProp>()
   const tailwind = useTailwind()
   const { t } = useTranslation()
-  const {data, error, loading, fetchMore} = useTournamentsQuery()
+  const { scheme } = useScheme()
+  const {data, error, loading, fetchMore, refetch, networkStatus} = useTournamentsQuery()
   const pageInfo = data?.tournaments?.pageInfo
+
 
   return (
     <FlatList
       style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={async () => {
+            setRefreshing(true)
+            await refetch()
+            setRefreshing(false)
+          }}
+          colors={[colors.white]}
+          tintColor={colors.white}
+          progressBackgroundColor={colors.white}
+        />
+      }
+      refreshing={false}
       contentContainerStyle={tailwind('p-2')}
       ListHeaderComponent={() => (
         <>
@@ -35,7 +55,12 @@ export const Home = () => {
           {!data?.crew && (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={tailwind('mb-5')}>
               {data?.crews?.map((crew) => (
-                <Crew key={crew?.id} crew={crew} />
+                <Crew
+                  key={crew?.id}
+                  image={crew?.icon}
+                  crew={crew}
+                  onPress={() => navigate('Crew', { id: crew?.id })}
+                />
               ))}
             </ScrollView>
           )}
@@ -73,7 +98,7 @@ export const Home = () => {
       )}
       onEndReachedThreshold={0.4}
       onEndReached={() => {
-        const {} = fetchMore({
+        fetchMore({
           variables: {
             cursor: pageInfo?.endCursor
           }

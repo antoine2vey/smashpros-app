@@ -45,7 +45,7 @@ export const CharacterPicker = forwardRef<BottomSheetModal, Props>(({ setCharact
 	return (
 		<BottomSheetModal
 			backgroundStyle={tailwind('bg-white-300 dark:bg-black-300')}
-			snapPoints={['50%', '80%']}
+			snapPoints={['60%']}
 			index={0}
 			ref={ref}
 			style={{

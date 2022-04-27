@@ -17,7 +17,7 @@ mutation register ($payload: UserRegisterPayload!) {
   }
 }
 
-query suggestedName($slug: String!) {
+query suggestedName ($slug: String!) {
   suggestedName(slug: $slug) {
       tag
       smashGGUserId
@@ -26,7 +26,7 @@ query suggestedName($slug: String!) {
   }
 }
 
-query profile($id: ID) {
+query profile ($id: ID) {
   user(id: $id) {
     ...UserBase
     twitch_username
@@ -67,6 +67,7 @@ query header {
   user {
     id
     tag
+    profile_picture
     crew {
       id
       prefix

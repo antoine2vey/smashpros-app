@@ -10,32 +10,30 @@ import { RootRouteProps } from '../../App'
 import { CharacterPicker } from "../components/CharacterPicker"
 import { Text } from "../components/Text"
 import MapboxGL from '@react-native-mapbox-gl/maps'
-import { Character, useSingleTournamentQuery } from '../generated/graphql'
+import { Character, User, UserEdge, useSingleTournamentQuery } from '../generated/graphql'
 import { ProgressiveImage } from '../components/ProgressiveImage'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useScheme } from '../hooks/useScheme'
+import { Participant } from '../components/Participant'
+import { Placeholder, TextPlaceholder } from '../components/placeholders/GenericPlaceholders'
+import { ParticipantPlaceholder } from '../components/placeholders/ParticipantPlaceholder'
+import { HeroScroll } from '../components/HeroScroll'
 
 MapboxGL.setAccessToken('pk.eyJ1IjoiYW50b2luZWRldmV5IiwiYSI6ImNsMmIxZTh0dDA1MG0zYnJ6OGNndG1ndjIifQ.diM8ot5GIU7JF0XTWqjxAg');
 
 export const Tournaments = () => {
   const { t } = useTranslation()
   const tailwind = useTailwind()
-  const { top } = useSafeAreaInsets()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
-  const {scheme} = useScheme()
-  const [statusBarScheme, setStatusBarScheme] = useState<StatusBarStyle>()
   const [characters, setCharacters] = useState<Character[]>([])
   const { params } = useRoute<RootRouteProps<'Tournament'>>()
+  const {scheme} = useScheme()
   const { width, height } = useWindowDimensions()
   const { data, loading, error, fetchMore, refetch } = useSingleTournamentQuery({
     variables: {
       id: params.id!
     }
   })
-
-  useEffect(() => {
-    setStatusBarScheme('light')
-  }, [])
 
   const onValidation = useCallback(() => {
     bottomSheetModalRef.current?.close()
@@ -46,55 +44,12 @@ export const Tournaments = () => {
     })
   }, [characters])
 
-  const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offset = height / 6 - Math.max(top, 10)
-    const { y } = e.nativeEvent.contentOffset
-
-    if (scheme === 'dark') {
-      setStatusBarScheme('light')
-    } else {
-      if (y > offset) {
-        setStatusBarScheme('dark')
-      } else {
-        setStatusBarScheme('light')
-      }
-    }
-  }, [scheme])
-
   console.log(data)
 
   return (
-    <View style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
-      <StatusBar style={statusBarScheme} /> 
-      {data?.tournament && (
-        <ProgressiveImage
-          source={{ uri: data?.tournament.images[1] }}
-          style={[
-            {
-              width,
-              height: height / 3
-            },
-            tailwind('absolute top-0 left-0')
-          ]}
-        />
-      )}
-      <View style={tailwind('bg-black-400 opacity-50 absolute inset-0')} /> 
-      <View
-        style={[
-          { height: height / 3 },
-          tailwind('bg-white-300 dark:bg-black-300 absolute bottom-0 left-0 right-0')
-        ]}
-      />
-        
-      <FlatList
-        scrollEventThrottle={16}
-        onScroll={onScroll}
-        contentContainerStyle={[
-          {
-            marginTop: height / 6
-          },
-          tailwind('p-3 bg-white-300 dark:bg-black-300 rounded-t-3xl')
-        ]}
+    <>
+      <HeroScroll<UserEdge>
+        background={{ uri: data?.tournament?.images[1] }}
         ListHeaderComponent={(
           <>
             <View style={tailwind('flex-row items-center')}>
@@ -167,37 +122,15 @@ export const Tournaments = () => {
           })
         }}
         renderItem={({ item: edge }) => (
-          <View style={tailwind('flex-row flex p-1 mt-2 bg-white-300 dark:bg-black-300 rounded-xl')}>
-            <ProgressiveImage source={{ uri: edge?.node?.profile_picture! }} style={tailwind('w-16 h-16 rounded-xl')} />
-            <View style={tailwind('ml-2')}>
-              <Text style={tailwind('font-semibold')}>
-                {edge?.node?.crew && (
-                  <Text style={tailwind('font-bold text-green-300')}>{edge?.node?.crew.prefix} | </Text>
-                )}
-                {edge?.node?.tag}
-              </Text>
-              <View style={tailwind('flex-row mt-1')}>
-                {edge?.node?.characters.map(character => (
-                  <Image key={character.id} source={{ uri: character.picture }} resizeMode="center" style={tailwind('w-6 h-6 -ml-1')} />
-                ))}
-              </View>
-            </View>
-          </View>
+          <Participant participant={edge.node} />
         )}
-        // Sets padding
-        ListFooterComponent={<View />}
-        ListFooterComponentStyle={{
-          paddingBottom: height / 6
-        }}
       />
-
-      
       <CharacterPicker
         ref={bottomSheetModalRef}
         characters={characters}
         setCharacters={setCharacters}
         onValidation={onValidation}
       />
-    </View>
+    </>
   )
 }

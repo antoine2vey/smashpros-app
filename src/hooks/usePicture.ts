@@ -3,7 +3,7 @@ import { ReactNativeFile } from 'apollo-upload-client'
 import { useState } from 'react'
 
 export function usePicture() {
-  const [image, setImage] = useState<string>('')
+  const [image, setImage] = useState<string | null>('')
 
   const pick = async () => {
     // No permissions request is necessary for launching the image library
@@ -19,7 +19,11 @@ export function usePicture() {
     }
   }
 
-  const generateFile = (uri: string, name: string) => {
+  const generateFile = (uri: string | null, name: string) => {
+    if (!uri) {
+      return null
+    }
+
     return new ReactNativeFile({
       uri,
       type: 'image',

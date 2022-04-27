@@ -75,6 +75,7 @@ export const Tournament = ({
       <>
         <ProgressiveImage
           source={{ uri: tournament.images[0] }}
+          resizeMode="cover"
           style={
             tailwind(`
               rounded-xl
