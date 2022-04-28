@@ -44,8 +44,6 @@ export const Tournaments = () => {
     })
   }, [characters])
 
-  console.log(data)
-
   return (
     <>
       <HeroScroll<UserEdge>

@@ -63,7 +63,7 @@ export const UserProfile = () => {
       <View style={tailwind('')}>
         {data?.user?.crew && (
           <View style={tailwind('flex-1')}>
-            <Text style={tailwind('text-xl mt-5 font-bold')}>Crew</Text>
+            <Text style={tailwind('text-xl mt-5 font-bold mb-2')}>Crew</Text>
             <Crew
               crew={data.user.crew!}
               full
@@ -75,7 +75,11 @@ export const UserProfile = () => {
 
       <Text style={tailwind('text-xl mt-5 font-bold')}>Next tournaments</Text>
       {data?.user?.tournaments.length! > 0 ? (
-        <ScrollView horizontal style={tailwind('-mx-5 pl-5 flex-row flex-wrap mt-2')}>
+        <ScrollView
+          horizontal
+          style={tailwind('-mx-5 pl-5 flex-row flex-wrap mt-2')}
+          contentContainerStyle={tailwind('pr-5')}
+        >
           {data?.user?.tournaments.map(tournament => (
             <TouchableOpacity
               key={tournament.id}
@@ -84,9 +88,9 @@ export const UserProfile = () => {
               }}
               activeOpacity={0.9}
             >
-              <ProgressiveImageBackground
-                source={{ uri: tournament.images[1] }}
-                containerStyle={tailwind('h-48 w-28 rounded-xl mr-2')}
+              <ProgressiveImage
+                source={{ uri: tournament.images[1] || tournament.images[0] }}
+                style={tailwind('h-48 w-28 rounded-xl mr-2 bg-white-300 dark:bg-black-300')}
                 resizeMode="cover"
               />
             </TouchableOpacity>
@@ -98,22 +102,26 @@ export const UserProfile = () => {
 
       <Text style={tailwind('text-xl mt-5 font-bold')}>Favorited tournaments</Text>
       {data?.user?.favorited_tournaments.length! > 0 ? (
-        <ScrollView horizontal style={tailwind('-mx-5 pl-5 flex-row flex-wrap mt-2')}>
-            {data?.user?.favorited_tournaments.map(tournament => (
-              <TouchableOpacity
-                key={tournament.id}
-                onPress={() => {
-                  navigate('Tournament', { id: tournament.id })
-                }}
-                activeOpacity={0.9}
-              >
-                <ProgressiveImageBackground
-                  source={{ uri: tournament.images[1] }}
-                  containerStyle={tailwind('h-48 w-28 rounded-xl mr-2')}
-                  resizeMode="cover"
-                />
-              </TouchableOpacity>
-            ))}
+        <ScrollView
+          horizontal
+          style={tailwind('-mx-5 pl-5 flex-row flex-wrap mt-2')}
+          contentContainerStyle={tailwind('pr-5')}
+        >
+          {data?.user?.favorited_tournaments.map(tournament => (
+            <TouchableOpacity
+              key={tournament.id}
+              onPress={() => {
+                navigate('Tournament', { id: tournament.id })
+              }}
+              activeOpacity={0.9}
+            >
+              <ProgressiveImage
+                source={{ uri: tournament.images[1] || tournament.images[0] }}
+                style={tailwind('h-48 w-28 rounded-xl mr-2 bg-white-300 dark:bg-black-300')}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
+          ))}
         </ScrollView>
       ) : (
         <Text style={tailwind('text-grey-400')}>Aucun tournoi favori</Text>

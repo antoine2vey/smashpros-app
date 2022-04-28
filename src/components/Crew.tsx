@@ -23,7 +23,7 @@ export const Crew = ({ crew, full, image, ...props }: Props) => {
       ]}
     >
       <ProgressiveImage
-        source={{ uri: image ?? crew.banner }}
+        source={{ uri: image ?? crew.banner ?? crew.icon }}
         style={[
           tailwind('w-24 h-40 rounded-lg bg-white-400 dark:bg-black-400'),
           full ? tailwind('w-full') : null

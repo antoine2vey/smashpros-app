@@ -10,33 +10,56 @@ query Crew ($id: ID) {
     }
   }
   crew(id: $id) {
+    ...BaseCrew
+  }
+}
+
+mutation kickMember ($id: ID!) {
+  kickMember (id: $id) {
+    ...CrewMember
+  }
+}
+
+mutation joinCrew ($id: ID!) {
+  joinCrew (id: $id) {
+    ...BaseCrew
+  }
+}
+
+mutation updateMember ($action: CrewUpdateActionEnum!, $id: ID!) {
+  updateMember (action: $action, id: $id) {
+    ...BaseCrew
+  }
+}
+
+fragment BaseCrew on Crew {
+  id
+  banner
+  icon
+  name
+  prefix
+  admin {
+    ...CrewMember
+  }
+  members {
+    ...CrewMember
+  }
+  waiting_members {
+    ...CrewMember
+  }
+}
+
+fragment CrewMember on User {
+  id
+  profile_picture
+  tag
+  characters {
     id
-    banner
-    icon
     name
+    picture
+  }
+  crew {
+    id
     prefix
-    admin {
-      id
-    }
-    members {
-      id
-      profile_picture
-      tag
-      characters {
-        id
-        name
-        picture
-      }
-    }
-    waiting_members {
-      id
-      profile_picture
-      tag
-      characters {
-        id
-        name
-        picture
-      }
-    }
   }
 }

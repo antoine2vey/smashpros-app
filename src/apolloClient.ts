@@ -62,5 +62,6 @@ export const client = new ApolloClient({
     authLink,
     createUploadLink({ uri })
   ]),
-  cache: cache
+  cache: cache,
+  connectToDevTools: true
 })

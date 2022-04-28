@@ -29,11 +29,11 @@ export type AuthPayload = {
 
 export type Battle = {
   __typename?: 'Battle';
-  adversary: User;
-  adversary_character: Character;
+  adversary?: Maybe<User>;
+  adversary_character?: Maybe<Character>;
   id: Scalars['ID'];
-  initiator: User;
-  initiator_character: Character;
+  initiator?: Maybe<User>;
+  initiator_character?: Maybe<Character>;
   winner?: Maybe<User>;
 };
 
@@ -82,12 +82,12 @@ export type Event = {
 
 export type Match = {
   __typename?: 'Match';
-  adversary: User;
+  adversary?: Maybe<User>;
   adversary_wins: Scalars['Int'];
   amount?: Maybe<Scalars['Int']>;
   battles: Array<Battle>;
   id: Scalars['ID'];
-  initiator: User;
+  initiator?: Maybe<User>;
   intiator_wins: Scalars['Int'];
   is_moneymatch: Scalars['Boolean'];
   state: MatchState;
@@ -124,7 +124,7 @@ export type Mutation = {
   createCrew?: Maybe<Crew>;
   favoriteTournament?: Maybe<Scalars['Boolean']>;
   joinCrew?: Maybe<Crew>;
-  kickMember?: Maybe<Crew>;
+  kickMember?: Maybe<User>;
   login?: Maybe<AuthPayload>;
   participateTournament?: Maybe<Tournament>;
   passwordReset?: Maybe<Scalars['Boolean']>;
@@ -526,7 +526,33 @@ export type CrewQueryVariables = Exact<{
 }>;
 
 
-export type CrewQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, roles: Array<{ __typename?: 'Role', id: string, name: RoleEnum }>, crew?: { __typename?: 'Crew', id: string } | null } | null, crew?: { __typename?: 'Crew', id: string, banner: string, icon: string, name: string, prefix: string, admin: { __typename?: 'User', id: string }, members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> }>, waiting_members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> }> } | null };
+export type CrewQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, roles: Array<{ __typename?: 'Role', id: string, name: RoleEnum }>, crew?: { __typename?: 'Crew', id: string } | null } | null, crew?: { __typename?: 'Crew', id: string, banner: string, icon: string, name: string, prefix: string, admin: { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }, members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }>, waiting_members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }> } | null };
+
+export type KickMemberMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type KickMemberMutation = { __typename?: 'Mutation', kickMember?: { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null } | null };
+
+export type JoinCrewMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type JoinCrewMutation = { __typename?: 'Mutation', joinCrew?: { __typename?: 'Crew', id: string, banner: string, icon: string, name: string, prefix: string, admin: { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }, members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }>, waiting_members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }> } | null };
+
+export type UpdateMemberMutationVariables = Exact<{
+  action: CrewUpdateActionEnum;
+  id: Scalars['ID'];
+}>;
+
+
+export type UpdateMemberMutation = { __typename?: 'Mutation', updateMember?: { __typename?: 'Crew', id: string, banner: string, icon: string, name: string, prefix: string, admin: { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }, members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }>, waiting_members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }> } | null };
+
+export type BaseCrewFragment = { __typename?: 'Crew', id: string, banner: string, icon: string, name: string, prefix: string, admin: { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }, members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }>, waiting_members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }> };
+
+export type CrewMemberFragment = { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null };
 
 export type TournamentsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -556,6 +582,40 @@ export const UserBaseFragmentDoc = gql`
   }
 }
     `;
+export const CrewMemberFragmentDoc = gql`
+    fragment CrewMember on User {
+  id
+  profile_picture
+  tag
+  characters {
+    id
+    name
+    picture
+  }
+  crew {
+    id
+    prefix
+  }
+}
+    `;
+export const BaseCrewFragmentDoc = gql`
+    fragment BaseCrew on Crew {
+  id
+  banner
+  icon
+  name
+  prefix
+  admin {
+    ...CrewMember
+  }
+  members {
+    ...CrewMember
+  }
+  waiting_members {
+    ...CrewMember
+  }
+}
+    ${CrewMemberFragmentDoc}`;
 export const RefreshDocument = gql`
     mutation refresh($refreshToken: String!) {
   refresh(refreshToken: $refreshToken) {
@@ -850,37 +910,10 @@ export const CrewDocument = gql`
     }
   }
   crew(id: $id) {
-    id
-    banner
-    icon
-    name
-    prefix
-    admin {
-      id
-    }
-    members {
-      id
-      profile_picture
-      tag
-      characters {
-        id
-        name
-        picture
-      }
-    }
-    waiting_members {
-      id
-      profile_picture
-      tag
-      characters {
-        id
-        name
-        picture
-      }
-    }
+    ...BaseCrew
   }
 }
-    `;
+    ${BaseCrewFragmentDoc}`;
 
 /**
  * __useCrewQuery__
@@ -909,6 +942,106 @@ export function useCrewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CrewQ
 export type CrewQueryHookResult = ReturnType<typeof useCrewQuery>;
 export type CrewLazyQueryHookResult = ReturnType<typeof useCrewLazyQuery>;
 export type CrewQueryResult = Apollo.QueryResult<CrewQuery, CrewQueryVariables>;
+export const KickMemberDocument = gql`
+    mutation kickMember($id: ID!) {
+  kickMember(id: $id) {
+    ...CrewMember
+  }
+}
+    ${CrewMemberFragmentDoc}`;
+export type KickMemberMutationFn = Apollo.MutationFunction<KickMemberMutation, KickMemberMutationVariables>;
+
+/**
+ * __useKickMemberMutation__
+ *
+ * To run a mutation, you first call `useKickMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useKickMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [kickMemberMutation, { data, loading, error }] = useKickMemberMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useKickMemberMutation(baseOptions?: Apollo.MutationHookOptions<KickMemberMutation, KickMemberMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<KickMemberMutation, KickMemberMutationVariables>(KickMemberDocument, options);
+      }
+export type KickMemberMutationHookResult = ReturnType<typeof useKickMemberMutation>;
+export type KickMemberMutationResult = Apollo.MutationResult<KickMemberMutation>;
+export type KickMemberMutationOptions = Apollo.BaseMutationOptions<KickMemberMutation, KickMemberMutationVariables>;
+export const JoinCrewDocument = gql`
+    mutation joinCrew($id: ID!) {
+  joinCrew(id: $id) {
+    ...BaseCrew
+  }
+}
+    ${BaseCrewFragmentDoc}`;
+export type JoinCrewMutationFn = Apollo.MutationFunction<JoinCrewMutation, JoinCrewMutationVariables>;
+
+/**
+ * __useJoinCrewMutation__
+ *
+ * To run a mutation, you first call `useJoinCrewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useJoinCrewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [joinCrewMutation, { data, loading, error }] = useJoinCrewMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useJoinCrewMutation(baseOptions?: Apollo.MutationHookOptions<JoinCrewMutation, JoinCrewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<JoinCrewMutation, JoinCrewMutationVariables>(JoinCrewDocument, options);
+      }
+export type JoinCrewMutationHookResult = ReturnType<typeof useJoinCrewMutation>;
+export type JoinCrewMutationResult = Apollo.MutationResult<JoinCrewMutation>;
+export type JoinCrewMutationOptions = Apollo.BaseMutationOptions<JoinCrewMutation, JoinCrewMutationVariables>;
+export const UpdateMemberDocument = gql`
+    mutation updateMember($action: CrewUpdateActionEnum!, $id: ID!) {
+  updateMember(action: $action, id: $id) {
+    ...BaseCrew
+  }
+}
+    ${BaseCrewFragmentDoc}`;
+export type UpdateMemberMutationFn = Apollo.MutationFunction<UpdateMemberMutation, UpdateMemberMutationVariables>;
+
+/**
+ * __useUpdateMemberMutation__
+ *
+ * To run a mutation, you first call `useUpdateMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMemberMutation, { data, loading, error }] = useUpdateMemberMutation({
+ *   variables: {
+ *      action: // value for 'action'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateMemberMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMemberMutation, UpdateMemberMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMemberMutation, UpdateMemberMutationVariables>(UpdateMemberDocument, options);
+      }
+export type UpdateMemberMutationHookResult = ReturnType<typeof useUpdateMemberMutation>;
+export type UpdateMemberMutationResult = Apollo.MutationResult<UpdateMemberMutation>;
+export type UpdateMemberMutationOptions = Apollo.BaseMutationOptions<UpdateMemberMutation, UpdateMemberMutationVariables>;
 export const TournamentsDocument = gql`
     query Tournaments($cursor: String) {
   tournaments(first: 10, after: $cursor) {

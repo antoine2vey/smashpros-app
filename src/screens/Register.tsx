@@ -5,7 +5,7 @@ import { Text } from "../components/Text";
 import { usePicture } from "../hooks/usePicture";
 import { useFormik } from 'formik';
 import { useEffect, useRef, useState } from "react";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { CharacterPicker } from "../components/CharacterPicker"
 import { CharacterIcon } from "../components/CharacterIcon";
 import { Input } from "../components/Input";
@@ -219,10 +219,15 @@ export const Register = () => {
 
       <BottomSheetModal
         backgroundStyle={tailwind('bg-white-300 dark:bg-black-300')}
-        backdropComponent={Backdrop}
-        snapPoints={['1%', '50%']}
+        backdropComponent={(props) => (
+          <BottomSheetBackdrop
+            disappearsOnIndex={-1}
+            appearsOnIndex={0}
+            {...props}
+          />
+        )}
+        snapPoints={['50%']}
         ref={bottomSheetSGGRef}
-        index={1}
       >
         <View style={tailwind('p-6')}>
           <Text style={tailwind('text-3xl font-bold')}>Link your smash.gg</Text>
