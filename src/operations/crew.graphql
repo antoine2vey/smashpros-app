@@ -14,20 +14,32 @@ query Crew ($id: ID) {
   }
 }
 
-mutation kickMember ($id: ID!) {
+mutation KickMember ($id: ID!) {
   kickMember (id: $id) {
     ...CrewMember
   }
 }
 
-mutation joinCrew ($id: ID!) {
+mutation JoinCrew ($id: ID!) {
   joinCrew (id: $id) {
     ...BaseCrew
   }
 }
 
-mutation updateMember ($action: CrewUpdateActionEnum!, $id: ID!) {
+mutation UpdateMember ($action: CrewUpdateActionEnum!, $id: ID!) {
   updateMember (action: $action, id: $id) {
+    ...BaseCrew
+  }
+}
+
+mutation TransferCrewOwnership ($to: ID!) {
+  transferCrewOwnership(to: $to) {
+    ...BaseCrew
+  }
+}
+
+mutation LeaveCrew {
+  leaveCrew {
     ...BaseCrew
   }
 }

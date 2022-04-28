@@ -1,12 +1,12 @@
 import { gql, useQuery } from '@apollo/client'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import { useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { StatusBar, StatusBarStyle } from "expo-status-bar"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from 'react-i18next'
 import { ScrollView, Image, TouchableOpacity, useWindowDimensions, View, NativeScrollEvent, NativeSyntheticEvent, FlatList } from "react-native"
 import { useTailwind } from 'tailwind-rn/dist'
-import { RootRouteProps } from '../../App'
+import { HomeScreenNavigateProp, RootRouteProps } from '../../App'
 import { CharacterPicker } from "../components/CharacterPicker"
 import { Text } from "../components/Text"
 import MapboxGL from '@react-native-mapbox-gl/maps'
@@ -28,6 +28,7 @@ export const Tournaments = () => {
   const [characters, setCharacters] = useState<Character[]>([])
   const { params } = useRoute<RootRouteProps<'Tournament'>>()
   const {scheme} = useScheme()
+  const { navigate } = useNavigation<HomeScreenNavigateProp>()
   const { width, height } = useWindowDimensions()
   const { data, loading, error, fetchMore, refetch } = useSingleTournamentQuery({
     variables: {
@@ -120,7 +121,10 @@ export const Tournaments = () => {
           })
         }}
         renderItem={({ item: edge }) => (
-          <Participant participant={edge.node} />
+          <Participant
+            participant={edge.node}
+            onPress={() => navigate('UserProfile', { id: edge.node?.id })}
+          />
         )}
       />
       <CharacterPicker

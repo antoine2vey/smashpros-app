@@ -4,17 +4,19 @@ import { CrewMemberFragment, CrewUpdateActionEnum } from "../generated/graphql"
 import { ProgressiveImage } from "./ProgressiveImage"
 import {Ionicons, MaterialCommunityIcons} from "@expo/vector-icons"
 import { Text } from "./Text"
-import { colors } from "../colors"
+import { useColors } from "../hooks/useColors"
 
 type Props = TouchableOpacityProps & {
   participant: CrewMemberFragment
   showAdminTools?: boolean
   kickMember?: () => void
   updateMember?: (choice: CrewUpdateActionEnum, id: string) => void
+  transferOwnership?: (to: string) => void
 }
 
-export const Participant: React.FC<Props> = ({ updateMember, kickMember, participant, showAdminTools, ...props }) => {
+export const Participant: React.FC<Props> = ({ transferOwnership, updateMember, kickMember, participant, showAdminTools, ...props }) => {
   const tailwind = useTailwind()
+  const { colors } = useColors()
 
   return (
     <TouchableOpacity
@@ -43,27 +45,42 @@ export const Participant: React.FC<Props> = ({ updateMember, kickMember, partici
       </View>
       <View style={tailwind('flex-row items-center')}>
         {showAdminTools && (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={kickMember}
-          >
-            <MaterialCommunityIcons name="account-remove" size={24} color={colors.red} />
-          </TouchableOpacity>
-        )}
-        {updateMember && (
           <>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => updateMember(CrewUpdateActionEnum.Accept, participant.id)}
-            >
-              <Ionicons name="checkmark" size={24} color={colors.green2} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => updateMember(CrewUpdateActionEnum.Deny, participant.id)}
-            >
-              <Ionicons name="close" size={24} color={colors.red} />
-            </TouchableOpacity>
+            {transferOwnership && (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => transferOwnership(participant.id)}
+                style={tailwind('mr-1')}
+              >
+                <MaterialCommunityIcons name="crown-outline" size={28} color={colors.gold} />
+              </TouchableOpacity>
+            )}
+
+            {kickMember && (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={kickMember}
+              >
+                <MaterialCommunityIcons name="account-remove" size={24} color={colors.red} />
+              </TouchableOpacity>
+            )}
+            
+            {updateMember && (
+              <>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => updateMember(CrewUpdateActionEnum.Accept, participant.id)}
+                >
+                  <Ionicons name="checkmark" size={24} color={colors.green2} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => updateMember(CrewUpdateActionEnum.Deny, participant.id)}
+                >
+                  <Ionicons name="close" size={24} color={colors.red} />
+                </TouchableOpacity>
+              </>
+            )}
           </>
         )}
       </View>

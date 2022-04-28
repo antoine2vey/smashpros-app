@@ -7,7 +7,7 @@ import { HeroScroll } from "../components/HeroScroll"
 import { Participant } from "../components/Participant"
 import { ProgressiveImage } from "../components/ProgressiveImage"
 import { Text } from "../components/Text"
-import { CrewMemberFragment, CrewUpdateActionEnum, RoleEnum, useCrewQuery, useJoinCrewMutation, useKickMemberMutation, useUpdateMemberMutation } from "../generated/graphql"
+import { CrewMemberFragment, CrewUpdateActionEnum, RoleEnum, useCrewQuery, useJoinCrewMutation, useKickMemberMutation, useLeaveCrewMutation, useTransferCrewOwnershipMutation, useUpdateMemberMutation } from "../generated/graphql"
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { gql, StoreObject } from "@apollo/client"
 import BottomSheet, { BottomSheetBackdrop, BottomSheetHandle, BottomSheetModal } from "@gorhom/bottom-sheet"
@@ -17,11 +17,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export const CrewScreen: React.FC = () => {
   const tailwind = useTailwind()
-  const { navigate } = useNavigation<HomeScreenNavigateProp>()
+  const { navigate, goBack } = useNavigation<HomeScreenNavigateProp>()
   const { params } = useRoute<RootRouteProps<'Crew'>>()
   const [kick] = useKickMemberMutation()
   const [join] = useJoinCrewMutation()
   const [update] = useUpdateMemberMutation()
+  const [leave] = useLeaveCrewMutation()
+  const [transferOwnership] = useTransferCrewOwnershipMutation()
   const bottomSheetRef = useRef<BottomSheetModal>(null)
   const snapPoints = useMemo(() => ["50%"], [])
   const { colors, shadow } = useColors()
@@ -58,10 +60,35 @@ export const CrewScreen: React.FC = () => {
     }
   }, [join, data])
 
-  const leaveCrew = useCallback(() => {
+  const leaveCrew = useCallback(async () => {
     if (data?.crew?.id) {
-      // mutation here
+      const user = data.user
+      await leave({
+        update(cache, { data }) {
+          if (data?.leaveCrew) {
+            cache.modify({
+              // Modify crew cache entry
+              id: cache.identify(user!),
+              fields: {
+                // Delete crew
+                crew() {
+                  return null
+                }
+              }
+            })
+          }
+        }
+      })
+      goBack()
     }
+  }, [leave, data])
+
+  const transferCrewOwnership = useCallback((to: string) => {
+    transferOwnership({
+      variables: {
+        to
+      }
+    })
   }, [data])
 
   const updateMember = useCallback((action: CrewUpdateActionEnum, id: string) => {
@@ -168,6 +195,7 @@ export const CrewScreen: React.FC = () => {
                       <Participant
                         key={member.id}
                         participant={member}
+                        showAdminTools={isCrewAdmin}
                         updateMember={updateMember}
                       />
                     ))}
@@ -181,7 +209,7 @@ export const CrewScreen: React.FC = () => {
             <View style={tailwind('mb-5')}>
               <View style={tailwind('flex-row items-center')}>
                 <Text style={tailwind('text-xl font-bold mr-1')}>Leader</Text>
-                <MaterialCommunityIcons name="crown-outline" color="#FFD700" size={28} />
+                <MaterialCommunityIcons name="crown-outline" color={colors.gold} size={28} />
               </View>
               <Participant
                 participant={data?.crew?.admin!}
@@ -198,6 +226,7 @@ export const CrewScreen: React.FC = () => {
             onPress={() => navigate('UserProfile', { id: item.id })}
             showAdminTools={isCrewAdmin}
             kickMember={() => kickMember(item)}
+            transferOwnership={transferCrewOwnership}
           />
         )}
       />

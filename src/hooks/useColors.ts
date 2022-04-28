@@ -16,7 +16,8 @@ export function useColors() {
     grey: '#969696',
     lightgrey: '#E3E3E3',
     placeholder: '#EDEDED',
-    red: '#F44336'
+    red: '#F44336',
+    gold: '#FFD700'
   }
   const shadow = useMemo(() => ({
     shadowColor: colors.black,

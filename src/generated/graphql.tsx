@@ -125,6 +125,7 @@ export type Mutation = {
   favoriteTournament?: Maybe<Scalars['Boolean']>;
   joinCrew?: Maybe<Crew>;
   kickMember?: Maybe<User>;
+  leaveCrew?: Maybe<Crew>;
   login?: Maybe<AuthPayload>;
   participateTournament?: Maybe<Tournament>;
   passwordReset?: Maybe<Scalars['Boolean']>;
@@ -132,6 +133,7 @@ export type Mutation = {
   register?: Maybe<User>;
   sendMatchInvite?: Maybe<Match>;
   synchronizeTournaments?: Maybe<Array<Maybe<Tournament>>>;
+  transferCrewOwnership?: Maybe<Crew>;
   updateMatchScore?: Maybe<Match>;
   updateMatchState?: Maybe<Match>;
   updateMember?: Maybe<Crew>;
@@ -207,6 +209,11 @@ export type MutationSendMatchInviteArgs = {
   isMoneymatch?: InputMaybe<Scalars['Boolean']>;
   to: Scalars['ID'];
   totalMatches: Scalars['Int'];
+};
+
+
+export type MutationTransferCrewOwnershipArgs = {
+  to: Scalars['ID'];
 };
 
 
@@ -549,6 +556,18 @@ export type UpdateMemberMutationVariables = Exact<{
 
 
 export type UpdateMemberMutation = { __typename?: 'Mutation', updateMember?: { __typename?: 'Crew', id: string, banner: string, icon: string, name: string, prefix: string, admin: { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }, members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }>, waiting_members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }> } | null };
+
+export type TransferCrewOwnershipMutationVariables = Exact<{
+  to: Scalars['ID'];
+}>;
+
+
+export type TransferCrewOwnershipMutation = { __typename?: 'Mutation', transferCrewOwnership?: { __typename?: 'Crew', id: string, banner: string, icon: string, name: string, prefix: string, admin: { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }, members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }>, waiting_members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }> } | null };
+
+export type LeaveCrewMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LeaveCrewMutation = { __typename?: 'Mutation', leaveCrew?: { __typename?: 'Crew', id: string, banner: string, icon: string, name: string, prefix: string, admin: { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }, members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }>, waiting_members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }> } | null };
 
 export type BaseCrewFragment = { __typename?: 'Crew', id: string, banner: string, icon: string, name: string, prefix: string, admin: { __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }, members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }>, waiting_members: Array<{ __typename?: 'User', id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }>, crew?: { __typename?: 'Crew', id: string, prefix: string } | null }> };
 
@@ -943,7 +962,7 @@ export type CrewQueryHookResult = ReturnType<typeof useCrewQuery>;
 export type CrewLazyQueryHookResult = ReturnType<typeof useCrewLazyQuery>;
 export type CrewQueryResult = Apollo.QueryResult<CrewQuery, CrewQueryVariables>;
 export const KickMemberDocument = gql`
-    mutation kickMember($id: ID!) {
+    mutation KickMember($id: ID!) {
   kickMember(id: $id) {
     ...CrewMember
   }
@@ -976,7 +995,7 @@ export type KickMemberMutationHookResult = ReturnType<typeof useKickMemberMutati
 export type KickMemberMutationResult = Apollo.MutationResult<KickMemberMutation>;
 export type KickMemberMutationOptions = Apollo.BaseMutationOptions<KickMemberMutation, KickMemberMutationVariables>;
 export const JoinCrewDocument = gql`
-    mutation joinCrew($id: ID!) {
+    mutation JoinCrew($id: ID!) {
   joinCrew(id: $id) {
     ...BaseCrew
   }
@@ -1009,7 +1028,7 @@ export type JoinCrewMutationHookResult = ReturnType<typeof useJoinCrewMutation>;
 export type JoinCrewMutationResult = Apollo.MutationResult<JoinCrewMutation>;
 export type JoinCrewMutationOptions = Apollo.BaseMutationOptions<JoinCrewMutation, JoinCrewMutationVariables>;
 export const UpdateMemberDocument = gql`
-    mutation updateMember($action: CrewUpdateActionEnum!, $id: ID!) {
+    mutation UpdateMember($action: CrewUpdateActionEnum!, $id: ID!) {
   updateMember(action: $action, id: $id) {
     ...BaseCrew
   }
@@ -1042,6 +1061,71 @@ export function useUpdateMemberMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateMemberMutationHookResult = ReturnType<typeof useUpdateMemberMutation>;
 export type UpdateMemberMutationResult = Apollo.MutationResult<UpdateMemberMutation>;
 export type UpdateMemberMutationOptions = Apollo.BaseMutationOptions<UpdateMemberMutation, UpdateMemberMutationVariables>;
+export const TransferCrewOwnershipDocument = gql`
+    mutation TransferCrewOwnership($to: ID!) {
+  transferCrewOwnership(to: $to) {
+    ...BaseCrew
+  }
+}
+    ${BaseCrewFragmentDoc}`;
+export type TransferCrewOwnershipMutationFn = Apollo.MutationFunction<TransferCrewOwnershipMutation, TransferCrewOwnershipMutationVariables>;
+
+/**
+ * __useTransferCrewOwnershipMutation__
+ *
+ * To run a mutation, you first call `useTransferCrewOwnershipMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTransferCrewOwnershipMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [transferCrewOwnershipMutation, { data, loading, error }] = useTransferCrewOwnershipMutation({
+ *   variables: {
+ *      to: // value for 'to'
+ *   },
+ * });
+ */
+export function useTransferCrewOwnershipMutation(baseOptions?: Apollo.MutationHookOptions<TransferCrewOwnershipMutation, TransferCrewOwnershipMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<TransferCrewOwnershipMutation, TransferCrewOwnershipMutationVariables>(TransferCrewOwnershipDocument, options);
+      }
+export type TransferCrewOwnershipMutationHookResult = ReturnType<typeof useTransferCrewOwnershipMutation>;
+export type TransferCrewOwnershipMutationResult = Apollo.MutationResult<TransferCrewOwnershipMutation>;
+export type TransferCrewOwnershipMutationOptions = Apollo.BaseMutationOptions<TransferCrewOwnershipMutation, TransferCrewOwnershipMutationVariables>;
+export const LeaveCrewDocument = gql`
+    mutation LeaveCrew {
+  leaveCrew {
+    ...BaseCrew
+  }
+}
+    ${BaseCrewFragmentDoc}`;
+export type LeaveCrewMutationFn = Apollo.MutationFunction<LeaveCrewMutation, LeaveCrewMutationVariables>;
+
+/**
+ * __useLeaveCrewMutation__
+ *
+ * To run a mutation, you first call `useLeaveCrewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLeaveCrewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [leaveCrewMutation, { data, loading, error }] = useLeaveCrewMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLeaveCrewMutation(baseOptions?: Apollo.MutationHookOptions<LeaveCrewMutation, LeaveCrewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LeaveCrewMutation, LeaveCrewMutationVariables>(LeaveCrewDocument, options);
+      }
+export type LeaveCrewMutationHookResult = ReturnType<typeof useLeaveCrewMutation>;
+export type LeaveCrewMutationResult = Apollo.MutationResult<LeaveCrewMutation>;
+export type LeaveCrewMutationOptions = Apollo.BaseMutationOptions<LeaveCrewMutation, LeaveCrewMutationVariables>;
 export const TournamentsDocument = gql`
     query Tournaments($cursor: String) {
   tournaments(first: 10, after: $cursor) {
