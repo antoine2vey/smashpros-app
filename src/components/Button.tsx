@@ -34,7 +34,7 @@ export const Button: React.FC<Props> = ({ loading, text, outlined, style, disabl
         style={[
           outlined
           ? tailwind('items-center p-3')
-          : tailwind('bg-green-300 justify-center items-center rounded-md h-14'),
+          : tailwind('bg-green-300 justify-center items-center rounded-md h-12'),
           style
         ]}
         {...props}
@@ -44,8 +44,8 @@ export const Button: React.FC<Props> = ({ loading, text, outlined, style, disabl
         ) : (
           <Text style={
             outlined
-            ? tailwind('text-green-300 font-bold')
-            : tailwind('text-white-400 font-medium')
+            ? tailwind('text-sm text-green-300 font-bold')
+            : tailwind('text-sm text-white-400 font-medium')
           }>{text}</Text>
         )}
       </TouchableOpacity>

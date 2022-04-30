@@ -52,7 +52,7 @@ export const Register = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const bottomSheetSGGRef = useRef<BottomSheetModal>(null)
   const [characters, setCharacters] = useState<Character[]>([])
-  const { handleBlur, handleChange, values, setFieldValue, submitForm, setFieldError, errors } = useFormik<FormValues>({
+  const { handleBlur, handleChange, values, setFieldValue, submitForm, setFieldError, errors, isValid } = useFormik<FormValues>({
     validationSchema: registerSchema,
     validateOnMount: true,
     initialValues: {
@@ -205,7 +205,7 @@ export const Register = () => {
         <Button
           text="Validate"
           loading={loading}
-          // disabled={!isValid || loading}
+          disabled={!isValid || loading}
           onPress={submitForm}
         />
       </View>
