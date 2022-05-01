@@ -1,5 +1,5 @@
 import { NativeStackHeaderProps } from '@react-navigation/native-stack'
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import {
   Image,
   ImageSourcePropType,
@@ -14,16 +14,7 @@ import { colors } from '../colors'
 import { useNavigation } from '@react-navigation/native'
 import { HomeScreenNavigateProp } from '../../App'
 import { useHeaderQuery } from '../generated/graphql'
-import { Ionicons } from '@expo/vector-icons'
-import { HeaderBackButton } from '@react-navigation/elements'
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withDecay,
-  withDelay,
-  withTiming
-} from 'react-native-reanimated'
+import { BackButton } from './BackButton'
 
 const profile = require('../assets/icon.png')
 
@@ -47,8 +38,7 @@ const Avatar = ({ size, url }: { size: number; url: ImageSourcePropType }) => (
 export const Header = ({}: NativeStackHeaderProps) => {
   const { top } = useSafeAreaInsets()
   const tailwind = useTailwind()
-  const { navigate, canGoBack, goBack } =
-    useNavigation<HomeScreenNavigateProp>()
+  const { navigate, canGoBack } = useNavigation<HomeScreenNavigateProp>()
   const { data } = useHeaderQuery()
   const canBack = useMemo(() => canGoBack(), [])
 
@@ -61,14 +51,10 @@ export const Header = ({}: NativeStackHeaderProps) => {
     >
       <View style={tailwind('flex-row justify-between')}>
         <View style={tailwind('flex-row items-center')}>
-          {canBack && (
-            <HeaderBackButton
-              labelVisible={false}
-              tintColor={colors.green2}
-              onPress={goBack}
-              style={tailwind('-my-4')}
-            />
-          )}
+          {canBack && <BackButton />}
+        </View>
+
+        <View style={canBack ? null : tailwind('flex-1')}>
           <TouchableOpacity
             style={tailwind('flex-row items-center')}
             onPress={() => navigate('UserProfile', { id: undefined })}

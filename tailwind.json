@@ -209,6 +209,11 @@
 			"marginBottom": 48
 		}
 	},
+	"mr-4": {
+		"style": {
+			"marginRight": 16
+		}
+	},
 	"flex": {
 		"style": {
 			"display": "flex"
