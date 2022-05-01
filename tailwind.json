@@ -83,6 +83,12 @@
 			"marginRight": -20
 		}
 	},
+	"mx-2": {
+		"style": {
+			"marginLeft": 8,
+			"marginRight": 8
+		}
+	},
 	"ml-2": {
 		"style": {
 			"marginLeft": 8

@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/native-stack'
 import { StatusBar } from 'expo-status-bar'
 import React, { useContext, useEffect, useState } from 'react'
-import { LogBox, Switch, useColorScheme, View } from 'react-native'
+import { Linking, LogBox, Switch, useColorScheme, View } from 'react-native'
 import {
   SafeAreaProvider,
   useSafeAreaInsets
@@ -82,6 +82,8 @@ export type HomeScreenNavigateProp =
 
 export type RootRouteProps<RouteName extends keyof HomeStackParamList> =
   RouteProp<HomeStackParamList, RouteName>
+export type LogoutRouteProps<RouteName extends keyof LogoutStackParamList> =
+  RouteProp<LogoutStackParamList, RouteName>
 
 const Stack = createNativeStackNavigator<HomeStackParamList>()
 const LogoutStackNavigator = createNativeStackNavigator<LogoutStackParamList>()
@@ -272,7 +274,20 @@ export function Root() {
 
   return (
     <View style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
-      <NavigationContainer>
+      <NavigationContainer
+        linking={{
+          prefixes: ['smashpros://'],
+          config: {
+            screens: {
+              ResetPassword: 'reset/:token'
+            }
+          },
+          async getInitialURL() {
+            console.log(await Linking.getInitialURL())
+            return Linking.getInitialURL()
+          }
+        }}
+      >
         <BottomSheetModalProvider>
           {loggedIn ? <Router /> : <LogoutStack />}
         </BottomSheetModalProvider>

@@ -26,21 +26,28 @@ export const ForgotPassword = () => {
   const { colors } = useColors()
   const { navigate } = useNavigation<LoginScreenNavigationProp>()
   const [askReset, { data, loading }] = useAskPasswordResetMutation()
-  const { handleBlur, handleChange, errors, touched, submitForm, isValid } =
-    useFormik<FormValues>({
-      validationSchema: forgotPasswordSchema,
-      initialValues: {
-        email: ''
-      },
-      validateOnMount: true,
-      onSubmit({ email }) {
-        askReset({
-          variables: {
-            email
-          }
-        })
-      }
-    })
+  const {
+    handleBlur,
+    handleChange,
+    errors,
+    touched,
+    submitForm,
+    isValid,
+    values
+  } = useFormik<FormValues>({
+    validationSchema: forgotPasswordSchema,
+    initialValues: {
+      email: ''
+    },
+    validateOnMount: true,
+    onSubmit({ email }) {
+      askReset({
+        variables: {
+          email
+        }
+      })
+    }
+  })
 
   useEffect(() => {
     if (data) {
@@ -65,6 +72,7 @@ export const ForgotPassword = () => {
           )}
           <Input
             onChangeText={handleChange('email')}
+            values={values.email}
             onBlur={handleBlur('email')}
             label="Email"
           />
