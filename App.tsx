@@ -281,10 +281,6 @@ export function Root() {
             screens: {
               ResetPassword: 'reset/:token'
             }
-          },
-          async getInitialURL() {
-            console.log(await Linking.getInitialURL())
-            return Linking.getInitialURL()
           }
         }}
       >

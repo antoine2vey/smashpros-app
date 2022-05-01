@@ -47,6 +47,11 @@
 			"right": 20
 		}
 	},
+	"z-10": {
+		"style": {
+			"zIndex": 10
+		}
+	},
 	"-mx-6": {
 		"style": {
 			"marginLeft": -24,
@@ -297,6 +302,11 @@
 	"h-4": {
 		"style": {
 			"height": 16
+		}
+	},
+	"h-14": {
+		"style": {
+			"height": 56
 		}
 	},
 	"w-7": {

@@ -27,9 +27,14 @@ export const Input: React.FC<Props> = ({
       <TextInput
         autoCapitalize="none"
         autoCorrect={false}
-        style={tailwind(
-          'rounded-md p-2 pt-6 text-base font-medium text-black-300 dark:text-white-300'
-        )}
+        style={[
+          tailwind(
+            'rounded-md p-2 pt-6 font-medium text-black-300 dark:text-white-300 z-10'
+          ),
+          {
+            fontSize: 16
+          }
+        ]}
         secureTextEntry={visible}
         {...props}
       />

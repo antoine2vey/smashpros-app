@@ -65,7 +65,7 @@ export const ResetPassword = () => {
   return (
     <SafeAreaView style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
       <View style={tailwind('p-2')}>
-        <BackButton />
+        <BackButton onPress={() => navigate('Login')} />
         <View style={tailwind('mt-5')}>
           <Text style={tailwind('text-3xl font-bold mb-2')}>
             Create new password
