@@ -50,7 +50,7 @@ export const Button: React.FC<Props> = ({
           outlined
             ? tailwind('items-center p-3')
             : tailwind(
-                'bg-green-300 justify-center items-center rounded-md h-12'
+                'bg-green-300 justify-center items-center rounded-md h-12 px-3'
               ),
           style
         ]}

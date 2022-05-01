@@ -77,5 +77,19 @@
 	<string>Give $(PRODUCT_NAME) permission to access your camera</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Give $(PRODUCT_NAME) permission to use your microphone</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+    <string>message</string>
+    <string>readdle-spark</string>
+    <string>airmail</string>
+    <string>ms-outlook</string>
+    <string>googlegmail</string>
+    <string>inbox-gmail</string>
+    <string>ymail</string>
+    <string>superhuman</string>
+    <string>yandexmail</string>
+    <string>fastmail</string>
+    <string>protonmail</string>
+	</array>
 </dict>
 </plist>

@@ -96,7 +96,11 @@ export const Login = () => {
             disabled={!isValid || loading}
             text="Login"
           />
-          <Button text="Forgot password?" outlined />
+          <Button
+            text="Forgot password?"
+            outlined
+            onPress={() => navigate('ForgotPassword')}
+          />
         </View>
       </View>
       <View style={tailwind('p-2 justify-center items-center flex-row')}>

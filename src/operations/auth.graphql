@@ -17,6 +17,22 @@ mutation register($payload: UserRegisterPayload!) {
   }
 }
 
+mutation askPasswordReset($email: String!) {
+  askPasswordReset(email: $email)
+}
+
+mutation passwordReset(
+  $code: String!
+  $confirmPassword: String!
+  $password: String!
+) {
+  passwordReset(
+    code: $code
+    confirmPassword: $confirmPassword
+    password: $password
+  )
+}
+
 query suggestedName($slug: String!) {
   suggestedName(slug: $slug) {
     tag

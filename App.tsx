@@ -33,6 +33,9 @@ import dayjs from 'dayjs'
 import { DarkContext, DarkContextProvider } from './src/contexts/DarkContext'
 import { useScheme } from './src/hooks/useScheme'
 import { CrewScreen } from './src/screens/CrewScreen'
+import { ForgotPassword } from './src/screens/ForgotPassword'
+import { ResetPassword } from './src/screens/ResetPassword'
+import { ForgotPasswordConfirm } from './src/screens/ForgotPasswordConfirm'
 
 dayjs.extend(updateLocale)
 dayjs.extend(relativeTime)
@@ -58,6 +61,11 @@ type HomeStackParamList = {
 type LogoutStackParamList = {
   Login: undefined
   Register: undefined
+  ForgotPassword: undefined
+  ForgotPasswordConfirm: undefined
+  ResetPassword: {
+    token: string | undefined
+  }
 }
 
 type RootStackParamList = {
@@ -79,27 +87,45 @@ const Stack = createNativeStackNavigator<HomeStackParamList>()
 const LogoutStackNavigator = createNativeStackNavigator<LogoutStackParamList>()
 const Tab = createBottomTabNavigator<RootStackParamList>()
 
-const LogoutStack = () => {
-  const tailwind = useTailwind()
-  return (
-    <LogoutStackNavigator.Navigator>
-      <LogoutStackNavigator.Screen
-        name="Login"
-        component={Login}
-        options={{
-          header: () => undefined
-        }}
-      />
-      <LogoutStackNavigator.Screen
-        name="Register"
-        component={Register}
-        options={{
-          header: () => undefined
-        }}
-      />
-    </LogoutStackNavigator.Navigator>
-  )
-}
+const LogoutStack = () => (
+  <LogoutStackNavigator.Navigator>
+    <LogoutStackNavigator.Screen
+      name="Login"
+      component={Login}
+      options={{
+        header: () => undefined
+      }}
+    />
+    <LogoutStackNavigator.Screen
+      name="Register"
+      component={Register}
+      options={{
+        header: () => undefined
+      }}
+    />
+    <LogoutStackNavigator.Screen
+      name="ForgotPassword"
+      component={ForgotPassword}
+      options={{
+        header: () => undefined
+      }}
+    />
+    <LogoutStackNavigator.Screen
+      name="ForgotPasswordConfirm"
+      component={ForgotPasswordConfirm}
+      options={{
+        header: () => undefined
+      }}
+    />
+    <LogoutStackNavigator.Screen
+      name="ResetPassword"
+      component={ResetPassword}
+      options={{
+        header: () => undefined
+      }}
+    />
+  </LogoutStackNavigator.Navigator>
+)
 
 const HomeStack = () => (
   <Stack.Navigator>
