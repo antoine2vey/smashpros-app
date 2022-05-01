@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { useScheme } from "./useScheme";
+import { useMemo } from 'react'
+import { useScheme } from './useScheme'
 
 export function useColors() {
   const { scheme } = useScheme()
@@ -19,16 +19,19 @@ export function useColors() {
     red: '#F44336',
     gold: '#FFD700'
   }
-  const shadow = useMemo(() => ({
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.00,
-    elevation: 24,
-  }), [])
+  const shadow = useMemo(
+    () => ({
+      shadowColor: colors.black,
+      shadowOffset: {
+        width: 0,
+        height: 12
+      },
+      shadowOpacity: 0.58,
+      shadowRadius: 16.0,
+      elevation: 24
+    }),
+    []
+  )
 
   return {
     base: dark ? colors.white : colors.black,

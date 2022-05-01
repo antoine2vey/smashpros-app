@@ -1,9 +1,17 @@
-import { useEffect } from "react"
-import { ActivityIndicator, TouchableOpacity, TouchableOpacityProps } from "react-native"
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated"
-import { useTailwind } from "tailwind-rn"
-import { colors } from "../colors"
-import { Text } from "./Text"
+import { useEffect } from 'react'
+import {
+  ActivityIndicator,
+  TouchableOpacity,
+  TouchableOpacityProps
+} from 'react-native'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring
+} from 'react-native-reanimated'
+import { useTailwind } from 'tailwind-rn'
+import { colors } from '../colors'
+import { Text } from './Text'
 
 type Props = TouchableOpacityProps & {
   text: string
@@ -11,7 +19,14 @@ type Props = TouchableOpacityProps & {
   loading?: boolean
 }
 
-export const Button: React.FC<Props> = ({ loading, text, outlined, style, disabled, ...props }) => {
+export const Button: React.FC<Props> = ({
+  loading,
+  text,
+  outlined,
+  style,
+  disabled,
+  ...props
+}) => {
   const tailwind = useTailwind()
   const opacity = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({
@@ -33,8 +48,10 @@ export const Button: React.FC<Props> = ({ loading, text, outlined, style, disabl
         disabled={disabled}
         style={[
           outlined
-          ? tailwind('items-center p-3')
-          : tailwind('bg-green-300 justify-center items-center rounded-md h-12'),
+            ? tailwind('items-center p-3')
+            : tailwind(
+                'bg-green-300 justify-center items-center rounded-md h-12'
+              ),
           style
         ]}
         {...props}
@@ -42,11 +59,15 @@ export const Button: React.FC<Props> = ({ loading, text, outlined, style, disabl
         {loading ? (
           <ActivityIndicator animating={loading} color={colors.fullwhite} />
         ) : (
-          <Text style={
-            outlined
-            ? tailwind('text-sm text-green-300 font-bold')
-            : tailwind('text-sm text-white-400 font-medium')
-          }>{text}</Text>
+          <Text
+            style={
+              outlined
+                ? tailwind('text-sm text-green-300 font-bold')
+                : tailwind('text-sm text-white-400 font-medium')
+            }
+          >
+            {text}
+          </Text>
         )}
       </TouchableOpacity>
     </Animated.View>

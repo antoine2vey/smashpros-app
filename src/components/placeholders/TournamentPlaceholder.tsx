@@ -1,6 +1,6 @@
-import { View } from "react-native"
-import { useTailwind } from "tailwind-rn/dist"
-import { Placeholder, TextPlaceholder } from "./GenericPlaceholders"
+import { View } from 'react-native'
+import { useTailwind } from 'tailwind-rn/dist'
+import { Placeholder, TextPlaceholder } from './GenericPlaceholders'
 
 type Props = {
   big?: boolean
@@ -33,13 +33,11 @@ export const TournamentPlaceholder: React.FC<Props> = ({ big }) => {
       ]}
     >
       <Placeholder
-        itemStyle={
-          tailwind(`
+        itemStyle={tailwind(`
             rounded-xl
             ${big ? 'h-32' : 'h-20'}
             ${big ? 'w-32' : 'w-20'}
-          `)
-        }
+          `)}
       />
       <View style={tailwind('flex-shrink ml-2.5 flex-1')}>
         <TextPlaceholder type="xl" />

@@ -1,22 +1,26 @@
-import { ApolloError } from "@apollo/client";
-import { Image, ScrollView, TouchableOpacity, View } from "react-native";
-import { useTailwind } from "tailwind-rn/dist";
-import { Text } from "../components/Text";
-import { usePicture } from "../hooks/usePicture";
-import { useFormik } from 'formik';
-import { useEffect, useRef, useState } from "react";
-import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
-import { CharacterPicker } from "../components/CharacterPicker"
-import { CharacterIcon } from "../components/CharacterIcon";
-import { Input } from "../components/Input";
-import { Backdrop } from "../components/Backdrop";
-import { Button } from "../components/Button";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { HeaderBackButton } from '@react-navigation/elements';
-import { useNavigation } from "@react-navigation/native";
+import { ApolloError } from '@apollo/client'
+import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import { useTailwind } from 'tailwind-rn/dist'
+import { Text } from '../components/Text'
+import { usePicture } from '../hooks/usePicture'
+import { useFormik } from 'formik'
+import { useEffect, useRef, useState } from 'react'
+import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
+import { CharacterPicker } from '../components/CharacterPicker'
+import { CharacterIcon } from '../components/CharacterIcon'
+import { Input } from '../components/Input'
+import { Backdrop } from '../components/Backdrop'
+import { Button } from '../components/Button'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { HeaderBackButton } from '@react-navigation/elements'
+import { useNavigation } from '@react-navigation/native'
 import { object, string, array, number } from 'yup'
-import { Character, useRegisterMutation, useSuggestedNameLazyQuery } from "../generated/graphql"
-import { colors } from "../colors";
+import {
+  Character,
+  useRegisterMutation,
+  useSuggestedNameLazyQuery
+} from '../generated/graphql'
+import { colors } from '../colors'
 
 const smashgg = require('../assets/smashgg.png')
 
@@ -43,7 +47,7 @@ interface FormValues {
 }
 
 export const Register = () => {
-  const {top} = useSafeAreaInsets()
+  const { top } = useSafeAreaInsets()
   const tailwind = useTailwind()
   const { navigate, goBack } = useNavigation()
   const { pick, image, generateFile, setImage } = usePicture()
@@ -52,7 +56,16 @@ export const Register = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const bottomSheetSGGRef = useRef<BottomSheetModal>(null)
   const [characters, setCharacters] = useState<Character[]>([])
-  const { handleBlur, handleChange, values, setFieldValue, submitForm, setFieldError, errors, isValid } = useFormik<FormValues>({
+  const {
+    handleBlur,
+    handleChange,
+    values,
+    setFieldValue,
+    submitForm,
+    setFieldError,
+    errors,
+    isValid
+  } = useFormik<FormValues>({
     validationSchema: registerSchema,
     validateOnMount: true,
     initialValues: {
@@ -65,7 +78,7 @@ export const Register = () => {
       smashGGSlug: '',
       smashGGUserId: null
     },
-    onSubmit: async values => {
+    onSubmit: async (values) => {
       try {
         const file = generateFile(image, `profile.png`)
         await register({
@@ -97,19 +110,20 @@ export const Register = () => {
 
   const onIdChange = async (text: string) => {
     handleChange('smashGGSlug')(text)
- 
+
     // Valid smash GG id length
     if (text.length === 8) {
       try {
-        const { data } = await getName({ variables: { slug: text }})
+        const { data } = await getName({ variables: { slug: text } })
 
         if (data?.suggestedName) {
-          const { smashGGPlayerId, smashGGUserId, tag, profilePicture } = data.suggestedName
+          const { smashGGPlayerId, smashGGUserId, tag, profilePicture } =
+            data.suggestedName
 
           setFieldValue('tag', tag)
           setFieldValue('smashGGPlayerId', smashGGPlayerId)
           setFieldValue('smashGGUserId', smashGGUserId)
-          
+
           if (profilePicture) {
             setFieldValue('profilePicture', null)
             setImage(profilePicture)
@@ -128,22 +142,38 @@ export const Register = () => {
   }
 
   const onValidation = () => {
-    const charactersId = characters.map(character => character.id)
+    const charactersId = characters.map((character) => character.id)
     setFieldValue('characters', charactersId)
     bottomSheetModalRef.current?.close()
   }
 
   return (
     <ScrollView style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
-      <HeaderBackButton label="Back" tintColor={colors.green2} onPress={goBack} style={{ marginTop: Math.max(top, 15)}} />
+      <HeaderBackButton
+        label="Back"
+        tintColor={colors.green2}
+        onPress={goBack}
+        style={{ marginTop: Math.max(top, 15) }}
+      />
 
       <View style={tailwind('p-6 flex-1')}>
-        <View style={tailwind('flex mb-5 items-start relative rounded-full h-32 w-32')}>
+        <View
+          style={tailwind(
+            'flex mb-5 items-start relative rounded-full h-32 w-32'
+          )}
+        >
           <TouchableOpacity onPress={pick} activeOpacity={0.9}>
             {image ? (
-              <Image source={{ uri: image }} style={tailwind('h-32 w-32 rounded-full')} />
+              <Image
+                source={{ uri: image }}
+                style={tailwind('h-32 w-32 rounded-full')}
+              />
             ) : (
-              <View style={tailwind('h-32 w-32 bg-green-300 rounded-full opacity-50')} />
+              <View
+                style={tailwind(
+                  'h-32 w-32 bg-green-300 rounded-full opacity-50'
+                )}
+              />
             )}
           </TouchableOpacity>
         </View>
@@ -176,12 +206,15 @@ export const Register = () => {
         <Text style={tailwind('text-2xl font-bold mt-3')}>Characters</Text>
         <View style={tailwind('flex-row items-center')}>
           <Text>Choose your character(s)</Text>
-          <TouchableOpacity style={tailwind('ml-1')} onPress={() => bottomSheetModalRef.current?.present()}>
+          <TouchableOpacity
+            style={tailwind('ml-1')}
+            onPress={() => bottomSheetModalRef.current?.present()}
+          >
             <Text style={tailwind('text-green-300 font-bold')}>here !</Text>
           </TouchableOpacity>
         </View>
         <View style={tailwind('flex-row flex-wrap mt-2')}>
-          {characters.map(character => (
+          {characters.map((character) => (
             <CharacterIcon
               key={character.id}
               uri={character.picture}
@@ -199,7 +232,11 @@ export const Register = () => {
           style={tailwind('bg-blue-400 items-center rounded-md mb-2')}
           onPress={() => bottomSheetSGGRef.current?.present()}
         >
-          <Image source={smashgg} resizeMode="contain" style={tailwind('w-28')} />
+          <Image
+            source={smashgg}
+            resizeMode="contain"
+            style={tailwind('w-28')}
+          />
         </TouchableOpacity>
 
         <Button
@@ -231,8 +268,10 @@ export const Register = () => {
       >
         <View style={tailwind('p-6')}>
           <Text style={tailwind('text-3xl font-bold')}>Link your smash.gg</Text>
-          <Text style={tailwind('text-sm font-medium')}>First, enter your smash.gg id, displayed on your profile</Text>
-          
+          <Text style={tailwind('text-sm font-medium')}>
+            First, enter your smash.gg id, displayed on your profile
+          </Text>
+
           <View style={tailwind('mt-3')}>
             <Input
               onChangeText={onIdChange}
@@ -240,12 +279,20 @@ export const Register = () => {
               value={values.smashGGSlug ?? ''}
               label="SmashGG Id"
             />
-            {errors.smashGGSlug && <Text style={tailwind('text-sm text-red-400')}>{errors.smashGGSlug}</Text>}
+            {errors.smashGGSlug && (
+              <Text style={tailwind('text-sm text-red-400')}>
+                {errors.smashGGSlug}
+              </Text>
+            )}
           </View>
 
           {values.smashGGPlayerId && (
             <View style={tailwind('mt-4')}>
-              <Text style={tailwind('text-xl mb-2')}>Are you <Text style={tailwind('text-xl font-bold')}>{values.tag}</Text> ?</Text>
+              <Text style={tailwind('text-xl mb-2')}>
+                Are you{' '}
+                <Text style={tailwind('text-xl font-bold')}>{values.tag}</Text>{' '}
+                ?
+              </Text>
               <Button
                 text="Yes"
                 onPress={() => bottomSheetSGGRef.current?.dismiss()}

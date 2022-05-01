@@ -1,16 +1,21 @@
-import { useFocusEffect, useNavigation } from "@react-navigation/native"
-import { useState } from "react"
-import { useTranslation } from "react-i18next"
-import { ActivityIndicator, FlatList, RefreshControl, ScrollView, View } from "react-native"
-import { useTailwind } from "tailwind-rn/dist"
-import { HomeScreenNavigateProp } from "../../App"
-import { colors } from "../colors"
-import { Crew } from "../components/Crew"
-import { Text } from "../components/Text"
-import { Tournament } from "../components/Tournament"
-import { useTournamentsQuery } from "../generated/graphql"
-import { useScheme } from "../hooks/useScheme"
-
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  ScrollView,
+  View
+} from 'react-native'
+import { useTailwind } from 'tailwind-rn/dist'
+import { HomeScreenNavigateProp } from '../../App'
+import { colors } from '../colors'
+import { Crew } from '../components/Crew'
+import { Text } from '../components/Text'
+import { Tournament } from '../components/Tournament'
+import { useTournamentsQuery } from '../generated/graphql'
+import { useScheme } from '../hooks/useScheme'
 
 export const Home = () => {
   const [refreshing, setRefreshing] = useState(false)
@@ -18,9 +23,9 @@ export const Home = () => {
   const tailwind = useTailwind()
   const { t } = useTranslation()
   const { scheme } = useScheme()
-  const {data, error, loading, fetchMore, refetch, networkStatus} = useTournamentsQuery()
+  const { data, error, loading, fetchMore, refetch, networkStatus } =
+    useTournamentsQuery()
   const pageInfo = data?.tournaments?.pageInfo
-
 
   return (
     <FlatList
@@ -53,7 +58,11 @@ export const Home = () => {
           )}
 
           {!data?.crew && (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={tailwind('mb-5')}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={tailwind('mb-5')}
+            >
               {data?.crews?.map((crew) => (
                 <Crew
                   key={crew?.id}
@@ -68,7 +77,8 @@ export const Home = () => {
           <Text style={tailwind('text-4xl font-bold')}>{t('tournaments')}</Text>
           <View style={tailwind('bg-white-300 dark:bg-black-300 pb-1')}>
             <Text style={tailwind('text-xl')}>
-              {t('nextTournament')} - <Text style={tailwind('font-bold')}>3 {t('days')}</Text>
+              {t('nextTournament')} -{' '}
+              <Text style={tailwind('font-bold')}>3 {t('days')}</Text>
             </Text>
           </View>
 
@@ -78,7 +88,9 @@ export const Home = () => {
                 tournament={data?.tournaments?.edges[0]?.node}
                 big
                 onPress={async () => {
-                  navigate('Tournament', { id: data?.tournaments?.edges[0]?.node?.id })
+                  navigate('Tournament', {
+                    id: data?.tournaments?.edges[0]?.node?.id
+                  })
                 }}
               />
             </View>
@@ -91,11 +103,7 @@ export const Home = () => {
       )}
       data={data?.tournaments?.edges}
       keyExtractor={(edge, i) => edge?.cursor || i.toString()}
-      ListFooterComponent={(
-        <ActivityIndicator
-          animating
-        />
-      )}
+      ListFooterComponent={<ActivityIndicator animating />}
       onEndReachedThreshold={0.4}
       onEndReached={() => {
         fetchMore({

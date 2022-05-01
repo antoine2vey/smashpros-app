@@ -6,11 +6,7 @@ type Props = TextProps & {
   style?: StyleProp<TextStyle>
 }
 
-export const Text: React.FC<Props> = ({
-  children,
-  style,
-  ...rest
-}) => {
+export const Text: React.FC<Props> = ({ children, style, ...rest }) => {
   const tailwind = useTailwind()
 
   return (

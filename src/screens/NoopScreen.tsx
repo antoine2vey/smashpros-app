@@ -1,3 +1,3 @@
-import { View } from "react-native";
+import { View } from 'react-native'
 
-export const NoopScreen = () => <View/>
+export const NoopScreen = () => <View />

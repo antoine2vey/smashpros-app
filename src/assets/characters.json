@@ -1,426 +1,426 @@
 {
   "data": {
-      "characters": [
-          {
-              "id": "32c7a460-b8c4-4942-b376-8a48b2fc2012",
-              "name": "Banjo & Kazooie",
-              "picture": "https://www.ssbwiki.com/images/1/12/Banjo%26KazooieHeadSSBUWebsite.png"
-          },
-          {
-              "id": "ffa044cc-2ac5-4e6e-9dd0-b6b273d50f7c",
-              "name": "Bower Jr",
-              "picture": "https://www.ssbwiki.com/images/3/3e/BowserJrHeadSSBUWebsite.png"
-          },
-          {
-              "id": "91d8a053-83a3-4b17-819b-a7d7bcc113d7",
-              "name": "Byleth",
-              "picture": "https://www.ssbwiki.com/images/8/86/BylethHeadSSBUWebsite.png"
-          },
-          {
-              "id": "d13f62fd-2cb8-4895-8a4c-4c29de66b5c5",
-              "name": "Dr Mario",
-              "picture": "https://www.ssbwiki.com/images/c/c8/DrMarioHeadSSBUWebsite.png"
-          },
-          {
-              "id": "d15baece-c859-44e4-9d30-7f8289dbb0f8",
-              "name": "Greninja",
-              "picture": "https://www.ssbwiki.com/images/7/79/GreninjaHeadSSBUWebsite.png"
-          },
-          {
-              "id": "3ed8442d-c9fe-454a-bbd7-7ba1b5995160",
-              "name": "King K Rool",
-              "picture": "https://www.ssbwiki.com/images/3/35/KingKRoolHeadSSBUWebsite.png"
-          },
-          {
-              "id": "7ae3e3a3-3ae7-4ba3-8baa-4dd6ee8479da",
-              "name": "Isabelle",
-              "picture": "https://www.ssbwiki.com/images/2/2e/IsabelleHeadSSBUWebsite.png"
-          },
-          {
-              "id": "839357d6-a8b3-4a26-ae62-8df260bcb7da",
-              "name": "Min Min",
-              "picture": "https://www.ssbwiki.com/images/f/fc/MinMinHeadSSBUWebsite.png"
-          },
-          {
-              "id": "12d755b3-e909-4614-ac66-50fb14bccbe5",
-              "name": "Ness",
-              "picture": "https://www.ssbwiki.com/images/d/d5/NessHeadSSBUWebsite.png"
-          },
-          {
-              "id": "86be396e-c212-4b6a-a034-e05a7eee7e3a",
-              "name": "Robin",
-              "picture": "https://www.ssbwiki.com/images/4/43/RobinHeadSSBUWebsite.png"
-          },
-          {
-              "id": "4dc9b997-c148-41d9-943e-e403e836603a",
-              "name": "Terry",
-              "picture": "https://www.ssbwiki.com/images/2/2e/TerryHeadSSBUWebsite.png"
-          },
-          {
-              "id": "7e64c2af-73b1-46d9-9d66-9af68f8379ec",
-              "name": "Yoshi",
-              "picture": "https://www.ssbwiki.com/images/9/93/YoshiHeadSSBUWebsite.png"
-          },
-          {
-              "id": "f5bf8624-3390-4516-89f1-34fae26f767f",
-              "name": "Bowser",
-              "picture": "https://www.ssbwiki.com/images/0/0b/BowserHeadSSBUWebsite.png"
-          },
-          {
-              "id": "f03c248f-eeab-4fc5-a802-8e71466678db",
-              "name": "Corrin",
-              "picture": "https://www.ssbwiki.com/images/6/6a/CorrinHeadSSBUWebsite.png"
-          },
-          {
-              "id": "1ebd24ca-3df1-430b-8d4d-a40e1fc50946",
-              "name": "Donkey Kong",
-              "picture": "https://www.ssbwiki.com/images/2/21/DonkeyKongHeadSSBUWebsite.png"
-          },
-          {
-              "id": "b7d4fbc1-93b1-4c3f-af6b-14f1a958f5fc",
-              "name": "Fox",
-              "picture": "https://www.ssbwiki.com/images/c/c9/FoxHeadSSBUWebsite.png"
-          },
-          {
-              "id": "c6005e0a-8e9e-4540-be95-c66405640e29",
-              "name": "Cloud",
-              "picture": "https://www.ssbwiki.com/images/c/cb/CloudHeadSSBUWebsite.png"
-          },
-          {
-              "id": "baac7b25-3a50-42f1-91af-5fbf15881afc",
-              "name": "Kirby",
-              "picture": "https://www.ssbwiki.com/images/1/15/KirbyHeadSSBUWebsite.png"
-          },
-          {
-              "id": "afc40594-56b9-4b5a-a228-86c843c94e2b",
-              "name": "Lucario",
-              "picture": "https://www.ssbwiki.com/images/2/20/LucarioHeadSSBUWebsite.png"
-          },
-          {
-              "id": "67b75bdd-86b8-428b-8e1c-0bd064228213",
-              "name": "Lucina",
-              "picture": "https://www.ssbwiki.com/images/d/d8/LucinaHeadSSBUWebsite.png"
-          },
-          {
-              "id": "d54e2874-7923-4ae3-8102-e9b2aa59e7fe",
-              "name": "Pac Man",
-              "picture": "https://www.ssbwiki.com/images/3/3d/Pac-ManHeadSSBUWebsite.png"
-          },
-          {
-              "id": "a03a4127-12da-49a2-ae01-3c8405d53317",
-              "name": "ROB",
-              "picture": "https://www.ssbwiki.com/images/b/be/ROBHeadSSBUWebsite.png"
-          },
-          {
-              "id": "3ace788f-45a9-4152-bb28-d4d650977177",
-              "name": "Toon Link",
-              "picture": "https://www.ssbwiki.com/images/b/bf/ToonLinkHeadSSBUWebsite.png"
-          },
-          {
-              "id": "460c546b-3a80-4217-b9b8-ab41a9d9f050",
-              "name": "Young Link",
-              "picture": "https://www.ssbwiki.com/images/c/c0/YoungLinkHeadSSBUWebsite.png"
-          },
-          {
-              "id": "5417a814-8391-4c4e-8c22-c447e3bddea6",
-              "name": "Chrom",
-              "picture": "https://www.ssbwiki.com/images/7/70/ChromHeadSSBUWebsite.png"
-          },
-          {
-              "id": "223b4cce-6d97-48e9-951d-8f8026f6a19e",
-              "name": "Dark Samus",
-              "picture": "https://www.ssbwiki.com/images/2/24/DarkSamusHeadSSBUWebsite.png"
-          },
-          {
-              "id": "1fc3f931-02c5-4e0e-b2e6-e21f956d0247",
-              "name": "Daisy",
-              "picture": "https://www.ssbwiki.com/images/2/2d/DaisyHeadSSBUWebsite.png"
-          },
-          {
-              "id": "4dd4ed22-a369-4185-90ac-98287b0c069e",
-              "name": "Diddy Kong",
-              "picture": "https://www.ssbwiki.com/images/5/5d/DiddyKongHeadSSBUWebsite.png"
-          },
-          {
-              "id": "07099a98-ee27-44ec-89d6-b819e1019d77",
-              "name": "Ken",
-              "picture": "https://www.ssbwiki.com/images/e/ef/KenHeadSSBUWebsite.png"
-          },
-          {
-              "id": "da312cb9-c765-4fc0-92b5-5b5cd1e83138",
-              "name": "Inkling",
-              "picture": "https://www.ssbwiki.com/images/0/04/InklingHeadSSBUWebsite.png"
-          },
-          {
-              "id": "fa1f4607-12fe-4714-a7cf-22a32057fa59",
-              "name": "Mega Man",
-              "picture": "https://www.ssbwiki.com/images/2/26/MegaManHeadSSBUWebsite.png"
-          },
-          {
-              "id": "9af4c09e-4cd2-4097-b88f-bbca3bd7437e",
-              "name": "Peach",
-              "picture": "https://www.ssbwiki.com/images/1/14/PeachHeadSSBUWebsite.png"
-          },
-          {
-              "id": "558ca451-6161-4b28-9526-66e6f754122f",
-              "name": "Ryu",
-              "picture": "https://www.ssbwiki.com/images/2/20/RyuHeadSSBUWebsite.png"
-          },
-          {
-              "id": "088d2730-d39f-46b5-a945-2f0742b3393c",
-              "name": "Villager",
-              "picture": "https://www.ssbwiki.com/images/f/f9/VillagerHeadSSBUWebsite.png"
-          },
-          {
-              "id": "b69efdc6-08f3-4a20-a194-8778f0f1eb5a",
-              "name": "Dark Pit",
-              "picture": "https://www.ssbwiki.com/images/8/8b/DarkPitHeadSSBUWebsite.png"
-          },
-          {
-              "id": "33e263cc-89da-4a3c-a7b3-767502edeb82",
-              "name": "Falco",
-              "picture": "https://www.ssbwiki.com/images/6/6e/FalcoHeadSSBUWebsite.png"
-          },
-          {
-              "id": "44fc36a1-2404-4bcd-b83a-e7352806023c",
-              "name": "Ganondorf",
-              "picture": "https://www.ssbwiki.com/images/b/b6/GanondorfHeadSSBUWebsite.png"
-          },
-          {
-              "id": "e690da76-91f8-425d-9219-7e8411cf4fdf",
-              "name": "Ike",
-              "picture": "https://www.ssbwiki.com/images/2/25/IkeHeadSSBUWebsite.png"
-          },
-          {
-              "id": "71388051-7f59-4579-9f79-f7ec2d2a23d8",
-              "name": "Luigi",
-              "picture": "https://www.ssbwiki.com/images/9/9d/LuigiHeadSSBUWebsite.png"
-          },
-          {
-              "id": "c2810d57-6b31-4bb6-8f6b-f6c98f0a958e",
-              "name": "Jigglypuff",
-              "picture": "https://www.ssbwiki.com/images/9/90/JigglypuffHeadSSBUWebsite.png"
-          },
-          {
-              "id": "9838f6f0-2a0c-46d1-ae01-f7052f7be708",
-              "name": "Palutena",
-              "picture": "https://www.ssbwiki.com/images/d/d7/PalutenaHeadSSBUWebsite.png"
-          },
-          {
-              "id": "d56fc00f-1981-4826-9caa-a0fb11a67936",
-              "name": "Pokémon Trainer",
-              "picture": "https://www.ssbwiki.com/images/2/2c/Pok%C3%A9monTrainerHeadSSBUWebsite.png"
-          },
-          {
-              "id": "49491f6a-3c38-4a51-a409-a2834365c9fe",
-              "name": "Sonic",
-              "picture": "https://www.ssbwiki.com/images/b/b7/SonicHeadSSBUWebsite.png"
-          },
-          {
-              "id": "71eb45b8-5e4b-40ea-b1e5-c2090f9d0481",
-              "name": "Wolf",
-              "picture": "https://www.ssbwiki.com/images/0/06/WolfHeadSSBUWebsite.png"
-          },
-          {
-              "id": "06372fbf-ddf2-433e-8ffc-c320f2b25fa9",
-              "name": "Bayonetta",
-              "picture": "https://www.ssbwiki.com/images/2/27/BayonettaHeadSSBUWebsite.png"
-          },
-          {
-              "id": "2bb2005c-7a31-4d72-bf0c-9626814a0e9f",
-              "name": "Duck Hunt",
-              "picture": "https://www.ssbwiki.com/images/3/38/DuckHuntHeadSSBUWebsite.png"
-          },
-          {
-              "id": "8d8bd4de-d030-442e-a800-f90e7589b489",
-              "name": "King Dedede",
-              "picture": "https://www.ssbwiki.com/images/f/fe/KingDededeHeadSSBUWebsite.png"
-          },
-          {
-              "id": "26f27c8e-158d-4569-85ae-690408bad5bb",
-              "name": "Mario",
-              "picture": "https://www.ssbwiki.com/images/9/9e/MarioHeadSSBUWebsite.png"
-          },
-          {
-              "id": "f6116d8d-d3c4-4d34-91aa-7dc9a7462d84",
-              "name": "Meta Knight",
-              "picture": "https://www.ssbwiki.com/images/3/3d/MetaKnightHeadSSBUWebsite.png"
-          },
-          {
-              "id": "f6a25bbc-6165-42a0-9993-a87b877141af",
-              "name": "Marth",
-              "picture": "https://www.ssbwiki.com/images/a/ae/MarthHeadSSBUWebsite.png"
-          },
-          {
-              "id": "c6e9b6a7-3d63-45ff-802a-779da0bf0d85",
-              "name": "Roy",
-              "picture": "https://www.ssbwiki.com/images/2/22/RoyHeadSSBUWebsite.png"
-          },
-          {
-              "id": "d0d4c32c-78d2-431c-8555-053e577505af",
-              "name": "Steve",
-              "picture": "https://www.ssbwiki.com/images/4/4f/SteveHeadSSBUWebsite.png"
-          },
-          {
-              "id": "f828db55-1a9f-41c4-95f1-149e48a12e10",
-              "name": "Zelda",
-              "picture": "https://www.ssbwiki.com/images/c/c8/ZeldaHeadSSBUWebsite.png"
-          },
-          {
-              "id": "ec55aef8-7308-4f48-b300-213f51c39c6c",
-              "name": "Hero",
-              "picture": "https://www.ssbwiki.com/images/1/1e/HeroHeadSSBUWebsite.png"
-          },
-          {
-              "id": "7fd63e86-9ca8-4075-bbc0-907b5a647ae6",
-              "name": "Ice Climbers",
-              "picture": "https://www.ssbwiki.com/images/0/0c/IceClimbersHeadSSBUWebsite.png"
-          },
-          {
-              "id": "c443c64b-27e0-42b9-8781-d780420bf3b0",
-              "name": "Kazuya",
-              "picture": "https://ssb.wiki.gallery/images/8/85/KazuyaHeadSSBUWebsite.png"
-          },
-          {
-              "id": "f4566a62-2833-45fc-8f15-940a99ffead1",
-              "name": "Mr Game & Watch",
-              "picture": "https://www.ssbwiki.com/images/1/15/MrGame%26WatchHeadSSBUWebsite.png"
-          },
-          {
-              "id": "0cb8683f-7f43-468a-82ed-a093c56f83f7",
-              "name": "Pichu",
-              "picture": "https://www.ssbwiki.com/images/5/50/PichuHeadSSBUWebsite.png"
-          },
-          {
-              "id": "30741990-89c6-4ca8-a27e-d6e678b64131",
-              "name": "Pyra & Mythra",
-              "picture": "https://ssb.wiki.gallery/images/7/7c/PyraHeadSSBUWebsite.png"
-          },
-          {
-              "id": "8a15a025-ecd0-4a3f-a75b-567da1e789ee",
-              "name": "Snake",
-              "picture": "https://www.ssbwiki.com/images/9/9f/SnakeHeadSSBUWebsite.png"
-          },
-          {
-              "id": "abfe5fbc-aeb2-4f19-b9c7-5efaa6def1e7",
-              "name": "Captain Falcon",
-              "picture": "https://www.ssbwiki.com/images/6/6b/CaptainFalconHeadSSBUWebsite.png"
-          },
-          {
-              "id": "227fa895-2b88-4883-9ac5-47631620cbee",
-              "name": "Little Mac",
-              "picture": "https://www.ssbwiki.com/images/8/87/LittleMacHeadSSBUWebsite.png"
-          },
-          {
-              "id": "b812bce1-fe95-4aff-a80f-d97eeb02a50d",
-              "name": "Mewtwo",
-              "picture": "https://www.ssbwiki.com/images/7/7e/MewtwoHeadSSBUWebsite.png"
-          },
-          {
-              "id": "022a5cc5-8e1a-4f54-9b63-fb9ec2a78e6d",
-              "name": "Olimar",
-              "picture": "https://www.ssbwiki.com/images/9/97/OlimarHeadSSBUWebsite.png"
-          },
-          {
-              "id": "2c825fcc-981c-442e-86a0-08dffb3d221a",
-              "name": "Ridley",
-              "picture": "https://www.ssbwiki.com/images/7/7c/RidleyHeadSSBUWebsite.png"
-          },
-          {
-              "id": "26e64f2e-bf76-44de-a8d9-be2d2f7d129a",
-              "name": "Shulk",
-              "picture": "https://www.ssbwiki.com/images/b/bf/ShulkHeadSSBUWebsite.png"
-          },
-          {
-              "id": "68ac06af-41b6-488a-a1ab-959d07d52a06",
-              "name": "Joker",
-              "picture": "https://www.ssbwiki.com/images/6/63/JokerHeadSSBUWebsite.png"
-          },
-          {
-              "id": "68739289-7ab2-4283-ac9e-f73f64ff003d",
-              "name": "Lucas",
-              "picture": "https://www.ssbwiki.com/images/3/31/LucasHeadSSBUWebsite.png"
-          },
-          {
-              "id": "bce678d7-e584-40d9-a95d-ee0e8167adf3",
-              "name": "Pikachu",
-              "picture": "https://www.ssbwiki.com/images/5/52/PikachuHeadSSBUWebsite.png"
-          },
-          {
-              "id": "21dfbf72-1947-4d57-9677-c8a0a158df02",
-              "name": "Rosalina",
-              "picture": "https://www.ssbwiki.com/images/6/63/RosalinaHeadSSBUWebsite.png"
-          },
-          {
-              "id": "4a1493f0-2820-4d60-9946-258df5f86f2d",
-              "name": "Simon",
-              "picture": "https://www.ssbwiki.com/images/5/52/SimonHeadSSBUWebsite.png"
-          },
-          {
-              "id": "3671d4e7-578e-43bf-a382-4a23b1990755",
-              "name": "Incineroar",
-              "picture": "https://www.ssbwiki.com/images/e/e3/IncineroarHeadSSBUWebsite.png"
-          },
-          {
-              "id": "20105acf-6458-4f92-bfac-09c61ff10f46",
-              "name": "Link",
-              "picture": "https://www.ssbwiki.com/images/2/2b/LinkHeadSSBUWebsite.png"
-          },
-          {
-              "id": "5da7fac2-6518-403b-879c-e7eacd8667c4",
-              "name": "Richter",
-              "picture": "https://www.ssbwiki.com/images/a/ab/RichterHeadSSBUWebsite.png"
-          },
-          {
-              "id": "5313cab0-c0ec-42c1-9d65-21f655f983d9",
-              "name": "Wii Fit Trainer",
-              "picture": "https://www.ssbwiki.com/images/f/fc/WiiFitTrainerHeadSSBUWebsite.png"
-          },
-          {
-              "id": "f1cdb78f-f805-4b16-9ce2-46b1938f2b02",
-              "name": "Mii Fighter",
-              "picture": "https://www.ssbwiki.com/images/c/cf/MiiFighterHeadSSBUWebsite.png"
-          },
-          {
-              "id": "34ce31dc-9156-4e05-8534-ddb76666a41a",
-              "name": "Pit",
-              "picture": "https://www.ssbwiki.com/images/d/d7/PitHeadSSBUWebsite.png"
-          },
-          {
-              "id": "8e52dc10-7082-4839-877a-7fe7f85aff8f",
-              "name": "Sheik",
-              "picture": "https://www.ssbwiki.com/images/1/1e/SheikHeadSSBUWebsite.png"
-          },
-          {
-              "id": "d3539ee9-8d7d-4659-bd9f-a11b310b32f3",
-              "name": "Zero Suit Samus",
-              "picture": "https://www.ssbwiki.com/images/5/5a/ZeroSuitSamusHeadSSBUWebsite.png"
-          },
-          {
-              "id": "bd78d40d-6c8c-4aee-b75e-0f117f2d6a10",
-              "name": "Piranha Plant",
-              "picture": "https://www.ssbwiki.com/images/c/cf/PiranhaPlantHeadSSBUWebsite.png"
-          },
-          {
-              "id": "c779a5d3-de44-4795-baf7-bf30990c4537",
-              "name": "Sephiroth",
-              "picture": "https://www.ssbwiki.com/images/6/64/SephirothHeadSSBUWebsite.png"
-          },
-          {
-              "id": "998c8903-b5b2-4f93-b78c-d78fda8caff7",
-              "name": "Samus",
-              "picture": "https://www.ssbwiki.com/images/d/d0/SamusHeadSSBUWebsite.png"
-          },
-          {
-              "id": "fa9c41c1-eef1-4491-9b23-f706fc47050f",
-              "name": "Sora",
-              "picture": "https://ssb.wiki.gallery/images/6/61/SoraHeadSSBUWebsite.png"
-          },
-          {
-              "id": "e1a7000b-a273-4dbe-a141-2d5a6c9cf47e",
-              "name": "Wario",
-              "picture": "https://www.ssbwiki.com/images/7/7f/WarioHeadSSBUWebsite.png"
-          }
-      ]
+    "characters": [
+      {
+        "id": "32c7a460-b8c4-4942-b376-8a48b2fc2012",
+        "name": "Banjo & Kazooie",
+        "picture": "https://www.ssbwiki.com/images/1/12/Banjo%26KazooieHeadSSBUWebsite.png"
+      },
+      {
+        "id": "ffa044cc-2ac5-4e6e-9dd0-b6b273d50f7c",
+        "name": "Bower Jr",
+        "picture": "https://www.ssbwiki.com/images/3/3e/BowserJrHeadSSBUWebsite.png"
+      },
+      {
+        "id": "91d8a053-83a3-4b17-819b-a7d7bcc113d7",
+        "name": "Byleth",
+        "picture": "https://www.ssbwiki.com/images/8/86/BylethHeadSSBUWebsite.png"
+      },
+      {
+        "id": "d13f62fd-2cb8-4895-8a4c-4c29de66b5c5",
+        "name": "Dr Mario",
+        "picture": "https://www.ssbwiki.com/images/c/c8/DrMarioHeadSSBUWebsite.png"
+      },
+      {
+        "id": "d15baece-c859-44e4-9d30-7f8289dbb0f8",
+        "name": "Greninja",
+        "picture": "https://www.ssbwiki.com/images/7/79/GreninjaHeadSSBUWebsite.png"
+      },
+      {
+        "id": "3ed8442d-c9fe-454a-bbd7-7ba1b5995160",
+        "name": "King K Rool",
+        "picture": "https://www.ssbwiki.com/images/3/35/KingKRoolHeadSSBUWebsite.png"
+      },
+      {
+        "id": "7ae3e3a3-3ae7-4ba3-8baa-4dd6ee8479da",
+        "name": "Isabelle",
+        "picture": "https://www.ssbwiki.com/images/2/2e/IsabelleHeadSSBUWebsite.png"
+      },
+      {
+        "id": "839357d6-a8b3-4a26-ae62-8df260bcb7da",
+        "name": "Min Min",
+        "picture": "https://www.ssbwiki.com/images/f/fc/MinMinHeadSSBUWebsite.png"
+      },
+      {
+        "id": "12d755b3-e909-4614-ac66-50fb14bccbe5",
+        "name": "Ness",
+        "picture": "https://www.ssbwiki.com/images/d/d5/NessHeadSSBUWebsite.png"
+      },
+      {
+        "id": "86be396e-c212-4b6a-a034-e05a7eee7e3a",
+        "name": "Robin",
+        "picture": "https://www.ssbwiki.com/images/4/43/RobinHeadSSBUWebsite.png"
+      },
+      {
+        "id": "4dc9b997-c148-41d9-943e-e403e836603a",
+        "name": "Terry",
+        "picture": "https://www.ssbwiki.com/images/2/2e/TerryHeadSSBUWebsite.png"
+      },
+      {
+        "id": "7e64c2af-73b1-46d9-9d66-9af68f8379ec",
+        "name": "Yoshi",
+        "picture": "https://www.ssbwiki.com/images/9/93/YoshiHeadSSBUWebsite.png"
+      },
+      {
+        "id": "f5bf8624-3390-4516-89f1-34fae26f767f",
+        "name": "Bowser",
+        "picture": "https://www.ssbwiki.com/images/0/0b/BowserHeadSSBUWebsite.png"
+      },
+      {
+        "id": "f03c248f-eeab-4fc5-a802-8e71466678db",
+        "name": "Corrin",
+        "picture": "https://www.ssbwiki.com/images/6/6a/CorrinHeadSSBUWebsite.png"
+      },
+      {
+        "id": "1ebd24ca-3df1-430b-8d4d-a40e1fc50946",
+        "name": "Donkey Kong",
+        "picture": "https://www.ssbwiki.com/images/2/21/DonkeyKongHeadSSBUWebsite.png"
+      },
+      {
+        "id": "b7d4fbc1-93b1-4c3f-af6b-14f1a958f5fc",
+        "name": "Fox",
+        "picture": "https://www.ssbwiki.com/images/c/c9/FoxHeadSSBUWebsite.png"
+      },
+      {
+        "id": "c6005e0a-8e9e-4540-be95-c66405640e29",
+        "name": "Cloud",
+        "picture": "https://www.ssbwiki.com/images/c/cb/CloudHeadSSBUWebsite.png"
+      },
+      {
+        "id": "baac7b25-3a50-42f1-91af-5fbf15881afc",
+        "name": "Kirby",
+        "picture": "https://www.ssbwiki.com/images/1/15/KirbyHeadSSBUWebsite.png"
+      },
+      {
+        "id": "afc40594-56b9-4b5a-a228-86c843c94e2b",
+        "name": "Lucario",
+        "picture": "https://www.ssbwiki.com/images/2/20/LucarioHeadSSBUWebsite.png"
+      },
+      {
+        "id": "67b75bdd-86b8-428b-8e1c-0bd064228213",
+        "name": "Lucina",
+        "picture": "https://www.ssbwiki.com/images/d/d8/LucinaHeadSSBUWebsite.png"
+      },
+      {
+        "id": "d54e2874-7923-4ae3-8102-e9b2aa59e7fe",
+        "name": "Pac Man",
+        "picture": "https://www.ssbwiki.com/images/3/3d/Pac-ManHeadSSBUWebsite.png"
+      },
+      {
+        "id": "a03a4127-12da-49a2-ae01-3c8405d53317",
+        "name": "ROB",
+        "picture": "https://www.ssbwiki.com/images/b/be/ROBHeadSSBUWebsite.png"
+      },
+      {
+        "id": "3ace788f-45a9-4152-bb28-d4d650977177",
+        "name": "Toon Link",
+        "picture": "https://www.ssbwiki.com/images/b/bf/ToonLinkHeadSSBUWebsite.png"
+      },
+      {
+        "id": "460c546b-3a80-4217-b9b8-ab41a9d9f050",
+        "name": "Young Link",
+        "picture": "https://www.ssbwiki.com/images/c/c0/YoungLinkHeadSSBUWebsite.png"
+      },
+      {
+        "id": "5417a814-8391-4c4e-8c22-c447e3bddea6",
+        "name": "Chrom",
+        "picture": "https://www.ssbwiki.com/images/7/70/ChromHeadSSBUWebsite.png"
+      },
+      {
+        "id": "223b4cce-6d97-48e9-951d-8f8026f6a19e",
+        "name": "Dark Samus",
+        "picture": "https://www.ssbwiki.com/images/2/24/DarkSamusHeadSSBUWebsite.png"
+      },
+      {
+        "id": "1fc3f931-02c5-4e0e-b2e6-e21f956d0247",
+        "name": "Daisy",
+        "picture": "https://www.ssbwiki.com/images/2/2d/DaisyHeadSSBUWebsite.png"
+      },
+      {
+        "id": "4dd4ed22-a369-4185-90ac-98287b0c069e",
+        "name": "Diddy Kong",
+        "picture": "https://www.ssbwiki.com/images/5/5d/DiddyKongHeadSSBUWebsite.png"
+      },
+      {
+        "id": "07099a98-ee27-44ec-89d6-b819e1019d77",
+        "name": "Ken",
+        "picture": "https://www.ssbwiki.com/images/e/ef/KenHeadSSBUWebsite.png"
+      },
+      {
+        "id": "da312cb9-c765-4fc0-92b5-5b5cd1e83138",
+        "name": "Inkling",
+        "picture": "https://www.ssbwiki.com/images/0/04/InklingHeadSSBUWebsite.png"
+      },
+      {
+        "id": "fa1f4607-12fe-4714-a7cf-22a32057fa59",
+        "name": "Mega Man",
+        "picture": "https://www.ssbwiki.com/images/2/26/MegaManHeadSSBUWebsite.png"
+      },
+      {
+        "id": "9af4c09e-4cd2-4097-b88f-bbca3bd7437e",
+        "name": "Peach",
+        "picture": "https://www.ssbwiki.com/images/1/14/PeachHeadSSBUWebsite.png"
+      },
+      {
+        "id": "558ca451-6161-4b28-9526-66e6f754122f",
+        "name": "Ryu",
+        "picture": "https://www.ssbwiki.com/images/2/20/RyuHeadSSBUWebsite.png"
+      },
+      {
+        "id": "088d2730-d39f-46b5-a945-2f0742b3393c",
+        "name": "Villager",
+        "picture": "https://www.ssbwiki.com/images/f/f9/VillagerHeadSSBUWebsite.png"
+      },
+      {
+        "id": "b69efdc6-08f3-4a20-a194-8778f0f1eb5a",
+        "name": "Dark Pit",
+        "picture": "https://www.ssbwiki.com/images/8/8b/DarkPitHeadSSBUWebsite.png"
+      },
+      {
+        "id": "33e263cc-89da-4a3c-a7b3-767502edeb82",
+        "name": "Falco",
+        "picture": "https://www.ssbwiki.com/images/6/6e/FalcoHeadSSBUWebsite.png"
+      },
+      {
+        "id": "44fc36a1-2404-4bcd-b83a-e7352806023c",
+        "name": "Ganondorf",
+        "picture": "https://www.ssbwiki.com/images/b/b6/GanondorfHeadSSBUWebsite.png"
+      },
+      {
+        "id": "e690da76-91f8-425d-9219-7e8411cf4fdf",
+        "name": "Ike",
+        "picture": "https://www.ssbwiki.com/images/2/25/IkeHeadSSBUWebsite.png"
+      },
+      {
+        "id": "71388051-7f59-4579-9f79-f7ec2d2a23d8",
+        "name": "Luigi",
+        "picture": "https://www.ssbwiki.com/images/9/9d/LuigiHeadSSBUWebsite.png"
+      },
+      {
+        "id": "c2810d57-6b31-4bb6-8f6b-f6c98f0a958e",
+        "name": "Jigglypuff",
+        "picture": "https://www.ssbwiki.com/images/9/90/JigglypuffHeadSSBUWebsite.png"
+      },
+      {
+        "id": "9838f6f0-2a0c-46d1-ae01-f7052f7be708",
+        "name": "Palutena",
+        "picture": "https://www.ssbwiki.com/images/d/d7/PalutenaHeadSSBUWebsite.png"
+      },
+      {
+        "id": "d56fc00f-1981-4826-9caa-a0fb11a67936",
+        "name": "Pokémon Trainer",
+        "picture": "https://www.ssbwiki.com/images/2/2c/Pok%C3%A9monTrainerHeadSSBUWebsite.png"
+      },
+      {
+        "id": "49491f6a-3c38-4a51-a409-a2834365c9fe",
+        "name": "Sonic",
+        "picture": "https://www.ssbwiki.com/images/b/b7/SonicHeadSSBUWebsite.png"
+      },
+      {
+        "id": "71eb45b8-5e4b-40ea-b1e5-c2090f9d0481",
+        "name": "Wolf",
+        "picture": "https://www.ssbwiki.com/images/0/06/WolfHeadSSBUWebsite.png"
+      },
+      {
+        "id": "06372fbf-ddf2-433e-8ffc-c320f2b25fa9",
+        "name": "Bayonetta",
+        "picture": "https://www.ssbwiki.com/images/2/27/BayonettaHeadSSBUWebsite.png"
+      },
+      {
+        "id": "2bb2005c-7a31-4d72-bf0c-9626814a0e9f",
+        "name": "Duck Hunt",
+        "picture": "https://www.ssbwiki.com/images/3/38/DuckHuntHeadSSBUWebsite.png"
+      },
+      {
+        "id": "8d8bd4de-d030-442e-a800-f90e7589b489",
+        "name": "King Dedede",
+        "picture": "https://www.ssbwiki.com/images/f/fe/KingDededeHeadSSBUWebsite.png"
+      },
+      {
+        "id": "26f27c8e-158d-4569-85ae-690408bad5bb",
+        "name": "Mario",
+        "picture": "https://www.ssbwiki.com/images/9/9e/MarioHeadSSBUWebsite.png"
+      },
+      {
+        "id": "f6116d8d-d3c4-4d34-91aa-7dc9a7462d84",
+        "name": "Meta Knight",
+        "picture": "https://www.ssbwiki.com/images/3/3d/MetaKnightHeadSSBUWebsite.png"
+      },
+      {
+        "id": "f6a25bbc-6165-42a0-9993-a87b877141af",
+        "name": "Marth",
+        "picture": "https://www.ssbwiki.com/images/a/ae/MarthHeadSSBUWebsite.png"
+      },
+      {
+        "id": "c6e9b6a7-3d63-45ff-802a-779da0bf0d85",
+        "name": "Roy",
+        "picture": "https://www.ssbwiki.com/images/2/22/RoyHeadSSBUWebsite.png"
+      },
+      {
+        "id": "d0d4c32c-78d2-431c-8555-053e577505af",
+        "name": "Steve",
+        "picture": "https://www.ssbwiki.com/images/4/4f/SteveHeadSSBUWebsite.png"
+      },
+      {
+        "id": "f828db55-1a9f-41c4-95f1-149e48a12e10",
+        "name": "Zelda",
+        "picture": "https://www.ssbwiki.com/images/c/c8/ZeldaHeadSSBUWebsite.png"
+      },
+      {
+        "id": "ec55aef8-7308-4f48-b300-213f51c39c6c",
+        "name": "Hero",
+        "picture": "https://www.ssbwiki.com/images/1/1e/HeroHeadSSBUWebsite.png"
+      },
+      {
+        "id": "7fd63e86-9ca8-4075-bbc0-907b5a647ae6",
+        "name": "Ice Climbers",
+        "picture": "https://www.ssbwiki.com/images/0/0c/IceClimbersHeadSSBUWebsite.png"
+      },
+      {
+        "id": "c443c64b-27e0-42b9-8781-d780420bf3b0",
+        "name": "Kazuya",
+        "picture": "https://ssb.wiki.gallery/images/8/85/KazuyaHeadSSBUWebsite.png"
+      },
+      {
+        "id": "f4566a62-2833-45fc-8f15-940a99ffead1",
+        "name": "Mr Game & Watch",
+        "picture": "https://www.ssbwiki.com/images/1/15/MrGame%26WatchHeadSSBUWebsite.png"
+      },
+      {
+        "id": "0cb8683f-7f43-468a-82ed-a093c56f83f7",
+        "name": "Pichu",
+        "picture": "https://www.ssbwiki.com/images/5/50/PichuHeadSSBUWebsite.png"
+      },
+      {
+        "id": "30741990-89c6-4ca8-a27e-d6e678b64131",
+        "name": "Pyra & Mythra",
+        "picture": "https://ssb.wiki.gallery/images/7/7c/PyraHeadSSBUWebsite.png"
+      },
+      {
+        "id": "8a15a025-ecd0-4a3f-a75b-567da1e789ee",
+        "name": "Snake",
+        "picture": "https://www.ssbwiki.com/images/9/9f/SnakeHeadSSBUWebsite.png"
+      },
+      {
+        "id": "abfe5fbc-aeb2-4f19-b9c7-5efaa6def1e7",
+        "name": "Captain Falcon",
+        "picture": "https://www.ssbwiki.com/images/6/6b/CaptainFalconHeadSSBUWebsite.png"
+      },
+      {
+        "id": "227fa895-2b88-4883-9ac5-47631620cbee",
+        "name": "Little Mac",
+        "picture": "https://www.ssbwiki.com/images/8/87/LittleMacHeadSSBUWebsite.png"
+      },
+      {
+        "id": "b812bce1-fe95-4aff-a80f-d97eeb02a50d",
+        "name": "Mewtwo",
+        "picture": "https://www.ssbwiki.com/images/7/7e/MewtwoHeadSSBUWebsite.png"
+      },
+      {
+        "id": "022a5cc5-8e1a-4f54-9b63-fb9ec2a78e6d",
+        "name": "Olimar",
+        "picture": "https://www.ssbwiki.com/images/9/97/OlimarHeadSSBUWebsite.png"
+      },
+      {
+        "id": "2c825fcc-981c-442e-86a0-08dffb3d221a",
+        "name": "Ridley",
+        "picture": "https://www.ssbwiki.com/images/7/7c/RidleyHeadSSBUWebsite.png"
+      },
+      {
+        "id": "26e64f2e-bf76-44de-a8d9-be2d2f7d129a",
+        "name": "Shulk",
+        "picture": "https://www.ssbwiki.com/images/b/bf/ShulkHeadSSBUWebsite.png"
+      },
+      {
+        "id": "68ac06af-41b6-488a-a1ab-959d07d52a06",
+        "name": "Joker",
+        "picture": "https://www.ssbwiki.com/images/6/63/JokerHeadSSBUWebsite.png"
+      },
+      {
+        "id": "68739289-7ab2-4283-ac9e-f73f64ff003d",
+        "name": "Lucas",
+        "picture": "https://www.ssbwiki.com/images/3/31/LucasHeadSSBUWebsite.png"
+      },
+      {
+        "id": "bce678d7-e584-40d9-a95d-ee0e8167adf3",
+        "name": "Pikachu",
+        "picture": "https://www.ssbwiki.com/images/5/52/PikachuHeadSSBUWebsite.png"
+      },
+      {
+        "id": "21dfbf72-1947-4d57-9677-c8a0a158df02",
+        "name": "Rosalina",
+        "picture": "https://www.ssbwiki.com/images/6/63/RosalinaHeadSSBUWebsite.png"
+      },
+      {
+        "id": "4a1493f0-2820-4d60-9946-258df5f86f2d",
+        "name": "Simon",
+        "picture": "https://www.ssbwiki.com/images/5/52/SimonHeadSSBUWebsite.png"
+      },
+      {
+        "id": "3671d4e7-578e-43bf-a382-4a23b1990755",
+        "name": "Incineroar",
+        "picture": "https://www.ssbwiki.com/images/e/e3/IncineroarHeadSSBUWebsite.png"
+      },
+      {
+        "id": "20105acf-6458-4f92-bfac-09c61ff10f46",
+        "name": "Link",
+        "picture": "https://www.ssbwiki.com/images/2/2b/LinkHeadSSBUWebsite.png"
+      },
+      {
+        "id": "5da7fac2-6518-403b-879c-e7eacd8667c4",
+        "name": "Richter",
+        "picture": "https://www.ssbwiki.com/images/a/ab/RichterHeadSSBUWebsite.png"
+      },
+      {
+        "id": "5313cab0-c0ec-42c1-9d65-21f655f983d9",
+        "name": "Wii Fit Trainer",
+        "picture": "https://www.ssbwiki.com/images/f/fc/WiiFitTrainerHeadSSBUWebsite.png"
+      },
+      {
+        "id": "f1cdb78f-f805-4b16-9ce2-46b1938f2b02",
+        "name": "Mii Fighter",
+        "picture": "https://www.ssbwiki.com/images/c/cf/MiiFighterHeadSSBUWebsite.png"
+      },
+      {
+        "id": "34ce31dc-9156-4e05-8534-ddb76666a41a",
+        "name": "Pit",
+        "picture": "https://www.ssbwiki.com/images/d/d7/PitHeadSSBUWebsite.png"
+      },
+      {
+        "id": "8e52dc10-7082-4839-877a-7fe7f85aff8f",
+        "name": "Sheik",
+        "picture": "https://www.ssbwiki.com/images/1/1e/SheikHeadSSBUWebsite.png"
+      },
+      {
+        "id": "d3539ee9-8d7d-4659-bd9f-a11b310b32f3",
+        "name": "Zero Suit Samus",
+        "picture": "https://www.ssbwiki.com/images/5/5a/ZeroSuitSamusHeadSSBUWebsite.png"
+      },
+      {
+        "id": "bd78d40d-6c8c-4aee-b75e-0f117f2d6a10",
+        "name": "Piranha Plant",
+        "picture": "https://www.ssbwiki.com/images/c/cf/PiranhaPlantHeadSSBUWebsite.png"
+      },
+      {
+        "id": "c779a5d3-de44-4795-baf7-bf30990c4537",
+        "name": "Sephiroth",
+        "picture": "https://www.ssbwiki.com/images/6/64/SephirothHeadSSBUWebsite.png"
+      },
+      {
+        "id": "998c8903-b5b2-4f93-b78c-d78fda8caff7",
+        "name": "Samus",
+        "picture": "https://www.ssbwiki.com/images/d/d0/SamusHeadSSBUWebsite.png"
+      },
+      {
+        "id": "fa9c41c1-eef1-4491-9b23-f706fc47050f",
+        "name": "Sora",
+        "picture": "https://ssb.wiki.gallery/images/6/61/SoraHeadSSBUWebsite.png"
+      },
+      {
+        "id": "e1a7000b-a273-4dbe-a141-2d5a6c9cf47e",
+        "name": "Wario",
+        "picture": "https://www.ssbwiki.com/images/7/7f/WarioHeadSSBUWebsite.png"
+      }
+    ]
   }
 }

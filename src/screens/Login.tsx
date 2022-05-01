@@ -1,16 +1,16 @@
-import { SafeAreaView, TouchableOpacity, View } from "react-native"
-import { useTailwind } from "tailwind-rn"
-import { Text } from "../components/Text"
+import { SafeAreaView, TouchableOpacity, View } from 'react-native'
+import { useTailwind } from 'tailwind-rn'
+import { Text } from '../components/Text'
 import { useFormik } from 'formik'
-import { useNavigation } from "@react-navigation/native"
-import { Input } from "../components/Input"
-import { Button } from "../components/Button"
-import { LoginScreenNavigationProp } from "../../App"
-import { useContext, useEffect } from "react"
+import { useNavigation } from '@react-navigation/native'
+import { Input } from '../components/Input'
+import { Button } from '../components/Button'
+import { LoginScreenNavigationProp } from '../../App'
+import { useContext, useEffect } from 'react'
 import { object, string } from 'yup'
-import { AuthContext } from "../contexts/AuthContext"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useLoginMutation } from "../generated/graphql"
+import { AuthContext } from '../contexts/AuthContext'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useLoginMutation } from '../generated/graphql'
 
 export const loginSchema = object({
   email: string().email().required(),
@@ -33,7 +33,7 @@ export const Login = () => {
       email: null,
       password: null
     },
-    onSubmit: async values => {
+    onSubmit: async (values) => {
       await login({
         variables: {
           email: values.email!,
@@ -61,8 +61,12 @@ export const Login = () => {
     <SafeAreaView style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
       <View style={tailwind('p-6 flex-1 justify-center')}>
         <View style={tailwind('items-center mb-10')}>
-          <Text style={tailwind('text-3xl font-bold')}>Welcome to smashpros!</Text>
-          <Text style={tailwind('text-xl text-grey-400 font-medium')}>An unique SSBU tool!</Text>
+          <Text style={tailwind('text-3xl font-bold')}>
+            Welcome to smashpros!
+          </Text>
+          <Text style={tailwind('text-xl text-grey-400 font-medium')}>
+            An unique SSBU tool!
+          </Text>
         </View>
 
         <Input
@@ -81,7 +85,9 @@ export const Login = () => {
           label="Password"
         />
 
-        {error && <Text style={tailwind('text-red-400 text-sm')}>{error?.message}</Text>}
+        {error && (
+          <Text style={tailwind('text-red-400 text-sm')}>{error?.message}</Text>
+        )}
 
         <View style={tailwind('mt-5')}>
           <Button
@@ -90,14 +96,13 @@ export const Login = () => {
             disabled={!isValid || loading}
             text="Login"
           />
-          <Button
-            text="Forgot password?"
-            outlined
-          />
+          <Button text="Forgot password?" outlined />
         </View>
       </View>
       <View style={tailwind('p-2 justify-center items-center flex-row')}>
-        <Text style={tailwind('text-grey-400 font-bold')}>Don't have an account ?</Text>
+        <Text style={tailwind('text-grey-400 font-bold')}>
+          Don't have an account ?
+        </Text>
         <TouchableOpacity
           style={tailwind('ml-1')}
           activeOpacity={0.8}

@@ -1,8 +1,8 @@
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
-import { createContext, useEffect, useState } from "react";
+import { useAsyncStorage } from '@react-native-async-storage/async-storage'
+import { createContext, useEffect, useState } from 'react'
 import decode from 'jwt-decode'
 import dayjs from 'dayjs'
-import { useRefreshMutation } from "../generated/graphql";
+import { useRefreshMutation } from '../generated/graphql'
 
 type Props = {
   children: React.ReactNode
@@ -24,12 +24,17 @@ export const AuthContext = createContext<{
   ready: false,
   loggedIn: false,
   setLoggedIn: () => {},
-  guest: true,
+  guest: true
 })
 
 export const AuthContextProvider: React.FC<Props> = ({ children }) => {
-  const { getItem: getAccessToken, setItem, removeItem: removeAccessToken } = useAsyncStorage('token:access')
-  const { getItem: getRefreshToken, removeItem: removeRefreshToken } = useAsyncStorage('token:refresh')
+  const {
+    getItem: getAccessToken,
+    setItem,
+    removeItem: removeAccessToken
+  } = useAsyncStorage('token:access')
+  const { getItem: getRefreshToken, removeItem: removeRefreshToken } =
+    useAsyncStorage('token:refresh')
   const [ready, setReady] = useState(false)
   const [loggedIn, setLoggedIn] = useState(false)
   const guest = true
@@ -46,7 +51,7 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
   // Refresh token
   async function doRefresh() {
     const refreshToken = await getRefreshToken()
-    
+
     return refresh({
       variables: {
         refreshToken: refreshToken!
@@ -69,7 +74,7 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
         if (exp < now) {
           try {
             const { data } = await doRefresh()
-          
+
             if (data) {
               setItem(data.refresh?.accessToken!)
               setLoggedIn(true)

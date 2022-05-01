@@ -1,8 +1,14 @@
-import { Image, ImageSourcePropType, TouchableOpacity, TouchableOpacityProps, View } from "react-native"
-import { useTailwind } from "tailwind-rn/dist"
-import { Crew as ICrew } from "../generated/graphql"
-import { ProgressiveImage } from "./ProgressiveImage"
-import { Text } from "./Text"
+import {
+  Image,
+  ImageSourcePropType,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View
+} from 'react-native'
+import { useTailwind } from 'tailwind-rn/dist'
+import { Crew as ICrew } from '../generated/graphql'
+import { ProgressiveImage } from './ProgressiveImage'
+import { Text } from './Text'
 
 type Props = TouchableOpacityProps & {
   crew: ICrew
@@ -17,10 +23,7 @@ export const Crew = ({ crew, full, image, ...props }: Props) => {
     <TouchableOpacity
       {...props}
       activeOpacity={0.8}
-      style={[
-        tailwind('mr-2 w-24'),
-        full ? tailwind('w-full') : null
-      ]}
+      style={[tailwind('mr-2 w-24'), full ? tailwind('w-full') : null]}
     >
       <ProgressiveImage
         source={{ uri: image ?? crew.banner ?? crew.icon }}

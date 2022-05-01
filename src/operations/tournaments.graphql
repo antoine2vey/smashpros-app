@@ -39,7 +39,7 @@ query Tournaments($cursor: String) {
 }
 
 query SingleTournament($id: ID!, $cursor: String, $characters: [ID!]) {
-  tournament (id: $id) {
+  tournament(id: $id) {
     id
     city
     end_at

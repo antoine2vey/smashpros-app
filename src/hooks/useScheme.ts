@@ -1,5 +1,5 @@
-import { useContext } from "react"
-import { DarkContext } from "../contexts/DarkContext"
+import { useContext } from 'react'
+import { DarkContext } from '../contexts/DarkContext'
 
 export function useScheme() {
   const { scheme, setScheme } = useContext(DarkContext)

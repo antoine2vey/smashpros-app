@@ -1,4 +1,4 @@
-query Crew ($id: ID) {
+query Crew($id: ID) {
   user {
     id
     roles {
@@ -14,25 +14,25 @@ query Crew ($id: ID) {
   }
 }
 
-mutation KickMember ($id: ID!) {
-  kickMember (id: $id) {
+mutation KickMember($id: ID!) {
+  kickMember(id: $id) {
     ...CrewMember
   }
 }
 
-mutation JoinCrew ($id: ID!) {
-  joinCrew (id: $id) {
+mutation JoinCrew($id: ID!) {
+  joinCrew(id: $id) {
     ...BaseCrew
   }
 }
 
-mutation UpdateMember ($action: CrewUpdateActionEnum!, $id: ID!) {
-  updateMember (action: $action, id: $id) {
+mutation UpdateMember($action: CrewUpdateActionEnum!, $id: ID!) {
+  updateMember(action: $action, id: $id) {
     ...BaseCrew
   }
 }
 
-mutation TransferCrewOwnership ($to: ID!) {
+mutation TransferCrewOwnership($to: ID!) {
   transferCrewOwnership(to: $to) {
     ...BaseCrew
   }

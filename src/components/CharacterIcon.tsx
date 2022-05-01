@@ -1,6 +1,12 @@
-import { StyleProp, TouchableOpacity, TouchableOpacityProps, View, ViewStyle } from "react-native"
-import { useTailwind } from "tailwind-rn/dist"
-import { ProgressiveImage } from "./ProgressiveImage"
+import {
+  StyleProp,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewStyle
+} from 'react-native'
+import { useTailwind } from 'tailwind-rn/dist'
+import { ProgressiveImage } from './ProgressiveImage'
 
 type Props = TouchableOpacityProps & {
   uri: string
@@ -8,7 +14,12 @@ type Props = TouchableOpacityProps & {
   style?: StyleProp<ViewStyle>
 }
 
-export const CharacterIcon: React.FC<Props> = ({ selected, uri, style, onPress }) => {
+export const CharacterIcon: React.FC<Props> = ({
+  selected,
+  uri,
+  style,
+  onPress
+}) => {
   const tailwind = useTailwind()
 
   return (

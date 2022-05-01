@@ -1,15 +1,22 @@
-import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native"
-import dayjs from "dayjs"
-import { useEffect } from "react"
-import { ScrollView, TouchableOpacity, View } from "react-native"
-import { useTailwind } from "tailwind-rn/dist"
-import { HomeScreenNavigateProp, RootRouteProps } from "../../App"
-import { colors } from "../colors"
-import { ProgressiveImage, ProgressiveImageBackground } from "../components/ProgressiveImage"
-import { Text } from "../components/Text"
-import { useProfileQuery } from "../generated/graphql"
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute
+} from '@react-navigation/native'
+import dayjs from 'dayjs'
+import { useEffect } from 'react'
+import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { useTailwind } from 'tailwind-rn/dist'
+import { HomeScreenNavigateProp, RootRouteProps } from '../../App'
+import { colors } from '../colors'
+import {
+  ProgressiveImage,
+  ProgressiveImageBackground
+} from '../components/ProgressiveImage'
+import { Text } from '../components/Text'
+import { useProfileQuery } from '../generated/graphql'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { Crew } from "../components/Crew"
+import { Crew } from '../components/Crew'
 
 export const UserProfile = () => {
   const tailwind = useTailwind()
@@ -35,21 +42,39 @@ export const UserProfile = () => {
 
       <View style={tailwind('flex-row flex-wrap items-center')}>
         <Text style={tailwind('text-3xl font-medium')}>
-          {data?.user?.crew && <Text style={tailwind('text-3xl font-bold text-green-300')}>{data.user.crew.prefix} | </Text>}
+          {data?.user?.crew && (
+            <Text style={tailwind('text-3xl font-bold text-green-300')}>
+              {data.user.crew.prefix} |{' '}
+            </Text>
+          )}
           {data?.user?.tag}
         </Text>
         <View style={tailwind('flex-row mt-2 ml-4')}>
-          <Ionicons name="logo-twitch" size={22} color="#6441a5" style={tailwind('mr-1')} />
-          <Ionicons name="logo-twitter" size={22} color="#1DA1F2" style={tailwind('mr-1')} />
+          <Ionicons
+            name="logo-twitch"
+            size={22}
+            color="#6441a5"
+            style={tailwind('mr-1')}
+          />
+          <Ionicons
+            name="logo-twitter"
+            size={22}
+            color="#1DA1F2"
+            style={tailwind('mr-1')}
+          />
         </View>
       </View>
-      <Text style={tailwind('text-sm text-grey-400')}>Inscrit depuis {dayjs(data?.user?.created_at).fromNow(true)}</Text>
-      <Text style={tailwind('text-sm text-grey-400')}>Vu pour la dernière fois {dayjs(data?.user?.updated_at).fromNow()}</Text>
+      <Text style={tailwind('text-sm text-grey-400')}>
+        Inscrit depuis {dayjs(data?.user?.created_at).fromNow(true)}
+      </Text>
+      <Text style={tailwind('text-sm text-grey-400')}>
+        Vu pour la dernière fois {dayjs(data?.user?.updated_at).fromNow()}
+      </Text>
 
       <View style={tailwind('')}>
         <Text style={tailwind('text-xl mt-5 font-bold')}>Characters</Text>
         <View style={tailwind('flex-row flex-wrap mt-2')}>
-          {data?.user?.characters.map(character => (
+          {data?.user?.characters.map((character) => (
             <ProgressiveImage
               source={{ uri: character.picture }}
               key={character.id}
@@ -80,7 +105,7 @@ export const UserProfile = () => {
           style={tailwind('-mx-5 pl-5 flex-row flex-wrap mt-2')}
           contentContainerStyle={tailwind('pr-5')}
         >
-          {data?.user?.tournaments.map(tournament => (
+          {data?.user?.tournaments.map((tournament) => (
             <TouchableOpacity
               key={tournament.id}
               onPress={() => {
@@ -90,24 +115,30 @@ export const UserProfile = () => {
             >
               <ProgressiveImage
                 source={{ uri: tournament.images[1] || tournament.images[0] }}
-                style={tailwind('h-48 w-28 rounded-xl mr-2 bg-white-300 dark:bg-black-300')}
+                style={tailwind(
+                  'h-48 w-28 rounded-xl mr-2 bg-white-300 dark:bg-black-300'
+                )}
                 resizeMode="cover"
               />
             </TouchableOpacity>
           ))}
         </ScrollView>
       ) : (
-        <Text style={tailwind('text-grey-400')}>Aucun tournoi en approche!</Text>
+        <Text style={tailwind('text-grey-400')}>
+          Aucun tournoi en approche!
+        </Text>
       )}
 
-      <Text style={tailwind('text-xl mt-5 font-bold')}>Favorited tournaments</Text>
+      <Text style={tailwind('text-xl mt-5 font-bold')}>
+        Favorited tournaments
+      </Text>
       {data?.user?.favorited_tournaments.length! > 0 ? (
         <ScrollView
           horizontal
           style={tailwind('-mx-5 pl-5 flex-row flex-wrap mt-2')}
           contentContainerStyle={tailwind('pr-5')}
         >
-          {data?.user?.favorited_tournaments.map(tournament => (
+          {data?.user?.favorited_tournaments.map((tournament) => (
             <TouchableOpacity
               key={tournament.id}
               onPress={() => {
@@ -117,7 +148,9 @@ export const UserProfile = () => {
             >
               <ProgressiveImage
                 source={{ uri: tournament.images[1] || tournament.images[0] }}
-                style={tailwind('h-48 w-28 rounded-xl mr-2 bg-white-300 dark:bg-black-300')}
+                style={tailwind(
+                  'h-48 w-28 rounded-xl mr-2 bg-white-300 dark:bg-black-300'
+                )}
                 resizeMode="cover"
               />
             </TouchableOpacity>
@@ -126,7 +159,6 @@ export const UserProfile = () => {
       ) : (
         <Text style={tailwind('text-grey-400')}>Aucun tournoi favori</Text>
       )}
-
     </ScrollView>
   )
 }

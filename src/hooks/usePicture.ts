@@ -11,7 +11,7 @@ export function usePicture() {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 1
     })
 
     if (!result.cancelled) {
@@ -27,7 +27,7 @@ export function usePicture() {
     return new ReactNativeFile({
       uri,
       type: 'image',
-      name,
+      name
     })
   }
 

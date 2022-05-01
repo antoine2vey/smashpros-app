@@ -1,8 +1,8 @@
-import { createContext, useState } from "react";
-import { ColorSchemeName, useColorScheme } from "react-native";
+import { createContext, useState } from 'react'
+import { ColorSchemeName, useColorScheme } from 'react-native'
 
 export const DarkContext = createContext<{
-  scheme: ColorSchemeName,
+  scheme: ColorSchemeName
   setScheme: React.Dispatch<React.SetStateAction<ColorSchemeName>>
 }>({
   scheme: 'light',

@@ -1,6 +1,6 @@
-import { gql, InMemoryCache } from "@apollo/client";
-import { relayStylePagination } from "@apollo/client/utilities";
-import { merge } from "lodash";
+import { gql, InMemoryCache } from '@apollo/client'
+import { relayStylePagination } from '@apollo/client/utilities'
+import { merge } from 'lodash'
 
 export const cache = new InMemoryCache({
   typePolicies: {

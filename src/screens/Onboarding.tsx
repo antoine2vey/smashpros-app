@@ -1,9 +1,9 @@
-import { Text, View } from "react-native"
+import { Text, View } from 'react-native'
 
 export const Onboarding = () => {
-    return (
-        <View>
-            <Text>test</Text>
-        </View>
-    )
+  return (
+    <View>
+      <Text>test</Text>
+    </View>
+  )
 }

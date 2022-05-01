@@ -1,10 +1,24 @@
-import { LinearGradient } from "expo-linear-gradient"
-import { useEffect, useMemo, useState } from "react"
-import { LayoutRectangle, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
-import Animated, { Easing, Extrapolate, interpolate, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated"
-import { useTailwind } from "tailwind-rn/dist"
-import { colors } from "../../colors"
-import { useScheme } from "../../hooks/useScheme"
+import { LinearGradient } from 'expo-linear-gradient'
+import { useEffect, useMemo, useState } from 'react'
+import {
+  LayoutRectangle,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle
+} from 'react-native'
+import Animated, {
+  Easing,
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming
+} from 'react-native-reanimated'
+import { useTailwind } from 'tailwind-rn/dist'
+import { colors } from '../../colors'
+import { useScheme } from '../../hooks/useScheme'
 
 type Props = {
   itemStyle?: StyleProp<ViewStyle>
@@ -16,8 +30,11 @@ export const Placeholder: React.FC<Props> = ({ itemStyle }) => {
   const [layout, setLayout] = useState<LayoutRectangle>()
   const primaryColor = scheme === 'light' ? colors.placeholder : colors.black
   const secondaryColor = scheme === 'light' ? colors.white : colors.black2
-  const gradientColors = useMemo(() => [primaryColor, secondaryColor, primaryColor], [primaryColor, secondaryColor])
-  const width = useSharedValue(0) 
+  const gradientColors = useMemo(
+    () => [primaryColor, secondaryColor, primaryColor],
+    [primaryColor, secondaryColor]
+  )
+  const width = useSharedValue(0)
   const styles = useAnimatedStyle(() => {
     if (layout) {
       return {
@@ -51,7 +68,7 @@ export const Placeholder: React.FC<Props> = ({ itemStyle }) => {
 
   return (
     <View
-      onLayout={event => setLayout(event.nativeEvent.layout)}
+      onLayout={(event) => setLayout(event.nativeEvent.layout)}
       style={[
         itemStyle,
         {
@@ -77,7 +94,10 @@ type TextPlaceholderProps = {
   style?: StyleProp<ViewStyle>
 }
 
-export const TextPlaceholder: React.FC<TextPlaceholderProps> = ({ type, style }) => {
+export const TextPlaceholder: React.FC<TextPlaceholderProps> = ({
+  type,
+  style
+}) => {
   const tailwind = useTailwind()
 
   function getHeightFromType() {
@@ -98,9 +118,8 @@ export const TextPlaceholder: React.FC<TextPlaceholderProps> = ({ type, style })
   }
 
   return (
-    <Placeholder itemStyle={[
-      tailwind(`rounded-md ${getHeightFromType()} mb-1.5`),
-      style
-    ]}  />
+    <Placeholder
+      itemStyle={[tailwind(`rounded-md ${getHeightFromType()} mb-1.5`), style]}
+    />
   )
 }
