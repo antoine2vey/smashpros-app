@@ -1,7 +1,11 @@
 query Characters {
   characters {
-    id
-    name
-    picture
+    ...CharacterData
   }
+}
+
+fragment CharacterData on Character {
+  id
+  name
+  picture
 }

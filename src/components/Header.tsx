@@ -16,8 +16,6 @@ import { HomeScreenNavigateProp } from '../../App'
 import { useHeaderQuery } from '../generated/graphql'
 import { BackButton } from './BackButton'
 
-const profile = require('../assets/icon.png')
-
 const Avatar = ({ size, url }: { size: number; url: ImageSourcePropType }) => (
   <View
     style={{
@@ -35,26 +33,31 @@ const Avatar = ({ size, url }: { size: number; url: ImageSourcePropType }) => (
   </View>
 )
 
-export const Header = ({}: NativeStackHeaderProps) => {
+type Props = NativeStackHeaderProps & {
+  root?: boolean
+}
+
+export const Header: React.FC<Props> = ({ root }) => {
   const { top } = useSafeAreaInsets()
   const tailwind = useTailwind()
   const { navigate, canGoBack } = useNavigation<HomeScreenNavigateProp>()
   const { data } = useHeaderQuery()
+
   const canBack = useMemo(() => canGoBack(), [])
 
   return (
     <View
       style={[
         { paddingTop: top },
-        tailwind('px-2 pb-2 bg-white-200 dark:bg-black-200')
+        tailwind('px-2 pb-2 bg-white-300 dark:bg-black-300')
       ]}
     >
       <View style={tailwind('flex-row justify-between')}>
         <View style={tailwind('flex-row items-center')}>
-          {canBack && <BackButton />}
+          {!root && canBack && <BackButton />}
         </View>
 
-        <View style={canBack ? null : tailwind('flex-1')}>
+        <View style={!root && canBack ? null : tailwind('flex-1')}>
           <TouchableOpacity
             style={tailwind('flex-row items-center')}
             onPress={() => navigate('UserProfile', { id: undefined })}

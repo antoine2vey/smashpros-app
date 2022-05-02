@@ -252,6 +252,10 @@
   height: 3.5rem
 }
 
+.h-56 {
+  height: 14rem
+}
+
 .w-7 {
   width: 1.75rem
 }
@@ -298,6 +302,14 @@
 
 .w-60 {
   width: 15rem
+}
+
+.w-4 {
+  width: 1rem
+}
+
+.w-8 {
+  width: 2rem
 }
 
 .flex-1 {
@@ -368,9 +380,30 @@
   border-radius: 1rem
 }
 
+.rounded-sm {
+  border-radius: 0.125rem
+}
+
+.rounded {
+  border-radius: 0.25rem
+}
+
 .rounded-t-3xl {
   border-top-left-radius: 1.5rem;
   border-top-right-radius: 1.5rem
+}
+
+.border {
+  border-width: 1px
+}
+
+.border-2 {
+  border-width: 2px
+}
+
+.border-green-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(69 211 126 / var(--tw-border-opacity))
 }
 
 .bg-green-300 {
@@ -416,6 +449,15 @@
 .bg-blue-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(39 48 58 / var(--tw-bg-opacity))
+}
+
+.bg-transparent {
+  background-color: transparent
+}
+
+.bg-green-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(40 164 90 / var(--tw-bg-opacity))
 }
 
 .p-3 {
@@ -617,6 +659,11 @@
   .dark\:bg-black-200 {
     --tw-bg-opacity: 1;
     background-color: rgb(41 41 41 / var(--tw-bg-opacity))
+  }
+
+  .dark\:bg-red-400 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(244 67 102 / var(--tw-bg-opacity))
   }
 
   .dark\:text-white-300 {

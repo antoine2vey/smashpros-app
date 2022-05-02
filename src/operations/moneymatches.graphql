@@ -1,0 +1,24 @@
+mutation sendMatchInvite(
+  $to: ID!
+  $totalMatches: Int!
+  $isMoneymatch: Boolean
+  $amount: Int
+) {
+  sendMatchInvite(
+    to: $to
+    totalMatches: $totalMatches
+    isMoneymatch: $isMoneymatch
+    amount: $amount
+  ) {
+    id
+    initiator {
+      tag
+    }
+    opponent {
+      tag
+    }
+    amount
+    is_moneymatch
+    total_matches
+  }
+}

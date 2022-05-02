@@ -14,17 +14,15 @@ import { colors } from '../colors'
 import { Crew } from '../components/Crew'
 import { Text } from '../components/Text'
 import { Tournament } from '../components/Tournament'
-import { useTournamentsQuery } from '../generated/graphql'
-import { useScheme } from '../hooks/useScheme'
+import { useHomeQuery, useNextTournamentQuery } from '../generated/graphql'
 
 export const Home = () => {
   const [refreshing, setRefreshing] = useState(false)
   const { navigate } = useNavigation<HomeScreenNavigateProp>()
   const tailwind = useTailwind()
   const { t } = useTranslation()
-  const { scheme } = useScheme()
-  const { data, error, loading, fetchMore, refetch, networkStatus } =
-    useTournamentsQuery()
+  const { data, loading, fetchMore, refetch } = useHomeQuery()
+  const { data: nextTournamentData } = useNextTournamentQuery()
   const pageInfo = data?.tournaments?.pageInfo
 
   return (
@@ -57,43 +55,56 @@ export const Home = () => {
             </View>
           )}
 
-          {!data?.crew && (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={tailwind('mb-5')}
-            >
-              {data?.crews?.map((crew) => (
-                <Crew
-                  key={crew?.id}
-                  image={crew?.icon}
-                  crew={crew}
-                  onPress={() => navigate('Crew', { id: crew?.id })}
-                />
-              ))}
-            </ScrollView>
-          )}
+          {!data?.crew &&
+            (data?.crews?.length ? (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={tailwind('mb-5')}
+              >
+                {data?.crews?.map((crew) => (
+                  <Crew
+                    key={crew?.id}
+                    image={crew?.icon}
+                    crew={crew}
+                    onPress={() => navigate('Crew', { id: crew?.id })}
+                  />
+                ))}
+              </ScrollView>
+            ) : (
+              <Text style={tailwind('text-grey-400 mb-5')}>
+                Looks like no crew has been created yet! You can create one here
+                one?
+              </Text>
+            ))}
 
           <Text style={tailwind('text-4xl font-bold')}>{t('tournaments')}</Text>
           <View style={tailwind('bg-white-300 dark:bg-black-300 pb-1')}>
             <Text style={tailwind('text-xl')}>
-              {t('nextTournament')} -{' '}
-              <Text style={tailwind('font-bold')}>3 {t('days')}</Text>
+              {t('nextTournament')}
+              {nextTournamentData?.user?.nextTournament && (
+                <Text style={tailwind('font-bold')}> - 3 {t('days')}</Text>
+              )}
             </Text>
           </View>
 
-          {data?.tournaments?.edges?.length && (
+          {nextTournamentData?.user?.nextTournament ? (
             <View style={tailwind('mt-2.5')}>
               <Tournament
-                tournament={data?.tournaments?.edges[0]?.node}
+                tournament={nextTournamentData?.user?.nextTournament}
                 big
                 onPress={async () => {
                   navigate('Tournament', {
-                    id: data?.tournaments?.edges[0]?.node?.id
+                    id: nextTournamentData?.user?.nextTournament?.id
                   })
                 }}
               />
             </View>
+          ) : (
+            <Text style={tailwind('text-grey-400')}>
+              You are not registered to any tournament, maybe try to register to
+              one below?
+            </Text>
           )}
 
           <View style={tailwind('bg-white-300 dark:bg-black-300 pb-1 mt-2.5')}>
@@ -113,10 +124,6 @@ export const Home = () => {
         })
       }}
       renderItem={({ item: edge, index }) => {
-        if (index === 0) {
-          return null
-        }
-
         return (
           <Tournament
             key={edge?.cursor}

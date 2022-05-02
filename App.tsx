@@ -36,12 +36,14 @@ import { CrewScreen } from './src/screens/CrewScreen'
 import { ForgotPassword } from './src/screens/ForgotPassword'
 import { ResetPassword } from './src/screens/ResetPassword'
 import { ForgotPasswordConfirm } from './src/screens/ForgotPasswordConfirm'
+import { Moneymatches } from './src/screens/Moneymatches'
+import { CreateMoneymatch } from './src/screens/CreateMoneymatch'
 
 dayjs.extend(updateLocale)
 dayjs.extend(relativeTime)
 dayjs.locale('fr')
 
-LogBox.ignoreLogs(["[Reanimated] You can't use 'scrollTo"])
+LogBox.ignoreLogs(["[Reanimated] You can't use 'scrollTo'"])
 
 type HomeStackParamList = {
   HomeStack: undefined
@@ -68,6 +70,15 @@ type LogoutStackParamList = {
   }
 }
 
+type MoneymatchStackParamList = {
+  Moneymatches: undefined
+  CreateMoneymatch:
+    | undefined
+    | {
+        opponent: string | undefined
+      }
+}
+
 type RootStackParamList = {
   HomeTabs: undefined
   MoneymatchTab: undefined
@@ -79,14 +90,21 @@ export type LoginScreenNavigationProp =
   NativeStackNavigationProp<LogoutStackParamList>
 export type HomeScreenNavigateProp =
   NativeStackNavigationProp<HomeStackParamList>
+export type MoneymatchScreenNavigateProp =
+  NativeStackNavigationProp<MoneymatchStackParamList>
 
 export type RootRouteProps<RouteName extends keyof HomeStackParamList> =
   RouteProp<HomeStackParamList, RouteName>
 export type LogoutRouteProps<RouteName extends keyof LogoutStackParamList> =
   RouteProp<LogoutStackParamList, RouteName>
+export type MoneymatchRouteProps<
+  RouteName extends keyof MoneymatchStackParamList
+> = RouteProp<MoneymatchStackParamList, RouteName>
 
 const Stack = createNativeStackNavigator<HomeStackParamList>()
 const LogoutStackNavigator = createNativeStackNavigator<LogoutStackParamList>()
+const MoneymatchStackNavigator =
+  createNativeStackNavigator<MoneymatchStackParamList>()
 const Tab = createBottomTabNavigator<RootStackParamList>()
 
 const LogoutStack = () => (
@@ -131,38 +149,54 @@ const LogoutStack = () => (
 
 const HomeStack = () => (
   <Stack.Navigator>
-    <Stack.Group>
-      <Stack.Screen
-        name="HomeStack"
-        component={Home}
-        options={{
-          header: (props) => <Header {...props} />
-        }}
-      />
-      <Stack.Screen
-        name="Tournament"
-        component={Tournaments}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="UserProfile"
-        component={UserProfile}
-        options={{
-          header: (props) => <Header {...props} />
-        }}
-      />
-      <Stack.Screen
-        name="Crew"
-        component={CrewScreen}
-        options={{
-          headerShown: false
-        }}
-      />
-    </Stack.Group>
-    {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
-      
-    </Stack.Group> */}
+    <Stack.Screen
+      name="HomeStack"
+      component={Home}
+      options={{
+        header: (props) => <Header root {...props} />
+      }}
+    />
+    <Stack.Screen
+      name="Tournament"
+      component={Tournaments}
+      options={{
+        header: () => null
+      }}
+    />
+    <Stack.Screen
+      name="UserProfile"
+      component={UserProfile}
+      options={{
+        header: (props) => <Header {...props} />
+      }}
+    />
+    <Stack.Screen
+      name="Crew"
+      component={CrewScreen}
+      options={{
+        header: (props) => <Header {...props} />
+      }}
+    />
   </Stack.Navigator>
+)
+
+const MoneymatchesStack = () => (
+  <MoneymatchStackNavigator.Navigator>
+    <MoneymatchStackNavigator.Screen
+      name="Moneymatches"
+      component={Moneymatches}
+      options={{
+        header: (props) => <Header root {...props} />
+      }}
+    />
+    <MoneymatchStackNavigator.Screen
+      name="CreateMoneymatch"
+      component={CreateMoneymatch}
+      options={{
+        header: (props) => <Header {...props} />
+      }}
+    />
+  </MoneymatchStackNavigator.Navigator>
 )
 
 const Router = () => {
@@ -174,7 +208,7 @@ const Router = () => {
         name="HomeTabs"
         component={HomeStack}
         options={{
-          header: () => undefined,
+          header: () => null,
           tabBarLabel: () => undefined,
           tabBarStyle: {
             ...tailwind('bg-white-300 dark:bg-black-300'),
@@ -189,9 +223,9 @@ const Router = () => {
       />
       <Tab.Screen
         name="MoneymatchTab"
-        component={NoopScreen}
+        component={MoneymatchesStack}
         options={{
-          header: () => undefined,
+          header: (props) => null,
           tabBarLabel: () => undefined,
           tabBarStyle: {
             ...tailwind('bg-white-300 dark:bg-black-300'),

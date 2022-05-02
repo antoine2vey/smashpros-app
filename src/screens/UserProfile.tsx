@@ -17,6 +17,7 @@ import { Text } from '../components/Text'
 import { useProfileQuery } from '../generated/graphql'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Crew } from '../components/Crew'
+import { SmallTournament } from '../components/SmallTournament'
 
 export const UserProfile = () => {
   const tailwind = useTailwind()
@@ -106,21 +107,11 @@ export const UserProfile = () => {
           contentContainerStyle={tailwind('pr-5')}
         >
           {data?.user?.tournaments.map((tournament) => (
-            <TouchableOpacity
+            <SmallTournament
               key={tournament.id}
-              onPress={() => {
-                navigate('Tournament', { id: tournament.id })
-              }}
-              activeOpacity={0.9}
-            >
-              <ProgressiveImage
-                source={{ uri: tournament.images[1] || tournament.images[0] }}
-                style={tailwind(
-                  'h-48 w-28 rounded-xl mr-2 bg-white-300 dark:bg-black-300'
-                )}
-                resizeMode="cover"
-              />
-            </TouchableOpacity>
+              tournament={tournament}
+              onPress={() => navigate('Tournament', { id: tournament.id })}
+            />
           ))}
         </ScrollView>
       ) : (
@@ -139,21 +130,11 @@ export const UserProfile = () => {
           contentContainerStyle={tailwind('pr-5')}
         >
           {data?.user?.favorited_tournaments.map((tournament) => (
-            <TouchableOpacity
+            <SmallTournament
               key={tournament.id}
-              onPress={() => {
-                navigate('Tournament', { id: tournament.id })
-              }}
-              activeOpacity={0.9}
-            >
-              <ProgressiveImage
-                source={{ uri: tournament.images[1] || tournament.images[0] }}
-                style={tailwind(
-                  'h-48 w-28 rounded-xl mr-2 bg-white-300 dark:bg-black-300'
-                )}
-                resizeMode="cover"
-              />
-            </TouchableOpacity>
+              tournament={tournament}
+              onPress={() => navigate('Tournament', { id: tournament.id })}
+            />
           ))}
         </ScrollView>
       ) : (

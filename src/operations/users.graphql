@@ -1,0 +1,35 @@
+query users($first: Int!, $after: String, $filter: UserFilter!) {
+  users(first: $first, after: $after, filters: $filter) {
+    edges {
+      cursor
+      node {
+        id
+        tag
+        profile_picture
+        characters {
+          ...CharacterData
+        }
+      }
+    }
+  }
+}
+
+query userFilter($cursor: String) {
+  characters {
+    ...CharacterData
+  }
+  tournaments(first: 10, after: $cursor) {
+    edges {
+      cursor
+      node {
+        id
+        name
+        images
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

@@ -8,7 +8,7 @@ import { useScheme } from '../hooks/useScheme'
 import { colors } from '../colors'
 
 type Props = TextInputProps & {
-  label: string
+  label?: string
 }
 
 export const Input: React.FC<Props> = ({
@@ -31,6 +31,7 @@ export const Input: React.FC<Props> = ({
           tailwind(
             'rounded-md p-2 pt-6 font-medium text-black-300 dark:text-white-300 z-10'
           ),
+          !label && tailwind('pt-2'),
           {
             fontSize: 16
           }
@@ -38,7 +39,12 @@ export const Input: React.FC<Props> = ({
         secureTextEntry={visible}
         {...props}
       />
-      <Text style={tailwind('absolute top-0 text-xs pl-2 pt-2')}>{label}</Text>
+
+      {!!label && (
+        <Text style={tailwind('absolute top-0 text-xs pl-2 pt-2')}>
+          {label}
+        </Text>
+      )}
 
       {secureTextEntry && (
         <TouchableOpacity

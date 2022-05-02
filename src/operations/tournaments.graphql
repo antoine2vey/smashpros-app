@@ -1,4 +1,4 @@
-query Tournaments($cursor: String) {
+query Home($cursor: String) {
   tournaments(first: 10, after: $cursor) {
     edges {
       cursor
@@ -76,5 +76,30 @@ query SingleTournament($id: ID!, $cursor: String, $characters: [ID!]) {
     tournament_id
     venue_address
     venue_name
+  }
+}
+
+query NextTournament {
+  user {
+    id
+    nextTournament {
+      id
+      name
+      city
+      num_attendees
+      start_at
+      images
+      participants(first: 3) {
+        edges {
+          cursor
+          node {
+            id
+            tag
+            profile_picture
+          }
+        }
+        totalCount
+      }
+    }
   }
 }
