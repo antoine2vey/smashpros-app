@@ -16,12 +16,18 @@ export const SmallTournament: React.FC<Props> = ({
   const tailwind = useTailwind()
 
   return (
-    <TouchableOpacity activeOpacity={0.9} {...props}>
+    <TouchableOpacity
+      style={[
+        tailwind('mr-2 border-2 border-transparent'),
+        selected && tailwind('border-2 border-green-300 rounded-xl')
+      ]}
+      activeOpacity={0.9}
+      {...props}
+    >
       <ProgressiveImage
         source={{ uri: tournament.images[0] || tournament.images[1] }}
         style={[
-          selected && tailwind('border-2 border-green-300'),
-          tailwind('h-48 w-28 rounded-xl mr-2 bg-white-200 dark:bg-black-200')
+          tailwind('h-48 w-28 rounded-xl bg-white-200 dark:bg-black-200')
         ]}
         resizeMode="cover"
       />

@@ -38,6 +38,7 @@ import { ResetPassword } from './src/screens/ResetPassword'
 import { ForgotPasswordConfirm } from './src/screens/ForgotPasswordConfirm'
 import { Moneymatches } from './src/screens/Moneymatches'
 import { CreateMoneymatch } from './src/screens/CreateMoneymatch'
+import { Moneymatch } from './src/screens/Moneymatch'
 
 dayjs.extend(updateLocale)
 dayjs.extend(relativeTime)
@@ -77,6 +78,7 @@ type MoneymatchStackParamList = {
     | {
         opponent: string | undefined
       }
+  Moneymatch: { id: string }
 }
 
 type RootStackParamList = {
@@ -194,6 +196,13 @@ const MoneymatchesStack = () => (
       component={CreateMoneymatch}
       options={{
         header: (props) => <Header {...props} />
+      }}
+    />
+    <MoneymatchStackNavigator.Screen
+      name="Moneymatch"
+      component={Moneymatch}
+      options={{
+        header: () => null
       }}
     />
   </MoneymatchStackNavigator.Navigator>

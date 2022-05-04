@@ -11,6 +11,10 @@ query users($first: Int!, $after: String, $filter: UserFilter!) {
         }
       }
     }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
   }
 }
 

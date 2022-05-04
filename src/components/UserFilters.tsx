@@ -36,27 +36,34 @@ import { useColors } from '../hooks/useColors'
 import { Input } from './Input'
 import { SmallTournament } from './SmallTournament'
 
-type UserFilterData = {
-  tournament: Tournament | null
-  characters: CharacterDataFragment[]
-  tag: string | null
-}
-
 type Props = {
-  onValidation: (data: UserFilterData) => void
+  characters: CharacterDataFragment[]
+  setCharacters: React.Dispatch<React.SetStateAction<CharacterDataFragment[]>>
+  tag: string | null
+  setTag: React.Dispatch<React.SetStateAction<string | null>>
+  tournament: Tournament | null
+  setTournament: React.Dispatch<React.SetStateAction<Tournament | null>>
+  onValidation: () => void
 }
 
 export const UserFilters = forwardRef<BottomSheetModal, Props>(
-  ({ onValidation }, ref) => {
+  (
+    {
+      onValidation,
+      characters,
+      setCharacters,
+      tag,
+      setTag,
+      tournament,
+      setTournament
+    },
+    ref
+  ) => {
     const tailwind = useTailwind()
     const { bottom } = useSafeAreaInsets()
     const { t } = useTranslation()
     const { shadow } = useColors()
     const { data } = useUserFilterQuery()
-
-    const [characters, setCharacters] = useState<CharacterDataFragment[]>([])
-    const [tag, setTag] = useState<string | null>(null)
-    const [tournament, setTournament] = useState<Tournament | null>(null)
 
     const handleCharacterPress = useCallback(
       (character: CharacterDataFragment) => {
@@ -96,13 +103,13 @@ export const UserFilters = forwardRef<BottomSheetModal, Props>(
           style={tailwind('flex-1 p-6 py-0 bg-white-300 dark:bg-black-300')}
         >
           <Text style={tailwind('text-2xl font-bold mb-1')}>Tag</Text>
-          <Input onChangeText={setTag} />
+          <Input value={tag || ''} onChangeText={setTag} />
 
           <Text style={tailwind('text-2xl font-bold')}>Tournament</Text>
           {tournament && (
             <Text
               numberOfLines={1}
-              style={tailwind('text-green-300 font-bold text-sm mb-3')}
+              style={tailwind('text-green-300 font-bold text-sm mb-2')}
             >
               {tournament.name}
             </Text>
@@ -163,12 +170,7 @@ export const UserFilters = forwardRef<BottomSheetModal, Props>(
           <Button
             text="Valider"
             onPress={() => {
-              onValidation({
-                tournament,
-                tag,
-                characters
-              })
-
+              onValidation()
               ref?.current.dismiss()
             }}
           />

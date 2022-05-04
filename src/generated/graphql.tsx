@@ -265,11 +265,10 @@ export type PageInfo = {
 
 export type Query = {
   __typename?: 'Query';
-  battles?: Maybe<Array<Battle>>;
   characters?: Maybe<Array<Maybe<Character>>>;
   crew?: Maybe<Crew>;
   crews?: Maybe<Array<Maybe<Crew>>>;
-  events?: Maybe<Array<Event>>;
+  match?: Maybe<Match>;
   matches?: Maybe<MatchConnection>;
   suggestedName?: Maybe<SuggestedName>;
   tournament?: Maybe<Tournament>;
@@ -281,6 +280,11 @@ export type Query = {
 
 export type QueryCrewArgs = {
   id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryMatchArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -613,12 +617,24 @@ export type CrewMemberFragment = { __typename?: 'User', id: string, profile_pict
 export type SendMatchInviteMutationVariables = Exact<{
   to: Scalars['ID'];
   totalMatches: Scalars['Int'];
-  isMoneymatch?: InputMaybe<Scalars['Boolean']>;
+  isMoneymatch: Scalars['Boolean'];
   amount?: InputMaybe<Scalars['Int']>;
 }>;
 
 
 export type SendMatchInviteMutation = { __typename?: 'Mutation', sendMatchInvite?: { __typename?: 'Match', id: string, amount?: number | null, is_moneymatch: boolean, total_matches: number, initiator?: { __typename?: 'User', tag: string } | null, opponent?: { __typename?: 'User', tag: string } | null } | null };
+
+export type MatchesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MatchesQuery = { __typename?: 'Query', matches?: { __typename?: 'MatchConnection', edges?: Array<{ __typename?: 'MatchEdge', cursor: string, node?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, intiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, battles: Array<{ __typename?: 'Battle', winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null } | null> | null } | null };
+
+export type MatchQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type MatchQuery = { __typename?: 'Query', match?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, intiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, battles: Array<{ __typename?: 'Battle', winner?: { __typename?: 'User', tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', name: string, picture: string } | null, opponent?: { __typename?: 'User', tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', name: string, picture: string } | null, initiator?: { __typename?: 'User', tag: string, profile_picture?: string | null } | null }> } | null };
 
 export type HomeQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -648,7 +664,7 @@ export type UsersQueryVariables = Exact<{
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserConnection', edges?: Array<{ __typename?: 'UserEdge', cursor: string, node?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null } | null> | null } | null };
+export type UsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserConnection', edges?: Array<{ __typename?: 'UserEdge', cursor: string, node?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null };
 
 export type UserFilterQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -1268,7 +1284,7 @@ export type LeaveCrewMutationHookResult = ReturnType<typeof useLeaveCrewMutation
 export type LeaveCrewMutationResult = Apollo.MutationResult<LeaveCrewMutation>;
 export type LeaveCrewMutationOptions = Apollo.BaseMutationOptions<LeaveCrewMutation, LeaveCrewMutationVariables>;
 export const SendMatchInviteDocument = gql`
-    mutation sendMatchInvite($to: ID!, $totalMatches: Int!, $isMoneymatch: Boolean, $amount: Int) {
+    mutation sendMatchInvite($to: ID!, $totalMatches: Int!, $isMoneymatch: Boolean!, $amount: Int) {
   sendMatchInvite(
     to: $to
     totalMatches: $totalMatches
@@ -1317,6 +1333,157 @@ export function useSendMatchInviteMutation(baseOptions?: Apollo.MutationHookOpti
 export type SendMatchInviteMutationHookResult = ReturnType<typeof useSendMatchInviteMutation>;
 export type SendMatchInviteMutationResult = Apollo.MutationResult<SendMatchInviteMutation>;
 export type SendMatchInviteMutationOptions = Apollo.BaseMutationOptions<SendMatchInviteMutation, SendMatchInviteMutationVariables>;
+export const MatchesDocument = gql`
+    query matches {
+  matches(first: 3) {
+    edges {
+      cursor
+      node {
+        id
+        total_matches
+        opponent_wins
+        intiator_wins
+        state
+        opponent {
+          id
+          tag
+          profile_picture
+        }
+        initiator {
+          id
+          tag
+          profile_picture
+        }
+        battles {
+          winner {
+            id
+            tag
+            profile_picture
+          }
+          opponent_character {
+            id
+            name
+            picture
+          }
+          opponent {
+            id
+            tag
+            profile_picture
+          }
+          initiator_character {
+            id
+            name
+            picture
+          }
+          initiator {
+            id
+            tag
+            profile_picture
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useMatchesQuery__
+ *
+ * To run a query within a React component, call `useMatchesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMatchesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMatchesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMatchesQuery(baseOptions?: Apollo.QueryHookOptions<MatchesQuery, MatchesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MatchesQuery, MatchesQueryVariables>(MatchesDocument, options);
+      }
+export function useMatchesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MatchesQuery, MatchesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MatchesQuery, MatchesQueryVariables>(MatchesDocument, options);
+        }
+export type MatchesQueryHookResult = ReturnType<typeof useMatchesQuery>;
+export type MatchesLazyQueryHookResult = ReturnType<typeof useMatchesLazyQuery>;
+export type MatchesQueryResult = Apollo.QueryResult<MatchesQuery, MatchesQueryVariables>;
+export const MatchDocument = gql`
+    query Match($id: ID!) {
+  match(id: $id) {
+    id
+    total_matches
+    opponent_wins
+    opponent {
+      id
+      tag
+      profile_picture
+    }
+    intiator_wins
+    initiator {
+      id
+      tag
+      profile_picture
+    }
+    state
+    battles {
+      winner {
+        tag
+        profile_picture
+      }
+      opponent_character {
+        name
+        picture
+      }
+      opponent {
+        tag
+        profile_picture
+      }
+      initiator_character {
+        name
+        picture
+      }
+      initiator {
+        tag
+        profile_picture
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useMatchQuery__
+ *
+ * To run a query within a React component, call `useMatchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMatchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMatchQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMatchQuery(baseOptions: Apollo.QueryHookOptions<MatchQuery, MatchQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MatchQuery, MatchQueryVariables>(MatchDocument, options);
+      }
+export function useMatchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MatchQuery, MatchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MatchQuery, MatchQueryVariables>(MatchDocument, options);
+        }
+export type MatchQueryHookResult = ReturnType<typeof useMatchQuery>;
+export type MatchLazyQueryHookResult = ReturnType<typeof useMatchLazyQuery>;
+export type MatchQueryResult = Apollo.QueryResult<MatchQuery, MatchQueryVariables>;
 export const HomeDocument = gql`
     query Home($cursor: String) {
   tournaments(first: 10, after: $cursor) {
@@ -1524,6 +1691,10 @@ export const UsersDocument = gql`
           ...CharacterData
         }
       }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
     }
   }
 }

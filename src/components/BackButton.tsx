@@ -7,7 +7,9 @@ import { useColors } from '../hooks/useColors'
 import { useNavigation } from '@react-navigation/native'
 import { useTailwind } from 'tailwind-rn/dist'
 
-export const BackButton = (props: HeaderBackButtonProps) => {
+export const BackButton = (
+  props: HeaderBackButtonProps & { white?: boolean }
+) => {
   const { colors } = useColors()
   const { goBack } = useNavigation()
   const tailwind = useTailwind()
@@ -18,7 +20,7 @@ export const BackButton = (props: HeaderBackButtonProps) => {
       labelVisible
       labelStyle={tailwind('ml-2 text-sm font-bold')}
       onPress={goBack}
-      tintColor={colors.green2}
+      tintColor={props.white ? colors.white : colors.green2}
       backImage={({ tintColor }) => (
         <AntDesign size={18} name="arrowleft" color={tintColor} />
       )}

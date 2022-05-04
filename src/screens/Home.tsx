@@ -1,4 +1,5 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -24,6 +25,7 @@ export const Home = () => {
   const { data, loading, fetchMore, refetch } = useHomeQuery()
   const { data: nextTournamentData } = useNextTournamentQuery()
   const pageInfo = data?.tournaments?.pageInfo
+  const nextTournament = nextTournamentData?.user?.nextTournament
 
   return (
     <FlatList
@@ -73,8 +75,8 @@ export const Home = () => {
               </ScrollView>
             ) : (
               <Text style={tailwind('text-grey-400 mb-5')}>
-                Looks like no crew has been created yet! You can create one here
-                one?
+                Looks like no crew has been created yet! You can create one
+                here!
               </Text>
             ))}
 
@@ -82,20 +84,23 @@ export const Home = () => {
           <View style={tailwind('bg-white-300 dark:bg-black-300 pb-1')}>
             <Text style={tailwind('text-xl')}>
               {t('nextTournament')}
-              {nextTournamentData?.user?.nextTournament && (
-                <Text style={tailwind('font-bold')}> - 3 {t('days')}</Text>
+              {nextTournament && (
+                <Text style={tailwind('font-bold')}>
+                  {' '}
+                  - {dayjs(nextTournament.start_at).toNow(true)}{' '}
+                </Text>
               )}
             </Text>
           </View>
 
-          {nextTournamentData?.user?.nextTournament ? (
+          {nextTournament ? (
             <View style={tailwind('mt-2.5')}>
               <Tournament
-                tournament={nextTournamentData?.user?.nextTournament}
+                tournament={nextTournament}
                 big
                 onPress={async () => {
                   navigate('Tournament', {
-                    id: nextTournamentData?.user?.nextTournament?.id
+                    id: nextTournament.id
                   })
                 }}
               />

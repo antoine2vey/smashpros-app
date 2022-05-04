@@ -1,7 +1,7 @@
 mutation sendMatchInvite(
   $to: ID!
   $totalMatches: Int!
-  $isMoneymatch: Boolean
+  $isMoneymatch: Boolean!
   $amount: Int
 ) {
   sendMatchInvite(
@@ -20,5 +20,99 @@ mutation sendMatchInvite(
     amount
     is_moneymatch
     total_matches
+  }
+}
+
+query matches {
+  matches(first: 3) {
+    edges {
+      cursor
+      node {
+        id
+        total_matches
+        opponent_wins
+        intiator_wins
+        state
+        opponent {
+          id
+          tag
+          profile_picture
+        }
+        initiator {
+          id
+          tag
+          profile_picture
+        }
+        battles {
+          winner {
+            id
+            tag
+            profile_picture
+          }
+          opponent_character {
+            id
+            name
+            picture
+          }
+          opponent {
+            id
+            tag
+            profile_picture
+          }
+          initiator_character {
+            id
+            name
+            picture
+          }
+          initiator {
+            id
+            tag
+            profile_picture
+          }
+        }
+      }
+    }
+  }
+}
+
+query Match($id: ID!) {
+  match(id: $id) {
+    id
+    total_matches
+    opponent_wins
+    opponent {
+      id
+      tag
+      profile_picture
+    }
+    intiator_wins
+    initiator {
+      id
+      tag
+      profile_picture
+    }
+    state
+    battles {
+      winner {
+        tag
+        profile_picture
+      }
+      opponent_character {
+        name
+        picture
+      }
+      opponent {
+        tag
+        profile_picture
+      }
+      initiator_character {
+        name
+        picture
+      }
+      initiator {
+        tag
+        profile_picture
+      }
+    }
   }
 }

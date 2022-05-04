@@ -6,7 +6,8 @@ export const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        tournaments: relayStylePagination()
+        tournaments: relayStylePagination(),
+        users: relayStylePagination()
       }
     },
     Tournament: {

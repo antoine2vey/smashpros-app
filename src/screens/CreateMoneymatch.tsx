@@ -5,24 +5,39 @@ import {
 } from '@gorhom/bottom-sheet'
 import { useRoute } from '@react-navigation/native'
 import { useFormik } from 'formik'
+import { chunk } from 'lodash'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native'
+import {
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { useTailwind } from 'tailwind-rn'
 import { bool, number, object, string } from 'yup'
 import { MoneymatchRouteProps } from '../../App'
+import { Button } from '../components/Button'
+import { ProgressiveImage } from '../components/ProgressiveImage'
 import { Text } from '../components/Text'
 import { UserFilters } from '../components/UserFilters'
 import {
+  CharacterDataFragment,
+  Tournament,
   useNextTournamentQuery,
+  useSendMatchInviteMutation,
   useUsersLazyQuery,
   useUsersQuery
 } from '../generated/graphql'
 import { useColors } from '../hooks/useColors'
+import { useUserFilters } from '../hooks/useUseFilters'
 
 type FormValues = {
-  to: string | null
+  to: string
   totalMatches: number
   isMoneymatch: boolean
+  amount?: number
 }
 
 const MAX = 19
@@ -42,20 +57,30 @@ export const CreateMoneymatch = () => {
   const { params } = useRoute<MoneymatchRouteProps<'CreateMoneymatch'>>()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const { shadow } = useColors()
-  const { values, setFieldValue } = useFormik<FormValues>({
+  const filters = useUserFilters()
+  const [createMoneymatch] = useSendMatchInviteMutation()
+  const { values, setFieldValue, isValid, submitForm } = useFormik<FormValues>({
     validationSchema: schema,
     validateOnMount: true,
     initialValues: {
-      to: null,
+      to: '',
       totalMatches: 1,
-      isMoneymatch: false
+      isMoneymatch: false,
+      amount: 0
     },
-    onSubmit(values) {
-      console.log(values)
+    async onSubmit({ to, totalMatches, isMoneymatch, amount }) {
+      await createMoneymatch({
+        variables: {
+          to,
+          totalMatches,
+          isMoneymatch,
+          amount
+        }
+      })
     }
   })
   const { data: nextTournament } = useNextTournamentQuery()
-  const [getUsers, { data }] = useUsersLazyQuery({
+  const { data, fetchMore, refetch } = useUsersQuery({
     variables: {
       first: 20,
       filter: {
@@ -63,6 +88,9 @@ export const CreateMoneymatch = () => {
         tournament: null,
         characters: []
       }
+    },
+    onError(error) {
+      console.log(error.message)
     }
   })
 
@@ -78,20 +106,23 @@ export const CreateMoneymatch = () => {
     }
   }, [params])
 
+  // When we fetch our next tournament (cached usually), get tournament users
   useEffect(() => {
-    if (nextTournament?.user?.nextTournament) {
-      getUsers({
-        variables: {
-          first: 20,
-          filter: {
-            tag: null,
-            tournament: nextTournament.user.nextTournament.id,
-            characters: []
-          }
+    if (nextTournament) {
+      filters.setTournament(nextTournament.user?.nextTournament)
+
+      refetch({
+        first: 20,
+        filter: {
+          tag: filters.tag,
+          tournament: nextTournament?.user?.nextTournament?.id,
+          characters: filters.characters.map((character) => character.id)
         }
       })
     }
   }, [nextTournament])
+
+  const opponents = data?.users?.edges
 
   return (
     <SafeAreaView style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
@@ -152,26 +183,134 @@ export const CreateMoneymatch = () => {
               <Text style={tailwind('text-base text-green-400')}>Filters</Text>
             </TouchableOpacity>
           </View>
-          {data?.users?.edges?.map((user) => (
-            <Text>{user?.node?.tag}</Text>
-          ))}
+          <View>
+            {!!filters.tag && (
+              <Text style={tailwind('text-sm text-grey-400')}>
+                Tag:{' '}
+                <Text style={tailwind('text-sm text-grey-400 font-bold')}>
+                  {filters.tag}
+                </Text>
+              </Text>
+            )}
+            {filters.tournament && (
+              <Text style={tailwind('text-sm text-grey-400')}>
+                Tournament:{' '}
+                <Text style={tailwind('text-sm text-grey-400 font-bold')}>
+                  {filters.tournament.name}
+                </Text>
+              </Text>
+            )}
+            {filters.characters.length > 0 && (
+              <Text style={tailwind('text-sm text-grey-400')}>
+                Characters:{' '}
+                {filters.characters.map((character) => (
+                  <ProgressiveImage
+                    key={character.id}
+                    source={{ uri: character.picture }}
+                    style={tailwind('w-6 h-6')}
+                    resizeMode="contain"
+                  />
+                ))}
+              </Text>
+            )}
+          </View>
+          {opponents && (
+            <FlatList
+              style={tailwind('mt-2')}
+              showsHorizontalScrollIndicator={false}
+              data={opponents}
+              horizontal
+              keyExtractor={(_, i) => i.toString()}
+              renderItem={({ item: user }) => (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  key={user?.node?.id}
+                  style={tailwind('mr-2 p-2 w-24 rounded-xl')}
+                  onPress={() => {
+                    if (user?.node?.id === values.to) {
+                      setFieldValue('to', null)
+                    } else {
+                      setFieldValue('to', user?.node?.id)
+                    }
+                  }}
+                >
+                  <View
+                    style={[
+                      tailwind(
+                        'relative border-2 rounded-xl border-transparent w-24 h-24'
+                      ),
+                      user?.node?.id === values.to &&
+                        tailwind('border-green-300')
+                    ]}
+                  >
+                    <ProgressiveImage
+                      source={{ uri: user?.node?.profile_picture }}
+                      style={tailwind('w-full h-full rounded-xl')}
+                      resizeMode="cover"
+                    />
+                    <View
+                      style={tailwind(
+                        'flex-row absolute bottom-0 left-0 right-0 p-1'
+                      )}
+                    >
+                      {user?.node?.characters.map((character) => (
+                        <ProgressiveImage
+                          key={character.id}
+                          source={{ uri: character.picture }}
+                          style={tailwind('w-6 h-6')}
+                          resizeMode="contain"
+                        />
+                      ))}
+                    </View>
+                  </View>
+                  <Text
+                    numberOfLines={1}
+                    style={tailwind('text-sm font-medium')}
+                  >
+                    {user?.node?.tag}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              onEndReachedThreshold={0.4}
+              onEndReached={() => {
+                fetchMore({
+                  variables: {
+                    first: 20,
+                    after: data.users?.pageInfo.endCursor,
+                    filter: {
+                      tag: filters.tag,
+                      tournament: filters.tournament?.id,
+                      characters: filters.characters.map(
+                        (character) => character.id
+                      )
+                    }
+                  }
+                })
+              }}
+            />
+          )}
         </View>
+
+        <Button
+          text="Create moneymatch"
+          disabled={!isValid}
+          onPress={submitForm}
+        />
       </ScrollView>
 
       <UserFilters
         ref={bottomSheetModalRef}
-        onValidation={async ({ tag, tournament, characters }) => {
-          getUsers({
-            variables: {
-              first: 20,
-              filter: {
-                tag,
-                tournament: tournament?.id,
-                characters: characters.map((character) => character.id)
-              }
+        onValidation={() => {
+          refetch({
+            first: 20,
+            filter: {
+              tag: filters.tag,
+              tournament: filters.tournament?.id,
+              characters: filters.characters.map((character) => character.id)
             }
           })
         }}
+        {...filters}
       />
     </SafeAreaView>
   )
