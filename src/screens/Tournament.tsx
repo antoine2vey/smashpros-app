@@ -66,6 +66,9 @@ export const Tournaments = () => {
     })
   }, [characters])
 
+  console.log(params.id)
+  console.log(data)
+
   return (
     <>
       <HeroScroll<UserEdge>
@@ -147,7 +150,7 @@ export const Tournaments = () => {
               <Text style={tailwind('text-xl')}>
                 {t('participants')}{' '}
                 <Text style={tailwind('text-green-400')}>
-                  ({data?.tournament?.participants?.totalCount})
+                  ({data?.tournament?.totalParticipants})
                 </Text>
               </Text>
               <TouchableOpacity

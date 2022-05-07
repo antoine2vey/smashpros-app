@@ -31,7 +31,7 @@ mutation sendMatchInvite(
 }
 
 query matches {
-  matches(first: 3) {
+  matches(first: 10) {
     edges {
       cursor
       node {
@@ -50,32 +50,10 @@ query matches {
           tag
           profile_picture
         }
-        battles {
-          winner {
-            id
-            tag
-            profile_picture
-          }
-          opponent_character {
-            id
-            name
-            picture
-          }
-          opponent {
-            id
-            tag
-            profile_picture
-          }
-          initiator_character {
-            id
-            name
-            picture
-          }
-          initiator {
-            id
-            tag
-            profile_picture
-          }
+        winner {
+          id
+          tag
+          profile_picture
         }
       }
     }

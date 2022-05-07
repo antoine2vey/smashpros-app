@@ -18,7 +18,6 @@ query Home($cursor: String) {
               profile_picture
             }
           }
-          totalCount
         }
       }
     }
@@ -69,8 +68,8 @@ query SingleTournament($id: ID!, $cursor: String, $characters: [ID!]) {
         endCursor
         hasNextPage
       }
-      totalCount
     }
+    totalParticipants
     slug
     state
     tournament_id
@@ -98,7 +97,6 @@ query NextTournament {
             profile_picture
           }
         }
-        totalCount
       }
     }
   }

@@ -34,7 +34,7 @@ export const Tournament = ({ big, tournament, ...rest }: Props) => {
 
   const restOfParticipants = useMemo(() => {
     if (tournament) {
-      return tournament.participants.totalCount - 3
+      return tournament.totalParticipants - 3
     }
   }, [tournament])
 
