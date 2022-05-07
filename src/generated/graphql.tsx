@@ -32,8 +32,10 @@ export type Battle = {
   id: Scalars['ID'];
   initiator?: Maybe<User>;
   initiator_character?: Maybe<Character>;
+  initiator_vote?: Maybe<User>;
   opponent?: Maybe<User>;
   opponent_character?: Maybe<Character>;
+  opponent_vote?: Maybe<User>;
   winner?: Maybe<User>;
 };
 
@@ -86,12 +88,13 @@ export type Match = {
   battles: Array<Battle>;
   id: Scalars['ID'];
   initiator?: Maybe<User>;
-  intiator_wins: Scalars['Int'];
+  initiator_wins: Scalars['Int'];
   is_moneymatch: Scalars['Boolean'];
   opponent?: Maybe<User>;
   opponent_wins: Scalars['Int'];
   state: MatchState;
   total_matches: Scalars['Int'];
+  winner?: Maybe<User>;
 };
 
 export type MatchConnection = {
@@ -111,10 +114,11 @@ export type MatchEdge = {
 };
 
 export enum MatchState {
+  CharacterChoice = 'CHARACTER_CHOICE',
   Finished = 'FINISHED',
   Hold = 'HOLD',
-  Refused = 'REFUSED',
-  Started = 'STARTED'
+  Playing = 'PLAYING',
+  Refused = 'REFUSED'
 }
 
 export type Mutation = {
@@ -132,10 +136,11 @@ export type Mutation = {
   refresh?: Maybe<RefreshPayload>;
   register?: Maybe<User>;
   sendMatchInvite?: Maybe<Match>;
+  setOnline?: Maybe<User>;
   synchronizeTournaments?: Maybe<Array<Maybe<Tournament>>>;
   transferCrewOwnership?: Maybe<Crew>;
-  updateMatchScore?: Maybe<Match>;
-  updateMatchState?: Maybe<Match>;
+  updateBattle?: Maybe<Battle>;
+  updateMatch?: Maybe<Match>;
   updateMember?: Maybe<Crew>;
   updateProfile?: Maybe<User>;
   userEnteredTournament?: Maybe<User>;
@@ -209,6 +214,12 @@ export type MutationSendMatchInviteArgs = {
   isMoneymatch?: InputMaybe<Scalars['Boolean']>;
   to: Scalars['ID'];
   totalMatches: Scalars['Int'];
+  tournament?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type MutationSetOnlineArgs = {
+  online: Scalars['Boolean'];
 };
 
 
@@ -217,14 +228,14 @@ export type MutationTransferCrewOwnershipArgs = {
 };
 
 
-export type MutationUpdateMatchScoreArgs = {
+export type MutationUpdateBattleArgs = {
+  character?: InputMaybe<Scalars['ID']>;
   id: Scalars['ID'];
-  initiatorCharacter: Scalars['ID'];
-  opponentCharacter: Scalars['ID'];
+  vote?: InputMaybe<Scalars['ID']>;
 };
 
 
-export type MutationUpdateMatchStateArgs = {
+export type MutationUpdateMatchArgs = {
   id: Scalars['ID'];
   state: MatchState;
 };
@@ -351,8 +362,32 @@ export enum RoleEnum {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  onBattleUpdate?: Maybe<Battle>;
+  onMatchUpdate?: Maybe<Match>;
+  onUserJoinMatch?: Maybe<User>;
+  onUserLeftMatch?: Maybe<User>;
   userEnteredTournament: User;
   userLeftTournament: User;
+};
+
+
+export type SubscriptionOnBattleUpdateArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type SubscriptionOnMatchUpdateArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type SubscriptionOnUserJoinMatchArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type SubscriptionOnUserLeftMatchArgs = {
+  id: Scalars['ID'];
 };
 
 export type SuggestedName = {
@@ -440,6 +475,7 @@ export type User = {
   email: Scalars['String'];
   favorited_tournaments: Array<Tournament>;
   id: Scalars['ID'];
+  in_match: Scalars['Boolean'];
   in_tournament: Scalars['Boolean'];
   nextTournament?: Maybe<Tournament>;
   profile_picture?: Maybe<Scalars['String']>;
@@ -619,22 +655,68 @@ export type SendMatchInviteMutationVariables = Exact<{
   totalMatches: Scalars['Int'];
   isMoneymatch: Scalars['Boolean'];
   amount?: InputMaybe<Scalars['Int']>;
+  tournament?: InputMaybe<Scalars['ID']>;
 }>;
 
 
-export type SendMatchInviteMutation = { __typename?: 'Mutation', sendMatchInvite?: { __typename?: 'Match', id: string, amount?: number | null, is_moneymatch: boolean, total_matches: number, initiator?: { __typename?: 'User', tag: string } | null, opponent?: { __typename?: 'User', tag: string } | null } | null };
+export type SendMatchInviteMutation = { __typename?: 'Mutation', sendMatchInvite?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null } | null };
 
 export type MatchesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MatchesQuery = { __typename?: 'Query', matches?: { __typename?: 'MatchConnection', edges?: Array<{ __typename?: 'MatchEdge', cursor: string, node?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, intiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, battles: Array<{ __typename?: 'Battle', winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null } | null> | null } | null };
+export type MatchesQuery = { __typename?: 'Query', matches?: { __typename?: 'MatchConnection', edges?: Array<{ __typename?: 'MatchEdge', cursor: string, node?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, battles: Array<{ __typename?: 'Battle', winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null };
 
 export type MatchQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type MatchQuery = { __typename?: 'Query', match?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, intiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, battles: Array<{ __typename?: 'Battle', winner?: { __typename?: 'User', tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', name: string, picture: string } | null, opponent?: { __typename?: 'User', tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', name: string, picture: string } | null, initiator?: { __typename?: 'User', tag: string, profile_picture?: string | null } | null }> } | null };
+export type MatchQuery = { __typename?: 'Query', match?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, battles: Array<{ __typename?: 'Battle', id: string, winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null };
+
+export type UpdateMatchMutationVariables = Exact<{
+  state: MatchState;
+  id: Scalars['ID'];
+}>;
+
+
+export type UpdateMatchMutation = { __typename?: 'Mutation', updateMatch?: { __typename?: 'Match', id: string, state: MatchState } | null };
+
+export type UpdateBattleMutationVariables = Exact<{
+  id: Scalars['ID'];
+  character?: InputMaybe<Scalars['ID']>;
+  vote?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type UpdateBattleMutation = { __typename?: 'Mutation', updateBattle?: { __typename?: 'Battle', id: string, winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null } | null };
+
+export type MatchUpdateStateSubscriptionVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type MatchUpdateStateSubscription = { __typename?: 'Subscription', onMatchUpdate?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, battles: Array<{ __typename?: 'Battle', id: string, winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null };
+
+export type BattleUpdateSubscriptionVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type BattleUpdateSubscription = { __typename?: 'Subscription', onBattleUpdate?: { __typename?: 'Battle', id: string, winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null } | null };
+
+export type UserJoinSubscriptionVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type UserJoinSubscription = { __typename?: 'Subscription', onUserJoinMatch?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string }> } | null };
+
+export type UserLeftSubscriptionVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type UserLeftSubscription = { __typename?: 'Subscription', onUserLeftMatch?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string }> } | null };
 
 export type HomeQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -672,6 +754,13 @@ export type UserFilterQueryVariables = Exact<{
 
 
 export type UserFilterQuery = { __typename?: 'Query', characters?: Array<{ __typename?: 'Character', id: string, name: string, picture: string } | null> | null, tournaments?: { __typename?: 'TournamentConnection', edges?: Array<{ __typename?: 'TournamentEdge', cursor: string, node?: { __typename?: 'Tournament', id: string, name: string, images: Array<string> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null };
+
+export type SetOnlineMutationVariables = Exact<{
+  online: Scalars['Boolean'];
+}>;
+
+
+export type SetOnlineMutation = { __typename?: 'Mutation', setOnline?: { __typename?: 'User', id: string, tag: string, in_match: boolean } | null };
 
 export const UserBaseFragmentDoc = gql`
     fragment UserBase on User {
@@ -1284,23 +1373,29 @@ export type LeaveCrewMutationHookResult = ReturnType<typeof useLeaveCrewMutation
 export type LeaveCrewMutationResult = Apollo.MutationResult<LeaveCrewMutation>;
 export type LeaveCrewMutationOptions = Apollo.BaseMutationOptions<LeaveCrewMutation, LeaveCrewMutationVariables>;
 export const SendMatchInviteDocument = gql`
-    mutation sendMatchInvite($to: ID!, $totalMatches: Int!, $isMoneymatch: Boolean!, $amount: Int) {
+    mutation sendMatchInvite($to: ID!, $totalMatches: Int!, $isMoneymatch: Boolean!, $amount: Int, $tournament: ID) {
   sendMatchInvite(
     to: $to
     totalMatches: $totalMatches
     isMoneymatch: $isMoneymatch
     amount: $amount
+    tournament: $tournament
   ) {
     id
-    initiator {
-      tag
-    }
-    opponent {
-      tag
-    }
-    amount
-    is_moneymatch
     total_matches
+    opponent_wins
+    initiator_wins
+    state
+    opponent {
+      id
+      tag
+      profile_picture
+    }
+    initiator {
+      id
+      tag
+      profile_picture
+    }
   }
 }
     `;
@@ -1323,6 +1418,7 @@ export type SendMatchInviteMutationFn = Apollo.MutationFunction<SendMatchInviteM
  *      totalMatches: // value for 'totalMatches'
  *      isMoneymatch: // value for 'isMoneymatch'
  *      amount: // value for 'amount'
+ *      tournament: // value for 'tournament'
  *   },
  * });
  */
@@ -1342,7 +1438,7 @@ export const MatchesDocument = gql`
         id
         total_matches
         opponent_wins
-        intiator_wins
+        initiator_wins
         state
         opponent {
           id
@@ -1382,6 +1478,10 @@ export const MatchesDocument = gql`
           }
         }
       }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
     }
   }
 }
@@ -1423,39 +1523,59 @@ export const MatchDocument = gql`
       id
       tag
       profile_picture
+      in_match
+      characters {
+        ...CharacterData
+      }
     }
-    intiator_wins
+    initiator_wins
     initiator {
       id
       tag
       profile_picture
+      in_match
+      characters {
+        ...CharacterData
+      }
     }
     state
     battles {
+      id
       winner {
+        id
         tag
         profile_picture
       }
       opponent_character {
-        name
-        picture
+        ...CharacterData
       }
       opponent {
+        id
         tag
         profile_picture
       }
       initiator_character {
-        name
-        picture
+        ...CharacterData
       }
       initiator {
+        id
+        tag
+        profile_picture
+      }
+      initiator_vote {
+        id
+        tag
+        profile_picture
+      }
+      opponent_vote {
+        id
         tag
         profile_picture
       }
     }
   }
 }
-    `;
+    ${CharacterDataFragmentDoc}`;
 
 /**
  * __useMatchQuery__
@@ -1484,6 +1604,316 @@ export function useMatchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Matc
 export type MatchQueryHookResult = ReturnType<typeof useMatchQuery>;
 export type MatchLazyQueryHookResult = ReturnType<typeof useMatchLazyQuery>;
 export type MatchQueryResult = Apollo.QueryResult<MatchQuery, MatchQueryVariables>;
+export const UpdateMatchDocument = gql`
+    mutation updateMatch($state: MatchState!, $id: ID!) {
+  updateMatch(state: $state, id: $id) {
+    id
+    state
+  }
+}
+    `;
+export type UpdateMatchMutationFn = Apollo.MutationFunction<UpdateMatchMutation, UpdateMatchMutationVariables>;
+
+/**
+ * __useUpdateMatchMutation__
+ *
+ * To run a mutation, you first call `useUpdateMatchMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMatchMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMatchMutation, { data, loading, error }] = useUpdateMatchMutation({
+ *   variables: {
+ *      state: // value for 'state'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateMatchMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMatchMutation, UpdateMatchMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMatchMutation, UpdateMatchMutationVariables>(UpdateMatchDocument, options);
+      }
+export type UpdateMatchMutationHookResult = ReturnType<typeof useUpdateMatchMutation>;
+export type UpdateMatchMutationResult = Apollo.MutationResult<UpdateMatchMutation>;
+export type UpdateMatchMutationOptions = Apollo.BaseMutationOptions<UpdateMatchMutation, UpdateMatchMutationVariables>;
+export const UpdateBattleDocument = gql`
+    mutation updateBattle($id: ID!, $character: ID, $vote: ID) {
+  updateBattle(id: $id, character: $character, vote: $vote) {
+    id
+    winner {
+      id
+      tag
+      profile_picture
+    }
+    opponent {
+      id
+      tag
+      profile_picture
+    }
+    opponent_character {
+      ...CharacterData
+    }
+    initiator {
+      id
+      tag
+      profile_picture
+    }
+    initiator_character {
+      ...CharacterData
+    }
+  }
+}
+    ${CharacterDataFragmentDoc}`;
+export type UpdateBattleMutationFn = Apollo.MutationFunction<UpdateBattleMutation, UpdateBattleMutationVariables>;
+
+/**
+ * __useUpdateBattleMutation__
+ *
+ * To run a mutation, you first call `useUpdateBattleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBattleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBattleMutation, { data, loading, error }] = useUpdateBattleMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      character: // value for 'character'
+ *      vote: // value for 'vote'
+ *   },
+ * });
+ */
+export function useUpdateBattleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBattleMutation, UpdateBattleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateBattleMutation, UpdateBattleMutationVariables>(UpdateBattleDocument, options);
+      }
+export type UpdateBattleMutationHookResult = ReturnType<typeof useUpdateBattleMutation>;
+export type UpdateBattleMutationResult = Apollo.MutationResult<UpdateBattleMutation>;
+export type UpdateBattleMutationOptions = Apollo.BaseMutationOptions<UpdateBattleMutation, UpdateBattleMutationVariables>;
+export const MatchUpdateStateDocument = gql`
+    subscription matchUpdateState($id: ID!) {
+  onMatchUpdate(id: $id) {
+    id
+    total_matches
+    opponent_wins
+    opponent {
+      id
+      tag
+      profile_picture
+      in_match
+      characters {
+        ...CharacterData
+      }
+    }
+    initiator_wins
+    initiator {
+      id
+      tag
+      profile_picture
+      in_match
+      characters {
+        ...CharacterData
+      }
+    }
+    state
+    battles {
+      id
+      winner {
+        id
+        tag
+        profile_picture
+      }
+      opponent_character {
+        ...CharacterData
+      }
+      opponent {
+        id
+        tag
+        profile_picture
+      }
+      initiator_character {
+        ...CharacterData
+      }
+      initiator {
+        id
+        tag
+        profile_picture
+      }
+      initiator_vote {
+        id
+        tag
+        profile_picture
+      }
+      opponent_vote {
+        id
+        tag
+        profile_picture
+      }
+    }
+  }
+}
+    ${CharacterDataFragmentDoc}`;
+
+/**
+ * __useMatchUpdateStateSubscription__
+ *
+ * To run a query within a React component, call `useMatchUpdateStateSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useMatchUpdateStateSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMatchUpdateStateSubscription({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMatchUpdateStateSubscription(baseOptions: Apollo.SubscriptionHookOptions<MatchUpdateStateSubscription, MatchUpdateStateSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<MatchUpdateStateSubscription, MatchUpdateStateSubscriptionVariables>(MatchUpdateStateDocument, options);
+      }
+export type MatchUpdateStateSubscriptionHookResult = ReturnType<typeof useMatchUpdateStateSubscription>;
+export type MatchUpdateStateSubscriptionResult = Apollo.SubscriptionResult<MatchUpdateStateSubscription>;
+export const BattleUpdateDocument = gql`
+    subscription battleUpdate($id: ID) {
+  onBattleUpdate(id: $id) {
+    id
+    winner {
+      id
+      tag
+      profile_picture
+    }
+    opponent_character {
+      ...CharacterData
+    }
+    opponent {
+      id
+      tag
+      profile_picture
+    }
+    initiator_character {
+      ...CharacterData
+    }
+    initiator {
+      id
+      tag
+      profile_picture
+    }
+    initiator_vote {
+      id
+      tag
+      profile_picture
+    }
+    opponent_vote {
+      id
+      tag
+      profile_picture
+    }
+  }
+}
+    ${CharacterDataFragmentDoc}`;
+
+/**
+ * __useBattleUpdateSubscription__
+ *
+ * To run a query within a React component, call `useBattleUpdateSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useBattleUpdateSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBattleUpdateSubscription({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useBattleUpdateSubscription(baseOptions?: Apollo.SubscriptionHookOptions<BattleUpdateSubscription, BattleUpdateSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<BattleUpdateSubscription, BattleUpdateSubscriptionVariables>(BattleUpdateDocument, options);
+      }
+export type BattleUpdateSubscriptionHookResult = ReturnType<typeof useBattleUpdateSubscription>;
+export type BattleUpdateSubscriptionResult = Apollo.SubscriptionResult<BattleUpdateSubscription>;
+export const UserJoinDocument = gql`
+    subscription userJoin($id: ID!) {
+  onUserJoinMatch(id: $id) {
+    id
+    tag
+    profile_picture
+    in_match
+    characters {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserJoinSubscription__
+ *
+ * To run a query within a React component, call `useUserJoinSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUserJoinSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserJoinSubscription({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserJoinSubscription(baseOptions: Apollo.SubscriptionHookOptions<UserJoinSubscription, UserJoinSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<UserJoinSubscription, UserJoinSubscriptionVariables>(UserJoinDocument, options);
+      }
+export type UserJoinSubscriptionHookResult = ReturnType<typeof useUserJoinSubscription>;
+export type UserJoinSubscriptionResult = Apollo.SubscriptionResult<UserJoinSubscription>;
+export const UserLeftDocument = gql`
+    subscription userLeft($id: ID!) {
+  onUserLeftMatch(id: $id) {
+    id
+    tag
+    profile_picture
+    in_match
+    characters {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserLeftSubscription__
+ *
+ * To run a query within a React component, call `useUserLeftSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUserLeftSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserLeftSubscription({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserLeftSubscription(baseOptions: Apollo.SubscriptionHookOptions<UserLeftSubscription, UserLeftSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<UserLeftSubscription, UserLeftSubscriptionVariables>(UserLeftDocument, options);
+      }
+export type UserLeftSubscriptionHookResult = ReturnType<typeof useUserLeftSubscription>;
+export type UserLeftSubscriptionResult = Apollo.SubscriptionResult<UserLeftSubscription>;
 export const HomeDocument = gql`
     query Home($cursor: String) {
   tournaments(first: 10, after: $cursor) {
@@ -1734,7 +2164,7 @@ export const UserFilterDocument = gql`
   characters {
     ...CharacterData
   }
-  tournaments(first: 10, after: $cursor) {
+  tournaments(first: 20, after: $cursor) {
     edges {
       cursor
       node {
@@ -1778,3 +2208,38 @@ export function useUserFilterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type UserFilterQueryHookResult = ReturnType<typeof useUserFilterQuery>;
 export type UserFilterLazyQueryHookResult = ReturnType<typeof useUserFilterLazyQuery>;
 export type UserFilterQueryResult = Apollo.QueryResult<UserFilterQuery, UserFilterQueryVariables>;
+export const SetOnlineDocument = gql`
+    mutation setOnline($online: Boolean!) {
+  setOnline(online: $online) {
+    id
+    tag
+    in_match
+  }
+}
+    `;
+export type SetOnlineMutationFn = Apollo.MutationFunction<SetOnlineMutation, SetOnlineMutationVariables>;
+
+/**
+ * __useSetOnlineMutation__
+ *
+ * To run a mutation, you first call `useSetOnlineMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetOnlineMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setOnlineMutation, { data, loading, error }] = useSetOnlineMutation({
+ *   variables: {
+ *      online: // value for 'online'
+ *   },
+ * });
+ */
+export function useSetOnlineMutation(baseOptions?: Apollo.MutationHookOptions<SetOnlineMutation, SetOnlineMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetOnlineMutation, SetOnlineMutationVariables>(SetOnlineDocument, options);
+      }
+export type SetOnlineMutationHookResult = ReturnType<typeof useSetOnlineMutation>;
+export type SetOnlineMutationResult = Apollo.MutationResult<SetOnlineMutation>;
+export type SetOnlineMutationOptions = Apollo.BaseMutationOptions<SetOnlineMutation, SetOnlineMutationVariables>;

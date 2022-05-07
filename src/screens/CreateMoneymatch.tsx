@@ -1,9 +1,10 @@
+import { StoreObject } from '@apollo/client'
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetScrollView
 } from '@gorhom/bottom-sheet'
-import { useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { useFormik } from 'formik'
 import { chunk } from 'lodash'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -17,7 +18,7 @@ import {
 } from 'react-native'
 import { useTailwind } from 'tailwind-rn'
 import { bool, number, object, string } from 'yup'
-import { MoneymatchRouteProps } from '../../App'
+import { MoneymatchRouteProps, MoneymatchScreenNavigateProp } from '../../App'
 import { Button } from '../components/Button'
 import { ProgressiveImage } from '../components/ProgressiveImage'
 import { Text } from '../components/Text'
@@ -38,6 +39,7 @@ type FormValues = {
   totalMatches: number
   isMoneymatch: boolean
   amount?: number
+  tournament: string | null
 }
 
 const MAX = 19
@@ -49,11 +51,13 @@ const schema = object({
     is: true,
     then: number().required(),
     otherwise: number()
-  })
+  }),
+  tournament: string()
 })
 
 export const CreateMoneymatch = () => {
   const tailwind = useTailwind()
+  const { goBack } = useNavigation<MoneymatchScreenNavigateProp>()
   const { params } = useRoute<MoneymatchRouteProps<'CreateMoneymatch'>>()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const { shadow } = useColors()
@@ -66,17 +70,36 @@ export const CreateMoneymatch = () => {
       to: '',
       totalMatches: 1,
       isMoneymatch: false,
-      amount: 0
+      amount: 0,
+      tournament: null
     },
-    async onSubmit({ to, totalMatches, isMoneymatch, amount }) {
+    async onSubmit({ to, totalMatches, isMoneymatch, amount, tournament }) {
       await createMoneymatch({
         variables: {
           to,
           totalMatches,
           isMoneymatch,
-          amount
+          amount,
+          tournament
+        },
+        update(cache, { data }) {
+          cache.modify({
+            fields: {
+              matches(existings, { toReference }) {
+                // Create reference for match
+                const ref = toReference(data?.sendMatchInvite!)
+                // Append to edges
+                return {
+                  ...existings,
+                  edges: [...existings.edges, ref]
+                }
+              }
+            }
+          })
         }
       })
+
+      goBack()
     }
   })
   const { data: nextTournament } = useNextTournamentQuery()
@@ -122,7 +145,13 @@ export const CreateMoneymatch = () => {
     }
   }, [nextTournament])
 
+  useEffect(() => {
+    setFieldValue('tournament', filters.tournament?.id)
+  }, [filters.tournament])
+
   const opponents = data?.users?.edges
+
+  console.log(values.tournament)
 
   return (
     <SafeAreaView style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>

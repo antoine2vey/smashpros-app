@@ -22,7 +22,7 @@ query userFilter($cursor: String) {
   characters {
     ...CharacterData
   }
-  tournaments(first: 10, after: $cursor) {
+  tournaments(first: 20, after: $cursor) {
     edges {
       cursor
       node {
@@ -35,5 +35,13 @@ query userFilter($cursor: String) {
       endCursor
       hasNextPage
     }
+  }
+}
+
+mutation setOnline($online: Boolean!) {
+  setOnline(online: $online) {
+    id
+    tag
+    in_match
   }
 }

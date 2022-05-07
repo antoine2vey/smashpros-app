@@ -3,23 +3,30 @@ mutation sendMatchInvite(
   $totalMatches: Int!
   $isMoneymatch: Boolean!
   $amount: Int
+  $tournament: ID
 ) {
   sendMatchInvite(
     to: $to
     totalMatches: $totalMatches
     isMoneymatch: $isMoneymatch
     amount: $amount
+    tournament: $tournament
   ) {
     id
-    initiator {
-      tag
-    }
-    opponent {
-      tag
-    }
-    amount
-    is_moneymatch
     total_matches
+    opponent_wins
+    initiator_wins
+    state
+    opponent {
+      id
+      tag
+      profile_picture
+    }
+    initiator {
+      id
+      tag
+      profile_picture
+    }
   }
 }
 
@@ -31,7 +38,7 @@ query matches {
         id
         total_matches
         opponent_wins
-        intiator_wins
+        initiator_wins
         state
         opponent {
           id
@@ -72,6 +79,10 @@ query matches {
         }
       }
     }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
   }
 }
 
@@ -84,35 +95,212 @@ query Match($id: ID!) {
       id
       tag
       profile_picture
+      in_match
+      characters {
+        ...CharacterData
+      }
     }
-    intiator_wins
+    initiator_wins
+    initiator {
+      id
+      tag
+      profile_picture
+      in_match
+      characters {
+        ...CharacterData
+      }
+    }
+    state
+    battles {
+      id
+      winner {
+        id
+        tag
+        profile_picture
+      }
+      opponent_character {
+        ...CharacterData
+      }
+      opponent {
+        id
+        tag
+        profile_picture
+      }
+      initiator_character {
+        ...CharacterData
+      }
+      initiator {
+        id
+        tag
+        profile_picture
+      }
+      initiator_vote {
+        id
+        tag
+        profile_picture
+      }
+      opponent_vote {
+        id
+        tag
+        profile_picture
+      }
+    }
+  }
+}
+
+mutation updateMatch($state: MatchState!, $id: ID!) {
+  updateMatch(state: $state, id: $id) {
+    id
+    state
+  }
+}
+
+mutation updateBattle($id: ID!, $character: ID, $vote: ID) {
+  updateBattle(id: $id, character: $character, vote: $vote) {
+    id
+    winner {
+      id
+      tag
+      profile_picture
+    }
+    opponent {
+      id
+      tag
+      profile_picture
+    }
+    opponent_character {
+      ...CharacterData
+    }
     initiator {
       id
       tag
       profile_picture
     }
+    initiator_character {
+      ...CharacterData
+    }
+  }
+}
+
+subscription matchUpdateState($id: ID!) {
+  onMatchUpdate(id: $id) {
+    id
+    total_matches
+    opponent_wins
+    opponent {
+      id
+      tag
+      profile_picture
+      in_match
+      characters {
+        ...CharacterData
+      }
+    }
+    initiator_wins
+    initiator {
+      id
+      tag
+      profile_picture
+      in_match
+      characters {
+        ...CharacterData
+      }
+    }
     state
     battles {
+      id
       winner {
+        id
         tag
         profile_picture
       }
       opponent_character {
-        name
-        picture
+        ...CharacterData
       }
       opponent {
+        id
         tag
         profile_picture
       }
       initiator_character {
-        name
-        picture
+        ...CharacterData
       }
       initiator {
+        id
         tag
         profile_picture
       }
+      initiator_vote {
+        id
+        tag
+        profile_picture
+      }
+      opponent_vote {
+        id
+        tag
+        profile_picture
+      }
+    }
+  }
+}
+
+subscription battleUpdate($id: ID) {
+  onBattleUpdate(id: $id) {
+    id
+    winner {
+      id
+      tag
+      profile_picture
+    }
+    opponent_character {
+      ...CharacterData
+    }
+    opponent {
+      id
+      tag
+      profile_picture
+    }
+    initiator_character {
+      ...CharacterData
+    }
+    initiator {
+      id
+      tag
+      profile_picture
+    }
+    initiator_vote {
+      id
+      tag
+      profile_picture
+    }
+    opponent_vote {
+      id
+      tag
+      profile_picture
+    }
+  }
+}
+
+subscription userJoin($id: ID!) {
+  onUserJoinMatch(id: $id) {
+    id
+    tag
+    profile_picture
+    in_match
+    characters {
+      id
+    }
+  }
+}
+
+subscription userLeft($id: ID!) {
+  onUserLeftMatch(id: $id) {
+    id
+    tag
+    profile_picture
+    in_match
+    characters {
+      id
     }
   }
 }

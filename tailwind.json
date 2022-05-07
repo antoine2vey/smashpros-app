@@ -404,6 +404,11 @@
 			"width": 16
 		}
 	},
+	"w-10": {
+		"style": {
+			"width": 40
+		}
+	},
 	"flex-1": {
 		"style": {
 			"flexGrow": 1,
@@ -627,6 +632,18 @@
 		"style": {
 			"--tw-bg-opacity": 1,
 			"backgroundColor": "rgb(39 48 58 / var(--tw-bg-opacity))"
+		}
+	},
+	"bg-red-300": {
+		"style": {
+			"--tw-bg-opacity": 1,
+			"backgroundColor": "rgb(252 165 165 / var(--tw-bg-opacity))"
+		}
+	},
+	"bg-black-200": {
+		"style": {
+			"--tw-bg-opacity": 1,
+			"backgroundColor": "rgb(8 8 18 / var(--tw-bg-opacity))"
 		}
 	},
 	"bg-opacity-50": {

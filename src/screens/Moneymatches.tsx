@@ -9,7 +9,13 @@ import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native'
 import { useTailwind } from 'tailwind-rn'
 import { MoneymatchRouteProps, MoneymatchScreenNavigateProp } from '../../App'
 import { Text } from '../components/Text'
-import { MatchEdge, MatchState, useMatchesQuery } from '../generated/graphql'
+import {
+  MatchEdge,
+  MatchState,
+  useBattleUpdateSubscription,
+  useMatchesQuery,
+  useMatchUpdateStateSubscription
+} from '../generated/graphql'
 import { useColors } from '../hooks/useColors'
 
 function filterMatchEdgeByState(state: MatchState) {
@@ -25,7 +31,8 @@ export const Moneymatches = () => {
 
   const onHoldMatches = useMemo(() => {
     if (data?.matches) {
-      return data.matches.edges?.filter(filterMatchEdgeByState(MatchState.Hold))
+      // return data.matches.edges?.filter(filterMatchEdgeByState(MatchState.Hold))
+      return data.matches.edges
     }
 
     return []
@@ -44,7 +51,7 @@ export const Moneymatches = () => {
             onPress={() => navigate('Moneymatch', { id: edge?.node?.id! })}
           >
             <Text>{edge?.node?.initiator?.tag}</Text>
-            <Text>{edge?.node?.intiator_wins}</Text>
+            <Text>{edge?.node?.initiator_wins}</Text>
             <Text>{edge?.node?.opponent_wins}</Text>
             <Text>{edge?.node?.opponent?.tag}</Text>
             <Text>{edge?.node?.state}</Text>

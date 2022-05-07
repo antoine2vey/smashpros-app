@@ -1,4 +1,4 @@
-import { ApolloClient, from } from '@apollo/client'
+import { ApolloClient, from, split } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import AsyncStorageLib from '@react-native-async-storage/async-storage'
 import { createUploadLink } from 'apollo-upload-client'
@@ -8,6 +8,9 @@ import { RefreshDocument } from './generated/graphql'
 import decode from 'jwt-decode'
 import dayjs from 'dayjs'
 import { Platform } from 'react-native'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { createClient } from 'graphql-ws';
+import { getMainDefinition } from '@apollo/client/utilities'
 
 // Reference to prevent infinite querying
 let isRequestPending = false
@@ -61,8 +64,31 @@ const uri = __DEV__
     : 'http://10.0.2.2:4000/graphql'
   : ''
 
+export const wsLink = new GraphQLWsLink(
+  createClient({
+    url: 'ws://127.0.0.1:4000/graphql',
+    connectionParams: async () => {
+      return {
+        authorization: await AsyncStorageLib.getItem('token:access')
+      }
+    }
+  })
+)
+
+const link = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  authLink.concat(createUploadLink({ uri })),
+)
+
 export const client = new ApolloClient({
-  link: from([authLink, createUploadLink({ uri })]),
+  link,
   cache: cache,
   connectToDevTools: true
 })

@@ -88,6 +88,9 @@ export const UserFilters = forwardRef<BottomSheetModal, Props>(
       <BottomSheetModal
         backgroundStyle={tailwind('bg-white-300 dark:bg-black-300')}
         snapPoints={['90%']}
+        onDismiss={() => {
+          onValidation()
+        }}
         backdropComponent={(props) => (
           <BottomSheetBackdrop
             disappearsOnIndex={-1}
@@ -170,7 +173,6 @@ export const UserFilters = forwardRef<BottomSheetModal, Props>(
           <Button
             text="Valider"
             onPress={() => {
-              onValidation()
               ref?.current.dismiss()
             }}
           />

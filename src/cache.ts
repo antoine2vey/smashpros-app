@@ -7,7 +7,8 @@ export const cache = new InMemoryCache({
     Query: {
       fields: {
         tournaments: relayStylePagination(),
-        users: relayStylePagination()
+        users: relayStylePagination(),
+        // matches: relayStylePagination()
       }
     },
     Tournament: {
