@@ -721,7 +721,7 @@ export type SingleTournamentQueryVariables = Exact<{
 }>;
 
 
-export type SingleTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'Tournament', id: string, city?: string | null, end_at?: any | null, lat?: number | null, lng?: number | null, name: string, images: Array<string>, num_attendees?: number | null, slug: string, state: number, tournament_id: number, venue_address?: string | null, venue_name?: string | null, participants?: { __typename?: 'UserConnection', totalCount: number, edges?: Array<{ __typename?: 'UserEdge', cursor: string, node?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, crew?: { __typename?: 'Crew', prefix: string } | null, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null } | null };
+export type SingleTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'Tournament', id: string, city?: string | null, end_at?: any | null, lat?: number | null, lng?: number | null, name: string, images: Array<string>, num_attendees?: number | null, slug: string, state: number, tournament_id: number, venue_address?: string | null, venue_name?: string | null, start_at?: any | null, participants?: { __typename?: 'UserConnection', totalCount: number, edges?: Array<{ __typename?: 'UserEdge', cursor: string, node?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, crew?: { __typename?: 'Crew', prefix: string } | null, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null } | null };
 
 export type NextTournamentQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1952,6 +1952,8 @@ export const SingleTournamentDocument = gql`
     tournament_id
     venue_address
     venue_name
+    start_at
+    end_at
     participants(first: 10, after: $cursor, characters: $characters) {
       edges {
         cursor

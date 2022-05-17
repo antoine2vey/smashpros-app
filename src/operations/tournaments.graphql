@@ -48,6 +48,8 @@ query SingleTournament($id: ID!, $cursor: String, $characters: [ID!]) {
     tournament_id
     venue_address
     venue_name
+    start_at
+    end_at
     participants(first: 10, after: $cursor, characters: $characters) {
       edges {
         cursor

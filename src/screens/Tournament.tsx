@@ -4,14 +4,9 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  ScrollView,
-  Image,
   TouchableOpacity,
   useWindowDimensions,
   View,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  FlatList,
   ActivityIndicator
 } from 'react-native'
 import { useTailwind } from 'tailwind-rn/dist'
@@ -21,20 +16,14 @@ import { Text } from '../components/Text'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import {
   Character,
-  User,
   UserEdge,
   useSingleTournamentQuery
 } from '../generated/graphql'
 import { ProgressiveImage } from '../components/ProgressiveImage'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useScheme } from '../hooks/useScheme'
 import { Participant } from '../components/Participant'
-import {
-  Placeholder,
-  TextPlaceholder
-} from '../components/placeholders/GenericPlaceholders'
-import { ParticipantPlaceholder } from '../components/placeholders/ParticipantPlaceholder'
 import { HeroScroll } from '../components/HeroScroll'
+import { useTournamentCalendar } from '../hooks/useTournamentCalendar'
 
 MapboxGL.setAccessToken(
   'pk.eyJ1IjoiYW50b2luZWRldmV5IiwiYSI6ImNsMmIxZTh0dDA1MG0zYnJ6OGNndG1ndjIifQ.diM8ot5GIU7JF0XTWqjxAg'
@@ -49,6 +38,7 @@ export const Tournaments = () => {
   const { scheme } = useScheme()
   const { navigate } = useNavigation<HomeScreenNavigateProp>()
   const { width, height } = useWindowDimensions()
+  const { addTournamentToCalendar } = useTournamentCalendar()
   const { data, loading, error, fetchMore, refetch } = useSingleTournamentQuery(
     {
       variables: {
@@ -66,6 +56,10 @@ export const Tournaments = () => {
       characters: characters.map((character) => character.id)
     })
   }, [characters])
+
+  const onAddTournamentPress = useCallback(() => {
+    addTournamentToCalendar(data?.tournament)
+  }, [data?.tournament])
 
   return (
     <>
@@ -96,6 +90,13 @@ export const Tournaments = () => {
                 </Text>
               </View>
             </View>
+
+            <TouchableOpacity
+              style={tailwind('mt-3 flex')}
+              onPress={onAddTournamentPress}
+            >
+              <Text style={tailwind('text-xl')}>Add to calendar</Text>
+            </TouchableOpacity>
 
             <View style={tailwind('mt-3 flex')}>
               <Text style={tailwind('text-xl')}>{t('findWay')}</Text>
@@ -180,16 +181,7 @@ export const Tournaments = () => {
         renderItem={({ item: edge }) => (
           <Participant
             participant={edge.node}
-            // onPress={() => navigate('UserProfile', { id: edge.node?.id })}
-            onPress={() =>
-              navigate('MoneymatchTab', {
-                screen: 'CreateMoneymatch',
-                params: {
-                  opponent: edge.node?.id,
-                  tournament: data?.tournament?.id
-                }
-              })
-            }
+            onPress={() => navigate('UserProfile', { id: edge.node?.id })}
           />
         )}
       />
