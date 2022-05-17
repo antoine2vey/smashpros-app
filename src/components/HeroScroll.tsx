@@ -52,7 +52,7 @@ export function HeroScroll<T>({
 
   return (
     <View style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
-      <StatusBar style={statusBarScheme} />
+      <StatusBar animated translucent style={statusBarScheme} />
       <ProgressiveImage
         source={background}
         style={[

@@ -50,10 +50,16 @@ query matches {
           tag
           profile_picture
         }
-        winner {
-          id
-          tag
-          profile_picture
+        winner_id
+        battles {
+          opponent_character {
+            id
+            picture
+          }
+          initiator_character {
+            id
+            picture
+          }
         }
       }
     }
@@ -91,11 +97,7 @@ query Match($id: ID!) {
     state
     battles {
       id
-      winner {
-        id
-        tag
-        profile_picture
-      }
+      winner_id
       opponent_character {
         ...CharacterData
       }
@@ -136,11 +138,7 @@ mutation updateMatch($state: MatchState!, $id: ID!) {
 mutation updateBattle($id: ID!, $character: ID, $vote: ID) {
   updateBattle(id: $id, character: $character, vote: $vote) {
     id
-    winner {
-      id
-      tag
-      profile_picture
-    }
+    winner_id
     opponent {
       id
       tag
@@ -187,11 +185,7 @@ subscription matchUpdateState($id: ID!) {
     state
     battles {
       id
-      winner {
-        id
-        tag
-        profile_picture
-      }
+      winner_id
       opponent_character {
         ...CharacterData
       }
@@ -225,11 +219,7 @@ subscription matchUpdateState($id: ID!) {
 subscription battleUpdate($id: ID) {
   onBattleUpdate(id: $id) {
     id
-    winner {
-      id
-      tag
-      profile_picture
-    }
+    winner_id
     opponent_character {
       ...CharacterData
     }

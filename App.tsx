@@ -15,7 +15,7 @@ import {
 import { Header } from './src/components/Header'
 import { Home } from './src/screens/Home'
 import { colors } from './src/colors'
-import Feather from '@expo/vector-icons/Feather'
+import { Feather, Ionicons } from '@expo/vector-icons'
 import { NoopScreen } from './src/screens/NoopScreen'
 import { Tournaments } from './src/screens/Tournament'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
@@ -39,6 +39,7 @@ import { ForgotPasswordConfirm } from './src/screens/ForgotPasswordConfirm'
 import { Moneymatches } from './src/screens/Moneymatches'
 import { CreateMoneymatch } from './src/screens/CreateMoneymatch'
 import { Moneymatch } from './src/screens/Moneymatch'
+import { Text } from './src/components/Text'
 
 dayjs.extend(updateLocale)
 dayjs.extend(relativeTime)
@@ -59,6 +60,7 @@ type HomeStackParamList = {
   UserProfile: {
     id: string | undefined
   }
+  TournamentsFilter: undefined
 }
 
 type LogoutStackParamList = {
@@ -77,6 +79,7 @@ type MoneymatchStackParamList = {
     | undefined
     | {
         opponent: string | undefined
+        tournament: string | undefined
       }
   Moneymatch: { id: string }
 }
@@ -155,7 +158,8 @@ const HomeStack = () => (
       name="HomeStack"
       component={Home}
       options={{
-        header: (props) => <Header root {...props} />
+        // header: (props) => <Header root {...props} />
+        header: () => null
       }}
     />
     <Stack.Screen
@@ -169,14 +173,16 @@ const HomeStack = () => (
       name="UserProfile"
       component={UserProfile}
       options={{
-        header: (props) => <Header {...props} />
+        // header: (props) => <Header {...props} />
+        header: () => null
       }}
     />
     <Stack.Screen
       name="Crew"
       component={CrewScreen}
       options={{
-        header: (props) => <Header {...props} />
+        // header: (props) => <Header {...props} />
+        header: () => null
       }}
     />
   </Stack.Navigator>
@@ -188,14 +194,16 @@ const MoneymatchesStack = () => (
       name="Moneymatches"
       component={Moneymatches}
       options={{
-        header: (props) => <Header root {...props} />
+        // header: (props) => <Header root {...props} />
+        header: () => null
       }}
     />
     <MoneymatchStackNavigator.Screen
       name="CreateMoneymatch"
       component={CreateMoneymatch}
       options={{
-        header: (props) => <Header {...props} />
+        // header: (props) => <Header {...props} />
+        header: () => null
       }}
     />
     <MoneymatchStackNavigator.Screen
@@ -218,15 +226,15 @@ const Router = () => {
         component={HomeStack}
         options={{
           header: () => null,
-          tabBarLabel: () => undefined,
+          tabBarLabel: () => null,
           tabBarStyle: {
-            ...tailwind('bg-white-300 dark:bg-black-300'),
+            ...tailwind('bg-white-400 dark:bg-black-400'),
             borderTopWidth: 0
           },
           tabBarInactiveTintColor: colors.green,
           tabBarActiveTintColor: colors.green2,
           tabBarIcon: ({ color }) => (
-            <Feather name="home" color={color} size={26} />
+            <Ionicons name="game-controller-outline" color={color} size={26} />
           )
         }}
       />
@@ -237,13 +245,13 @@ const Router = () => {
           header: (props) => null,
           tabBarLabel: () => undefined,
           tabBarStyle: {
-            ...tailwind('bg-white-300 dark:bg-black-300'),
+            ...tailwind('bg-white-400 dark:bg-black-400'),
             borderTopWidth: 0
           },
           tabBarInactiveTintColor: colors.green,
           tabBarActiveTintColor: colors.green2,
           tabBarIcon: ({ color }) => (
-            <Feather name="dollar-sign" color={color} size={26} />
+            <Ionicons name="cash-outline" color={color} size={26} />
           )
         }}
       />
@@ -254,7 +262,7 @@ const Router = () => {
           header: () => undefined,
           tabBarLabel: () => undefined,
           tabBarStyle: {
-            ...tailwind('bg-white-300 dark:bg-black-300'),
+            ...tailwind('bg-white-400 dark:bg-black-400'),
             borderTopWidth: 0
           },
           tabBarInactiveTintColor: colors.green,
@@ -271,7 +279,7 @@ const Router = () => {
           header: () => undefined,
           tabBarLabel: () => undefined,
           tabBarStyle: {
-            ...tailwind('bg-white-300 dark:bg-black-300'),
+            ...tailwind('bg-white-400 dark:bg-black-400'),
             borderTopWidth: 0
           },
           tabBarInactiveTintColor: colors.green,

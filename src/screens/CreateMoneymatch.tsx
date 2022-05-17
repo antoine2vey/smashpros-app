@@ -57,6 +57,7 @@ const schema = object({
 
 export const CreateMoneymatch = () => {
   const tailwind = useTailwind()
+  const ref = useRef<FlatList>(null)
   const { goBack } = useNavigation<MoneymatchScreenNavigateProp>()
   const { params } = useRoute<MoneymatchRouteProps<'CreateMoneymatch'>>()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
@@ -102,19 +103,17 @@ export const CreateMoneymatch = () => {
       goBack()
     }
   })
-  const { data: nextTournament } = useNextTournamentQuery()
+
   const { data, fetchMore, refetch } = useUsersQuery({
     variables: {
       first: 20,
       filter: {
         tag: null,
-        tournament: null,
+        tournament: params?.tournament || null,
         characters: []
       }
     },
-    onError(error) {
-      console.log(error.message)
-    }
+    fetchPolicy: 'network-only'
   })
 
   const bestOfN = useMemo(() => [1, 3, 5], [])
@@ -123,35 +122,32 @@ export const CreateMoneymatch = () => {
 
   useEffect(() => {
     if (params) {
-      if (params.opponent) {
-        // fetch user
-      }
+      // refetch({
+      //   first: 20,
+      //   filter: {
+      //     tag: null,
+      //     tournament:
+      //   }
+      // })
     }
   }, [params])
 
-  // When we fetch our next tournament (cached usually), get tournament users
   useEffect(() => {
-    if (nextTournament) {
-      filters.setTournament(nextTournament.user?.nextTournament)
+    if (params?.opponent && data?.users?.edges?.length) {
+      setFieldValue('to', params.opponent)
 
-      refetch({
-        first: 20,
-        filter: {
-          tag: filters.tag,
-          tournament: nextTournament?.user?.nextTournament?.id,
-          characters: filters.characters.map((character) => character.id)
-        }
-      })
+      const index = data.users.edges.findIndex(
+        (edge) => edge?.node?.id === params.opponent
+      )
+      ref.current?.scrollToIndex({ index })
     }
-  }, [nextTournament])
+  }, [params?.opponent, data?.users])
 
   useEffect(() => {
     setFieldValue('tournament', filters.tournament?.id)
   }, [filters.tournament])
 
   const opponents = data?.users?.edges
-
-  console.log(values.tournament)
 
   return (
     <SafeAreaView style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
@@ -249,6 +245,8 @@ export const CreateMoneymatch = () => {
               showsHorizontalScrollIndicator={false}
               data={opponents}
               horizontal
+              ref={ref}
+              onScrollToIndexFailed={() => null}
               keyExtractor={(_, i) => i.toString()}
               renderItem={({ item: user }) => (
                 <TouchableOpacity
@@ -302,19 +300,21 @@ export const CreateMoneymatch = () => {
               )}
               onEndReachedThreshold={0.4}
               onEndReached={() => {
-                fetchMore({
-                  variables: {
-                    first: 20,
-                    after: data.users?.pageInfo.endCursor,
-                    filter: {
-                      tag: filters.tag,
-                      tournament: filters.tournament?.id,
-                      characters: filters.characters.map(
-                        (character) => character.id
-                      )
+                if (data.users?.pageInfo.hasNextPage) {
+                  fetchMore({
+                    variables: {
+                      first: 20,
+                      after: data.users?.pageInfo.endCursor,
+                      filter: {
+                        tag: filters.tag,
+                        tournament: filters.tournament?.id,
+                        characters: filters.characters.map(
+                          (character) => character.id
+                        )
+                      }
                     }
-                  }
-                })
+                  })
+                }
               }}
             />
           )}

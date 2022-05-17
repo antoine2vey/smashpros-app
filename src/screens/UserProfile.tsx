@@ -31,7 +31,7 @@ export const UserProfile = () => {
 
   return (
     <ScrollView
-      style={tailwind('bg-white-300 dark:bg-black-300')}
+      style={tailwind('bg-white-400 dark:bg-black-400')}
       contentContainerStyle={tailwind('px-5 py-2')}
     >
       <View style={tailwind('mb-3 flex-row justify-between items-start')}>

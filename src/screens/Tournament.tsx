@@ -1,7 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { StatusBar, StatusBarStyle } from 'expo-status-bar'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -12,7 +11,8 @@ import {
   View,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native'
 import { useTailwind } from 'tailwind-rn/dist'
 import { HomeScreenNavigateProp, RootRouteProps } from '../../App'
@@ -56,6 +56,7 @@ export const Tournaments = () => {
       }
     }
   )
+  const pageInfo = data?.tournament?.participants?.pageInfo
 
   const onValidation = useCallback(() => {
     bottomSheetModalRef.current?.close()
@@ -65,9 +66,6 @@ export const Tournaments = () => {
       characters: characters.map((character) => character.id)
     })
   }, [characters])
-
-  console.log(params.id)
-  console.log(data)
 
   return (
     <>
@@ -150,7 +148,7 @@ export const Tournaments = () => {
               <Text style={tailwind('text-xl')}>
                 {t('participants')}{' '}
                 <Text style={tailwind('text-green-400')}>
-                  ({data?.tournament?.totalParticipants})
+                  ({data?.tournament?.participants?.totalCount})
                 </Text>
               </Text>
               <TouchableOpacity
@@ -167,17 +165,31 @@ export const Tournaments = () => {
         data={data?.tournament?.participants?.edges}
         keyExtractor={(edge, i) => edge?.cursor || i.toString()}
         onEndReachedThreshold={0.4}
+        ListFooterComponent={
+          <ActivityIndicator animating={pageInfo?.hasNextPage} />
+        }
         onEndReached={() => {
-          fetchMore({
-            variables: {
-              cursor: data?.tournament?.participants?.pageInfo.endCursor
-            }
-          })
+          if (pageInfo?.hasNextPage) {
+            fetchMore({
+              variables: {
+                cursor: pageInfo.endCursor
+              }
+            })
+          }
         }}
         renderItem={({ item: edge }) => (
           <Participant
             participant={edge.node}
-            onPress={() => navigate('UserProfile', { id: edge.node?.id })}
+            // onPress={() => navigate('UserProfile', { id: edge.node?.id })}
+            onPress={() =>
+              navigate('MoneymatchTab', {
+                screen: 'CreateMoneymatch',
+                params: {
+                  opponent: edge.node?.id,
+                  tournament: data?.tournament?.id
+                }
+              })
+            }
           />
         )}
       />

@@ -149,6 +149,18 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "winner_id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -505,7 +517,7 @@
       {
         "kind": "SCALAR",
         "name": "DateTime",
-        "description": "Date custom scalar type",
+        "description": "A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -847,6 +859,18 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "winner_id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -861,7 +885,7 @@
         "fields": [
           {
             "name": "edges",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types",
+            "description": null,
             "args": [],
             "type": {
               "kind": "LIST",
@@ -877,7 +901,7 @@
           },
           {
             "name": "pageInfo",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo",
+            "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -885,6 +909,22 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "totalCount",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
                 "ofType": null
               }
             },
@@ -904,7 +944,7 @@
         "fields": [
           {
             "name": "cursor",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor",
+            "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -920,7 +960,7 @@
           },
           {
             "name": "node",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-Node",
+            "description": null,
             "args": [],
             "type": {
               "kind": "OBJECT",
@@ -1795,11 +1835,11 @@
       {
         "kind": "OBJECT",
         "name": "PageInfo",
-        "description": "PageInfo cursor, as defined in https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo",
+        "description": null,
         "fields": [
           {
             "name": "endCursor",
-            "description": "The cursor corresponding to the last nodes in edges. Null if the connection is empty.",
+            "description": null,
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -1811,7 +1851,7 @@
           },
           {
             "name": "hasNextPage",
-            "description": "Used to indicate whether more edges exist following the set defined by the clients arguments.",
+            "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1827,7 +1867,7 @@
           },
           {
             "name": "hasPreviousPage",
-            "description": "Used to indicate whether more edges exist prior to the set defined by the clients arguments.",
+            "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1843,7 +1883,7 @@
           },
           {
             "name": "startCursor",
-            "description": "The cursor corresponding to the first nodes in edges. Null if the connection is empty.",
+            "description": null,
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -1956,7 +1996,7 @@
             "args": [
               {
                 "name": "after",
-                "description": "Returns the elements in the list that come after the specified cursor",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -1968,7 +2008,7 @@
               },
               {
                 "name": "before",
-                "description": "Returns the elements in the list that come before the specified cursor",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -1980,7 +2020,7 @@
               },
               {
                 "name": "first",
-                "description": "Returns the first n elements from the list.",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -1992,7 +2032,7 @@
               },
               {
                 "name": "last",
-                "description": "Returns the last n elements from the list.",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -2075,7 +2115,7 @@
             "args": [
               {
                 "name": "after",
-                "description": "Returns the elements in the list that come after the specified cursor",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -2087,7 +2127,7 @@
               },
               {
                 "name": "before",
-                "description": "Returns the elements in the list that come before the specified cursor",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -2098,8 +2138,20 @@
                 "deprecationReason": null
               },
               {
+                "name": "filters",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "TournamentsFilter",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
                 "name": "first",
-                "description": "Returns the first n elements from the list.",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -2111,7 +2163,7 @@
               },
               {
                 "name": "last",
-                "description": "Returns the last n elements from the list.",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -2161,7 +2213,7 @@
             "args": [
               {
                 "name": "after",
-                "description": "Returns the elements in the list that come after the specified cursor",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -2173,7 +2225,7 @@
               },
               {
                 "name": "before",
-                "description": "Returns the elements in the list that come before the specified cursor",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -2201,7 +2253,7 @@
               },
               {
                 "name": "first",
-                "description": "Returns the first n elements from the list.",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -2213,7 +2265,7 @@
               },
               {
                 "name": "last",
-                "description": "Returns the last n elements from the list.",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -2869,7 +2921,7 @@
             "args": [
               {
                 "name": "after",
-                "description": "Returns the elements in the list that come after the specified cursor",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -2881,7 +2933,7 @@
               },
               {
                 "name": "before",
-                "description": "Returns the elements in the list that come before the specified cursor",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -2913,7 +2965,7 @@
               },
               {
                 "name": "first",
-                "description": "Returns the first n elements from the list.",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -2925,7 +2977,7 @@
               },
               {
                 "name": "last",
-                "description": "Returns the last n elements from the list.",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -2974,22 +3026,6 @@
           },
           {
             "name": "state",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "totalParticipants",
             "description": null,
             "args": [],
             "type": {
@@ -3057,7 +3093,7 @@
         "fields": [
           {
             "name": "edges",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types",
+            "description": null,
             "args": [],
             "type": {
               "kind": "LIST",
@@ -3073,7 +3109,7 @@
           },
           {
             "name": "pageInfo",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo",
+            "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3081,6 +3117,22 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "totalCount",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
                 "ofType": null
               }
             },
@@ -3100,7 +3152,7 @@
         "fields": [
           {
             "name": "cursor",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor",
+            "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3116,7 +3168,7 @@
           },
           {
             "name": "node",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-Node",
+            "description": null,
             "args": [],
             "type": {
               "kind": "OBJECT",
@@ -3156,6 +3208,77 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "TournamentsFilter",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "endDate",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "DateTime",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "lat",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "lng",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "radius",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "startDate",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "DateTime",
               "ofType": null
             },
             "defaultValue": null,
@@ -3555,7 +3678,7 @@
         "fields": [
           {
             "name": "edges",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types",
+            "description": null,
             "args": [],
             "type": {
               "kind": "LIST",
@@ -3571,7 +3694,7 @@
           },
           {
             "name": "pageInfo",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo",
+            "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3579,6 +3702,22 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "totalCount",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
                 "ofType": null
               }
             },
@@ -3598,7 +3737,7 @@
         "fields": [
           {
             "name": "cursor",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor",
+            "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3614,7 +3753,7 @@
           },
           {
             "name": "node",
-            "description": "https://facebook.github.io/relay/graphql/connections.htm#sec-Node",
+            "description": null,
             "args": [],
             "type": {
               "kind": "OBJECT",

@@ -33,14 +33,14 @@ export function useColors() {
     []
   )
 
-  const lightShadow = useMemo(
+  const mediumShadow = useMemo(
     () => ({
-      shadowColor: "#000",
+      shadowColor: colors.black,
       shadowOffset: {
         width: 0,
         height: 2,
       },
-      shadowOpacity: 0.25,
+      shadowOpacity: 0.15,
       shadowRadius: 3.84,
 
       elevation: 5,
@@ -48,9 +48,25 @@ export function useColors() {
     []
   )
 
+  const lightShadow = useMemo(
+    () => ({
+      shadowColor: colors.black,
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowOpacity: 0.05,
+      shadowRadius: 2.22,
+
+      elevation: 3,
+    }),
+    []
+  )
+
   return {
     base: dark ? colors.white : colors.black,
     shadow,
+    mediumShadow,
     lightShadow,
     colors
   }

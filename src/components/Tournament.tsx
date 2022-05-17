@@ -12,14 +12,17 @@ import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
 import { ProgressiveImage } from './ProgressiveImage'
+import { Tournament as ITournament } from '../generated/graphql'
+import { useColors } from '../hooks/useColors'
 
 type Props = TouchableOpacityProps & {
   big?: boolean
-  tournament: any
+  tournament: ITournament
 }
 
 export const Tournament = ({ big, tournament, ...rest }: Props) => {
   const tailwind = useTailwind()
+  const { mediumShadow, lightShadow } = useColors()
   const { t } = useTranslation()
 
   const firstThreeParticipants = useMemo(() => {
@@ -34,7 +37,7 @@ export const Tournament = ({ big, tournament, ...rest }: Props) => {
 
   const restOfParticipants = useMemo(() => {
     if (tournament) {
-      return tournament.totalParticipants - 3
+      return tournament.participants?.totalCount - 3
     }
   }, [tournament])
 
@@ -60,15 +63,7 @@ export const Tournament = ({ big, tournament, ...rest }: Props) => {
           items-center
           mb-3
         `),
-        big && {
-          shadowColor: tailwind('text-black-400'),
-          shadowOffset: {
-            width: 1,
-            height: 2
-          },
-          shadowOpacity: 0.12,
-          shadowRadius: 3
-        }
+        mediumShadow
       ]}
       activeOpacity={0.8}
       {...rest}

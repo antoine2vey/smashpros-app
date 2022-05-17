@@ -13,7 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Date custom scalar type */
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
@@ -37,6 +37,7 @@ export type Battle = {
   opponent_character?: Maybe<Character>;
   opponent_vote?: Maybe<User>;
   winner?: Maybe<User>;
+  winner_id?: Maybe<Scalars['String']>;
 };
 
 export type Character = {
@@ -95,21 +96,19 @@ export type Match = {
   state: MatchState;
   total_matches: Scalars['Int'];
   winner?: Maybe<User>;
+  winner_id?: Maybe<Scalars['String']>;
 };
 
 export type MatchConnection = {
   __typename?: 'MatchConnection';
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types */
   edges?: Maybe<Array<Maybe<MatchEdge>>>;
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo */
   pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type MatchEdge = {
   __typename?: 'MatchEdge';
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor */
   cursor: Scalars['String'];
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-Node */
   node?: Maybe<Match>;
 };
 
@@ -261,16 +260,11 @@ export type MutationUserLeftTournamentArgs = {
   tournament: Scalars['ID'];
 };
 
-/** PageInfo cursor, as defined in https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo */
 export type PageInfo = {
   __typename?: 'PageInfo';
-  /** The cursor corresponding to the last nodes in edges. Null if the connection is empty. */
   endCursor?: Maybe<Scalars['String']>;
-  /** Used to indicate whether more edges exist following the set defined by the clients arguments. */
   hasNextPage: Scalars['Boolean'];
-  /** Used to indicate whether more edges exist prior to the set defined by the clients arguments. */
   hasPreviousPage: Scalars['Boolean'];
-  /** The cursor corresponding to the first nodes in edges. Null if the connection is empty. */
   startCursor?: Maybe<Scalars['String']>;
 };
 
@@ -320,6 +314,7 @@ export type QueryTournamentArgs = {
 export type QueryTournamentsArgs = {
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
+  filters?: InputMaybe<TournamentsFilter>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
@@ -421,7 +416,6 @@ export type Tournament = {
   slug: Scalars['String'];
   start_at?: Maybe<Scalars['DateTime']>;
   state: Scalars['Int'];
-  totalParticipants: Scalars['Int'];
   tournament_id: Scalars['Int'];
   venue_address?: Maybe<Scalars['String']>;
   venue_name?: Maybe<Scalars['String']>;
@@ -438,23 +432,28 @@ export type TournamentParticipantsArgs = {
 
 export type TournamentConnection = {
   __typename?: 'TournamentConnection';
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types */
   edges?: Maybe<Array<Maybe<TournamentEdge>>>;
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo */
   pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type TournamentEdge = {
   __typename?: 'TournamentEdge';
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor */
   cursor: Scalars['String'];
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-Node */
   node?: Maybe<Tournament>;
 };
 
 export type TournamentQuery = {
   id?: InputMaybe<Scalars['ID']>;
   player?: InputMaybe<Scalars['String']>;
+};
+
+export type TournamentsFilter = {
+  endDate?: InputMaybe<Scalars['DateTime']>;
+  lat?: InputMaybe<Scalars['Float']>;
+  lng?: InputMaybe<Scalars['Float']>;
+  radius?: InputMaybe<Scalars['Float']>;
+  startDate?: InputMaybe<Scalars['DateTime']>;
 };
 
 export type User = {
@@ -485,17 +484,14 @@ export type User = {
 
 export type UserConnection = {
   __typename?: 'UserConnection';
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types */
   edges?: Maybe<Array<Maybe<UserEdge>>>;
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo */
   pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type UserEdge = {
   __typename?: 'UserEdge';
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor */
   cursor: Scalars['String'];
-  /** https://facebook.github.io/relay/graphql/connections.htm#sec-Node */
   node?: Maybe<User>;
 };
 
@@ -656,14 +652,14 @@ export type SendMatchInviteMutation = { __typename?: 'Mutation', sendMatchInvite
 export type MatchesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MatchesQuery = { __typename?: 'Query', matches?: { __typename?: 'MatchConnection', edges?: Array<{ __typename?: 'MatchEdge', cursor: string, node?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null };
+export type MatchesQuery = { __typename?: 'Query', matches?: { __typename?: 'MatchConnection', edges?: Array<{ __typename?: 'MatchEdge', cursor: string, node?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, winner_id?: string | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, battles: Array<{ __typename?: 'Battle', opponent_character?: { __typename?: 'Character', id: string, picture: string } | null, initiator_character?: { __typename?: 'Character', id: string, picture: string } | null }> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null };
 
 export type MatchQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type MatchQuery = { __typename?: 'Query', match?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, battles: Array<{ __typename?: 'Battle', id: string, winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null };
+export type MatchQuery = { __typename?: 'Query', match?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, battles: Array<{ __typename?: 'Battle', id: string, winner_id?: string | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null };
 
 export type UpdateMatchMutationVariables = Exact<{
   state: MatchState;
@@ -680,21 +676,21 @@ export type UpdateBattleMutationVariables = Exact<{
 }>;
 
 
-export type UpdateBattleMutation = { __typename?: 'Mutation', updateBattle?: { __typename?: 'Battle', id: string, winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null } | null };
+export type UpdateBattleMutation = { __typename?: 'Mutation', updateBattle?: { __typename?: 'Battle', id: string, winner_id?: string | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null } | null };
 
 export type MatchUpdateStateSubscriptionVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type MatchUpdateStateSubscription = { __typename?: 'Subscription', onMatchUpdate?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, battles: Array<{ __typename?: 'Battle', id: string, winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null };
+export type MatchUpdateStateSubscription = { __typename?: 'Subscription', onMatchUpdate?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, battles: Array<{ __typename?: 'Battle', id: string, winner_id?: string | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null };
 
 export type BattleUpdateSubscriptionVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
 }>;
 
 
-export type BattleUpdateSubscription = { __typename?: 'Subscription', onBattleUpdate?: { __typename?: 'Battle', id: string, winner?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null } | null };
+export type BattleUpdateSubscription = { __typename?: 'Subscription', onBattleUpdate?: { __typename?: 'Battle', id: string, winner_id?: string | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null } | null };
 
 export type UserJoinSubscriptionVariables = Exact<{
   id: Scalars['ID'];
@@ -710,12 +706,13 @@ export type UserLeftSubscriptionVariables = Exact<{
 
 export type UserLeftSubscription = { __typename?: 'Subscription', onUserLeftMatch?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string }> } | null };
 
-export type HomeQueryVariables = Exact<{
+export type TournamentsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
+  filters?: InputMaybe<TournamentsFilter>;
 }>;
 
 
-export type HomeQuery = { __typename?: 'Query', tournaments?: { __typename?: 'TournamentConnection', edges?: Array<{ __typename?: 'TournamentEdge', cursor: string, node?: { __typename?: 'Tournament', id: string, name: string, city?: string | null, num_attendees?: number | null, start_at?: any | null, images: Array<string>, participants?: { __typename?: 'UserConnection', edges?: Array<{ __typename?: 'UserEdge', cursor: string, node?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null } | null> | null } | null } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null, crew?: { __typename?: 'Crew', id: string } | null, crews?: Array<{ __typename?: 'Crew', banner: string, icon: string, id: string, name: string } | null> | null };
+export type TournamentsQuery = { __typename?: 'Query', tournaments?: { __typename?: 'TournamentConnection', edges?: Array<{ __typename?: 'TournamentEdge', cursor: string, node?: { __typename?: 'Tournament', id: string, name: string, city?: string | null, num_attendees?: number | null, start_at?: any | null, images: Array<string>, participants?: { __typename?: 'UserConnection', totalCount: number, edges?: Array<{ __typename?: 'UserEdge', cursor: string, node?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null };
 
 export type SingleTournamentQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -724,12 +721,12 @@ export type SingleTournamentQueryVariables = Exact<{
 }>;
 
 
-export type SingleTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'Tournament', id: string, city?: string | null, end_at?: any | null, lat?: number | null, lng?: number | null, name: string, images: Array<string>, num_attendees?: number | null, totalParticipants: number, slug: string, state: number, tournament_id: number, venue_address?: string | null, venue_name?: string | null, participants?: { __typename?: 'UserConnection', edges?: Array<{ __typename?: 'UserEdge', cursor: string, node?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, crew?: { __typename?: 'Crew', prefix: string } | null, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null } | null };
+export type SingleTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'Tournament', id: string, city?: string | null, end_at?: any | null, lat?: number | null, lng?: number | null, name: string, images: Array<string>, num_attendees?: number | null, slug: string, state: number, tournament_id: number, venue_address?: string | null, venue_name?: string | null, participants?: { __typename?: 'UserConnection', totalCount: number, edges?: Array<{ __typename?: 'UserEdge', cursor: string, node?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, crew?: { __typename?: 'Crew', prefix: string } | null, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null } | null };
 
 export type NextTournamentQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NextTournamentQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, nextTournament?: { __typename?: 'Tournament', id: string, name: string, city?: string | null, num_attendees?: number | null, start_at?: any | null, images: Array<string>, participants?: { __typename?: 'UserConnection', edges?: Array<{ __typename?: 'UserEdge', cursor: string, node?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null } | null> | null } | null } | null } | null };
+export type NextTournamentQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, nextTournament?: { __typename?: 'Tournament', id: string, name: string, city?: string | null, num_attendees?: number | null, start_at?: any | null, images: Array<string>, participants?: { __typename?: 'UserConnection', totalCount: number, edges?: Array<{ __typename?: 'UserEdge', cursor: string, node?: { __typename?: 'User', id: string, profile_picture?: string | null } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null } | null } | null };
 
 export type UsersQueryVariables = Exact<{
   first: Scalars['Int'];
@@ -1442,10 +1439,16 @@ export const MatchesDocument = gql`
           tag
           profile_picture
         }
-        winner {
-          id
-          tag
-          profile_picture
+        winner_id
+        battles {
+          opponent_character {
+            id
+            picture
+          }
+          initiator_character {
+            id
+            picture
+          }
         }
       }
     }
@@ -1511,11 +1514,7 @@ export const MatchDocument = gql`
     state
     battles {
       id
-      winner {
-        id
-        tag
-        profile_picture
-      }
+      winner_id
       opponent_character {
         ...CharacterData
       }
@@ -1613,11 +1612,7 @@ export const UpdateBattleDocument = gql`
     mutation updateBattle($id: ID!, $character: ID, $vote: ID) {
   updateBattle(id: $id, character: $character, vote: $vote) {
     id
-    winner {
-      id
-      tag
-      profile_picture
-    }
+    winner_id
     opponent {
       id
       tag
@@ -1693,11 +1688,7 @@ export const MatchUpdateStateDocument = gql`
     state
     battles {
       id
-      winner {
-        id
-        tag
-        profile_picture
-      }
+      winner_id
       opponent_character {
         ...CharacterData
       }
@@ -1755,11 +1746,7 @@ export const BattleUpdateDocument = gql`
     subscription battleUpdate($id: ID) {
   onBattleUpdate(id: $id) {
     id
-    winner {
-      id
-      tag
-      profile_picture
-    }
+    winner_id
     opponent_character {
       ...CharacterData
     }
@@ -1884,9 +1871,9 @@ export function useUserLeftSubscription(baseOptions: Apollo.SubscriptionHookOpti
       }
 export type UserLeftSubscriptionHookResult = ReturnType<typeof useUserLeftSubscription>;
 export type UserLeftSubscriptionResult = Apollo.SubscriptionResult<UserLeftSubscription>;
-export const HomeDocument = gql`
-    query Home($cursor: String) {
-  tournaments(first: 10, after: $cursor) {
+export const TournamentsDocument = gql`
+    query Tournaments($cursor: String, $filters: TournamentsFilter) {
+  tournaments(first: 10, after: $cursor, filters: $filters) {
     edges {
       cursor
       node {
@@ -1905,6 +1892,11 @@ export const HomeDocument = gql`
               profile_picture
             }
           }
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
+          totalCount
         }
       }
     }
@@ -1913,45 +1905,37 @@ export const HomeDocument = gql`
       hasNextPage
     }
   }
-  crew {
-    id
-  }
-  crews {
-    banner
-    icon
-    id
-    name
-  }
 }
     `;
 
 /**
- * __useHomeQuery__
+ * __useTournamentsQuery__
  *
- * To run a query within a React component, call `useHomeQuery` and pass it any options that fit your needs.
- * When your component renders, `useHomeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useTournamentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTournamentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useHomeQuery({
+ * const { data, loading, error } = useTournamentsQuery({
  *   variables: {
  *      cursor: // value for 'cursor'
+ *      filters: // value for 'filters'
  *   },
  * });
  */
-export function useHomeQuery(baseOptions?: Apollo.QueryHookOptions<HomeQuery, HomeQueryVariables>) {
+export function useTournamentsQuery(baseOptions?: Apollo.QueryHookOptions<TournamentsQuery, TournamentsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HomeQuery, HomeQueryVariables>(HomeDocument, options);
+        return Apollo.useQuery<TournamentsQuery, TournamentsQueryVariables>(TournamentsDocument, options);
       }
-export function useHomeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HomeQuery, HomeQueryVariables>) {
+export function useTournamentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TournamentsQuery, TournamentsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HomeQuery, HomeQueryVariables>(HomeDocument, options);
+          return Apollo.useLazyQuery<TournamentsQuery, TournamentsQueryVariables>(TournamentsDocument, options);
         }
-export type HomeQueryHookResult = ReturnType<typeof useHomeQuery>;
-export type HomeLazyQueryHookResult = ReturnType<typeof useHomeLazyQuery>;
-export type HomeQueryResult = Apollo.QueryResult<HomeQuery, HomeQueryVariables>;
+export type TournamentsQueryHookResult = ReturnType<typeof useTournamentsQuery>;
+export type TournamentsLazyQueryHookResult = ReturnType<typeof useTournamentsLazyQuery>;
+export type TournamentsQueryResult = Apollo.QueryResult<TournamentsQuery, TournamentsQueryVariables>;
 export const SingleTournamentDocument = gql`
     query SingleTournament($id: ID!, $cursor: String, $characters: [ID!]) {
   tournament(id: $id) {
@@ -1963,6 +1947,11 @@ export const SingleTournamentDocument = gql`
     name
     images
     num_attendees
+    slug
+    state
+    tournament_id
+    venue_address
+    venue_name
     participants(first: 10, after: $cursor, characters: $characters) {
       edges {
         cursor
@@ -1984,13 +1973,8 @@ export const SingleTournamentDocument = gql`
         endCursor
         hasNextPage
       }
+      totalCount
     }
-    totalParticipants
-    slug
-    state
-    tournament_id
-    venue_address
-    venue_name
   }
 }
     `;
@@ -2040,10 +2024,14 @@ export const NextTournamentDocument = gql`
           cursor
           node {
             id
-            tag
             profile_picture
           }
         }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        totalCount
       }
     }
   }
