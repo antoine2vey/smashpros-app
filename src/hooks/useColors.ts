@@ -7,8 +7,8 @@ export function useColors() {
   const colors = {
     green: '#28A45A',
     green2: '#45D37E',
-    black: '#262626',
-    black2: '#292929',
+    black: '#080812',
+    black2: '#030307',
     fullblack: '#000',
     white: '#F1F1F1',
     white2: '#F5F5F5',

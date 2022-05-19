@@ -88,6 +88,12 @@
 			"marginRight": 8
 		}
 	},
+	"-mx-4": {
+		"style": {
+			"marginLeft": -16,
+			"marginRight": -16
+		}
+	},
 	"ml-2": {
 		"style": {
 			"marginLeft": 8
@@ -865,6 +871,11 @@
 			"paddingRight": 20
 		}
 	},
+	"pr-8": {
+		"style": {
+			"paddingRight": 32
+		}
+	},
 	"text-center": {
 		"style": {
 			"textAlign": "center"
@@ -1090,6 +1101,13 @@
 		"style": {
 			"--tw-bg-opacity": 1,
 			"backgroundColor": "rgb(8 8 18 / var(--tw-bg-opacity))"
+		},
+		"media": "(prefers-color-scheme: dark)"
+	},
+	"dark:bg-white-400": {
+		"style": {
+			"--tw-bg-opacity": 1,
+			"backgroundColor": "rgb(255 255 255 / var(--tw-bg-opacity))"
 		},
 		"media": "(prefers-color-scheme: dark)"
 	},

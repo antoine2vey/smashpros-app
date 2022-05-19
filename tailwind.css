@@ -71,6 +71,11 @@
   margin-right: 0.5rem
 }
 
+.-mx-4 {
+  margin-left: -1rem;
+  margin-right: -1rem
+}
+
 .ml-2 {
   margin-left: 0.5rem
 }
@@ -656,6 +661,10 @@
   padding-right: 1.25rem
 }
 
+.pr-8 {
+  padding-right: 2rem
+}
+
 .text-center {
   text-align: center
 }
@@ -836,6 +845,11 @@
   .dark\:bg-black-200 {
     --tw-bg-opacity: 1;
     background-color: rgb(8 8 18 / var(--tw-bg-opacity))
+  }
+
+  .dark\:bg-white-400 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity))
   }
 
   .dark\:text-white-300 {

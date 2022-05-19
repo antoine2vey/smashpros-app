@@ -36,9 +36,13 @@ export const Home = () => {
   const { t } = useTranslation()
   const { top } = useSafeAreaInsets()
   const { mediumShadow, colors } = useColors()
-  const { data, fetchMore } = useTournamentsQuery()
+  const { data, fetchMore, refetch } = useTournamentsQuery()
   const { data: nextTournamentData } = useNextTournamentQuery()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+  const [filters, setFilters] = useState<{
+    start: string | null
+    end: string | null
+  }>()
   const pageInfo = data?.tournaments?.pageInfo
   const nextTournament = nextTournamentData?.user?.nextTournament
 
@@ -76,9 +80,21 @@ export const Home = () => {
             <Text style={tailwind('font-semibold -mb-0.5 text-sm')}>
               Filter tournaments
             </Text>
-            <Text style={tailwind('text-xs text-grey-400')}>
-              France &bull; Any week
-            </Text>
+            <View style={tailwind('flex-row ')}>
+              <Text style={tailwind('text-xs text-grey-400 mr-1')}>
+                France &bull;
+              </Text>
+              {filters?.start && (
+                <Text style={tailwind('text-xs text-grey-400 mr-1')}>
+                  {filters.start}
+                </Text>
+              )}
+              {filters?.end && (
+                <Text style={tailwind('text-xs text-grey-400')}>
+                  au {filters.end}
+                </Text>
+              )}
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -157,7 +173,27 @@ export const Home = () => {
         }}
       />
 
-      <TournamentsFilter ref={bottomSheetModalRef} />
+      <TournamentsFilter
+        ref={bottomSheetModalRef}
+        onValidation={async (data) => {
+          setFilters({
+            start: data.startRange
+              ? dayjs(data.startRange).format('DD/MM')
+              : null,
+            end: data.endRange ? dayjs(data.endRange).format('DD/MM') : null
+          })
+
+          await refetch({
+            filters: {
+              lat: data.latitude,
+              lng: data.longitude,
+              radius: data.radius,
+              startDate: data.startRange,
+              endDate: data.endRange
+            }
+          })
+        }}
+      />
     </View>
   )
 }
