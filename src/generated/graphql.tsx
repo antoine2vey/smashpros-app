@@ -280,6 +280,7 @@ export type Query = {
   tournaments?: Maybe<TournamentConnection>;
   user?: Maybe<User>;
   users?: Maybe<UserConnection>;
+  zones?: Maybe<Array<Maybe<Zone>>>;
 };
 
 
@@ -331,6 +332,11 @@ export type QueryUsersArgs = {
   filters: UserFilter;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryZonesArgs = {
+  countryCode: Scalars['String'];
 };
 
 export type RefreshPayload = {
@@ -450,10 +456,8 @@ export type TournamentQuery = {
 
 export type TournamentsFilter = {
   endDate?: InputMaybe<Scalars['DateTime']>;
-  lat?: InputMaybe<Scalars['Float']>;
-  lng?: InputMaybe<Scalars['Float']>;
-  radius?: InputMaybe<Scalars['Float']>;
   startDate?: InputMaybe<Scalars['DateTime']>;
+  zone?: InputMaybe<Scalars['ID']>;
 };
 
 export type User = {
@@ -525,6 +529,14 @@ export type UserUpdatePayload = {
   tag: Scalars['String'];
   twitchUsername?: InputMaybe<Scalars['String']>;
   twitterUsername?: InputMaybe<Scalars['String']>;
+};
+
+export type Zone = {
+  __typename?: 'Zone';
+  country_code?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  picture?: Maybe<Scalars['String']>;
 };
 
 export type RefreshMutationVariables = Exact<{
@@ -750,6 +762,13 @@ export type SetOnlineMutationVariables = Exact<{
 
 
 export type SetOnlineMutation = { __typename?: 'Mutation', setOnline?: { __typename?: 'User', id: string, tag: string, in_match: boolean } | null };
+
+export type ZonesQueryVariables = Exact<{
+  countryCode: Scalars['String'];
+}>;
+
+
+export type ZonesQuery = { __typename?: 'Query', zones?: Array<{ __typename?: 'Zone', id?: string | null, name?: string | null, country_code?: string | null } | null> | null };
 
 export const UserBaseFragmentDoc = gql`
     fragment UserBase on User {
@@ -2201,3 +2220,40 @@ export function useSetOnlineMutation(baseOptions?: Apollo.MutationHookOptions<Se
 export type SetOnlineMutationHookResult = ReturnType<typeof useSetOnlineMutation>;
 export type SetOnlineMutationResult = Apollo.MutationResult<SetOnlineMutation>;
 export type SetOnlineMutationOptions = Apollo.BaseMutationOptions<SetOnlineMutation, SetOnlineMutationVariables>;
+export const ZonesDocument = gql`
+    query Zones($countryCode: String!) {
+  zones(countryCode: $countryCode) {
+    id
+    name
+    country_code
+  }
+}
+    `;
+
+/**
+ * __useZonesQuery__
+ *
+ * To run a query within a React component, call `useZonesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useZonesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useZonesQuery({
+ *   variables: {
+ *      countryCode: // value for 'countryCode'
+ *   },
+ * });
+ */
+export function useZonesQuery(baseOptions: Apollo.QueryHookOptions<ZonesQuery, ZonesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ZonesQuery, ZonesQueryVariables>(ZonesDocument, options);
+      }
+export function useZonesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ZonesQuery, ZonesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ZonesQuery, ZonesQueryVariables>(ZonesDocument, options);
+        }
+export type ZonesQueryHookResult = ReturnType<typeof useZonesQuery>;
+export type ZonesLazyQueryHookResult = ReturnType<typeof useZonesLazyQuery>;
+export type ZonesQueryResult = Apollo.QueryResult<ZonesQuery, ZonesQueryVariables>;

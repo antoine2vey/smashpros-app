@@ -1,0 +1,7 @@
+query Zones($countryCode: String!) {
+  zones(countryCode: $countryCode) {
+    id
+    name
+    country_code
+  }
+}

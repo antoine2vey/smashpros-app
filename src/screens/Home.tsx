@@ -21,7 +21,8 @@ import { Text } from '../components/Text'
 import { Tournament } from '../components/Tournament'
 import {
   useNextTournamentQuery,
-  useTournamentsQuery
+  useTournamentsQuery,
+  Zone
 } from '../generated/graphql'
 import { useColors } from '../hooks/useColors'
 import { StatusBar } from 'expo-status-bar'
@@ -35,11 +36,12 @@ export const Home = () => {
   const tailwind = useTailwind()
   const { t } = useTranslation()
   const { top } = useSafeAreaInsets()
-  const { mediumShadow, colors } = useColors()
+  const { mediumShadow, base } = useColors()
   const { data, fetchMore, refetch } = useTournamentsQuery()
   const { data: nextTournamentData } = useNextTournamentQuery()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const [filters, setFilters] = useState<{
+    zone: Zone | null
     start: string | null
     end: string | null
   }>()
@@ -71,7 +73,7 @@ export const Home = () => {
               'pl-3 pr-2 self-stretch justify-center rounded-l-full'
             )}
           >
-            <Ionicons name="search-outline" color={colors.black} size={22} />
+            <Ionicons name="search-outline" color={base} size={22} />
           </TouchableOpacity>
           <TouchableOpacity
             style={tailwind('flex-1')}
@@ -81,9 +83,15 @@ export const Home = () => {
               Filter tournaments
             </Text>
             <View style={tailwind('flex-row ')}>
-              <Text style={tailwind('text-xs text-grey-400 mr-1')}>
-                France &bull;
-              </Text>
+              {filters?.zone ? (
+                <Text style={tailwind('text-xs text-grey-400 mr-1')}>
+                  {filters.zone.name} &bull;
+                </Text>
+              ) : (
+                <Text style={tailwind('text-xs text-grey-400 mr-1')}>
+                  Everywhere
+                </Text>
+              )}
               {filters?.start && (
                 <Text style={tailwind('text-xs text-grey-400 mr-1')}>
                   {filters.start}
@@ -176,7 +184,9 @@ export const Home = () => {
       <TournamentsFilter
         ref={bottomSheetModalRef}
         onValidation={async (data) => {
+          console.log(data)
           setFilters({
+            zone: data.zone,
             start: data.startRange
               ? dayjs(data.startRange).format('DD/MM')
               : null,
@@ -185,9 +195,7 @@ export const Home = () => {
 
           await refetch({
             filters: {
-              lat: data.latitude,
-              lng: data.longitude,
-              radius: data.radius,
+              zone: data.zone?.id,
               startDate: data.startRange,
               endDate: data.endRange
             }

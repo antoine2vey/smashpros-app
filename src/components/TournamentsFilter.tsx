@@ -1,15 +1,11 @@
-import { useFocusEffect } from '@react-navigation/native'
-import { setStatusBarStyle, StatusBar, StatusBarStyle } from 'expo-status-bar'
 import { forwardRef, useCallback, useState } from 'react'
 import {
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   useWindowDimensions,
   View
 } from 'react-native'
 import { useTailwind } from 'tailwind-rn/dist'
-import { AnimatedStatusBar } from './AnimatedStatusBar'
 import { Ionicons } from '@expo/vector-icons'
 import { Text } from './Text'
 import {
@@ -22,32 +18,30 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CalendarList, DateData } from 'react-native-calendars'
 import dayjs, { Dayjs } from 'dayjs'
 import { useScheme } from '../hooks/useScheme'
-import * as Location from 'expo-location'
+import { useZonesQuery, Zone } from '../generated/graphql'
+import * as RNLocalize from 'react-native-localize'
 
 type Props = {
   onValidation: (data: {
-    latitude: number | null | undefined
-    longitude: number | null | undefined
-    radius: number | null
     startRange: string | null
     endRange: string | null
+    zone: Zone | null
   }) => void
 }
 
 export const TournamentsFilter = forwardRef<BottomSheetModal, Props>(
   ({ onValidation }, ref) => {
+    const countryCode = RNLocalize.getCountry()
     const { shadow } = useColors()
     const { bottom } = useSafeAreaInsets()
     const tailwind = useTailwind()
     const { width } = useWindowDimensions()
-    const { colors, mediumShadow } = useColors()
+    const { colors, mediumShadow, base } = useColors()
+    const { data } = useZonesQuery({ variables: { countryCode } })
+    const [selectedZone, setZone] = useState<Zone | null>(null)
     const { scheme } = useScheme()
     const [startRange, setStartRange] = useState<string | null>(null)
     const [endRange, setEndRange] = useState<string | null>(null)
-    const [longitude, setLongitude] = useState<number | null>()
-    const [latitude, setLatitude] = useState<number | null>()
-    const [radius, setRadius] = useState<number | null>(50)
-    const [locationSelected, setLocationSelected] = useState<boolean>(false)
     const [dates, setDates] = useState<{
       [date: string]: {
         color: string
@@ -90,20 +84,28 @@ export const TournamentsFilter = forwardRef<BottomSheetModal, Props>(
           const start = dayjs(startRange)
           const end = dayjs(dateString)
           const isBackwards = end.isBefore(start)
-          let dates = {}
 
           if (startRange === dateString) {
-            setEndRange(startRange)
-            return
+            // In case user press same date
+            return setEndRange(startRange)
           }
 
           if (isBackwards) {
             // User did backward selection
-            dates = generateDates(end, start)
-          } else {
-            dates = generateDates(start, end)
+            setEndRange(null)
+            setStartRange(dateString)
+
+            return setDates({
+              [dateString]: {
+                startingDay: true,
+                endingDay: true,
+                ...DEFAULT_TEXT_STYLE
+              }
+            })
           }
 
+          const dates = generateDates(start, end)
+          setEndRange(dateString)
           setDates((prevDates) => {
             return {
               ...prevDates,
@@ -121,8 +123,6 @@ export const TournamentsFilter = forwardRef<BottomSheetModal, Props>(
               }
             }
           })
-
-          setEndRange(dateString)
         } else {
           // No date selected OR we are selecting a new range
           setDates({
@@ -147,64 +147,23 @@ export const TournamentsFilter = forwardRef<BottomSheetModal, Props>(
     }, [])
 
     const resetFilters = useCallback(() => {
+      setZone(null)
       clearCalendar()
-
-      setLatitude(null)
-      setLongitude(null)
-      setRadius(null)
-      setLocationSelected(false)
-    }, [])
-
-    const onLocationPress = useCallback(async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync()
-
-      if (status === Location.PermissionStatus.GRANTED) {
-        const { coords } = await Location.getCurrentPositionAsync()
-
-        setLatitude(coords.latitude)
-        setLongitude(coords.longitude)
-        setLocationSelected(true)
-      }
     }, [])
 
     const search = useCallback(() => {
       ref.current.dismiss()
 
       onValidation({
-        longitude,
-        latitude,
-        radius,
+        zone: selectedZone,
         startRange: startRange ? dayjs(startRange).format() : null,
         endRange: endRange ? dayjs(endRange).format() : null
       })
-    }, [longitude, latitude, radius, startRange, endRange])
+    }, [selectedZone, startRange, endRange])
 
-    const locations = [
-      {
-        lat: 48.8566,
-        lng: 2.3522,
-        radius: 5,
-        name: 'Paris'
-      },
-      {
-        lat: 48.8566,
-        lng: 2.3522,
-        radius: 5,
-        name: 'Paris'
-      },
-      {
-        lat: 48.8566,
-        lng: 2.3522,
-        radius: 5,
-        name: 'Paris'
-      },
-      {
-        lat: 48.8566,
-        lng: 2.3522,
-        radius: 5,
-        name: 'Paris'
-      }
-    ]
+    const onZonePress = useCallback((zone: Zone | null) => {
+      setZone(zone)
+    }, [])
 
     return (
       <BottomSheetModal
@@ -234,7 +193,7 @@ export const TournamentsFilter = forwardRef<BottomSheetModal, Props>(
             )}
             onPress={() => ref.current.dismiss()}
           >
-            <Ionicons name="close-outline" size={24} color="black" />
+            <Ionicons name="close-outline" size={24} color={base} />
           </TouchableOpacity>
           <View style={tailwind('items-center')}>
             <Text style={tailwind('text-sm font-semibold')}>Filters</Text>
@@ -242,47 +201,36 @@ export const TournamentsFilter = forwardRef<BottomSheetModal, Props>(
         </View>
         <BottomSheetScrollView contentContainerStyle={tailwind('px-4')}>
           <Text style={tailwind('text-xl font-semibold mt-5')}>Places</Text>
-          <TouchableOpacity
-            style={tailwind('flex-row items-center')}
-            onPress={onLocationPress}
-          >
-            <Ionicons
-              name="location-outline"
-              size={18}
-              color={locationSelected ? colors.green2 : colors.black}
-            />
-            <Text
-              style={[
-                tailwind('text-sm ml-1'),
-                locationSelected && tailwind('text-green-300 font-bold')
-              ]}
-            >
-              Own location
-            </Text>
-          </TouchableOpacity>
           <ScrollView
             horizontal
             style={tailwind('-mx-5 py-2')}
             contentContainerStyle={tailwind('px-5')}
-            decelerationRate={0}
-            snapToInterval={128}
             showsHorizontalScrollIndicator={false}
-            snapToAlignment="center"
           >
-            {locations.map((_, i) => (
-              <View
-                key={i}
-                style={[
-                  tailwind('w-32 h-32 bg-white-400 mr-2 rounded-xl'),
-                  mediumShadow
-                ]}
-              />
+            {data?.zones?.map((zone) => (
+              <TouchableOpacity
+                onPress={() => onZonePress(zone)}
+                key={zone?.id}
+              >
+                <View
+                  style={[
+                    tailwind(
+                      'w-32 h-32 bg-white-400 dark:bg-black-200 mr-2 rounded-xl border border-transparent'
+                    ),
+                    selectedZone?.id === zone?.id &&
+                      tailwind('border-green-300'),
+                    mediumShadow
+                  ]}
+                />
+                <Text
+                  style={tailwind('mt-1 font-bold w-32 flex')}
+                  numberOfLines={1}
+                >
+                  {zone?.name}
+                </Text>
+              </TouchableOpacity>
             ))}
           </ScrollView>
-
-          <View>
-            <Text style={tailwind('text-xl font-semibold mt-5')}>Radius</Text>
-          </View>
 
           <View style={tailwind('flex-row justify-between items-center  mt-5')}>
             <Text style={tailwind('text-xl font-semibold')}>Dates</Text>
