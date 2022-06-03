@@ -5,7 +5,7 @@ import {
 } from '@gorhom/bottom-sheet'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import _, { uniq } from 'lodash'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   FlatList,
   SafeAreaView,
@@ -43,9 +43,9 @@ export const Moneymatches = () => {
   const tailwind = useTailwind()
   const { navigate } = useNavigation<MoneymatchScreenNavigateProp>()
   const { mediumShadow } = useColors()
-  const { data, loading } = useMatchesQuery()
+  const { data, loading, refetch } = useMatchesQuery()
   const { data: next } = useNextTournamentQuery()
-
+  const [refreshing, setRefreshing] = useState(false)
   const getUniqueCharactersForMatch = useCallback((match: Match) => {
     const characters = match?.battles?.map((battle) => {
       return {
@@ -81,7 +81,13 @@ export const Moneymatches = () => {
       <FlatList
         style={tailwind('flex-1 bg-white-400 dark:bg-black-400')}
         data={data?.matches?.edges}
-        keyExtractor={(item, index) => item?.node?.id! + index}
+        refreshing={refreshing}
+        onRefresh={async () => {
+          setRefreshing(true)
+          await refetch()
+          setRefreshing(false)
+        }}
+        keyExtractor={(item, index) => item?.node?.id!}
         contentContainerStyle={tailwind('px-5')}
         renderItem={({ item: edge }) => {
           const { initiatorCharacters, opponentCharacters } =
@@ -93,7 +99,7 @@ export const Moneymatches = () => {
               activeOpacity={0.9}
               onPress={() => navigate('Moneymatch', { id: edge?.node?.id! })}
               style={[
-                tailwind('bg-white-400 dark:bg-black-200 rounded-xl mb-2 p-6'),
+                tailwind('bg-white-400 dark:bg-black-200 rounded-xl mb-2 p-3'),
                 mediumShadow
               ]}
             >

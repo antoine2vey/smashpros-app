@@ -51,7 +51,7 @@ export function HeroScroll<T>({
   )
 
   return (
-    <View style={tailwind('flex-1 bg-white-300 dark:bg-black-300')}>
+    <View style={tailwind('flex-1 bg-white-400 dark:bg-black-400')}>
       <StatusBar animated translucent style={statusBarScheme} />
       <ProgressiveImage
         source={background}
@@ -68,7 +68,7 @@ export function HeroScroll<T>({
         style={[
           { height: height / 3 },
           tailwind(
-            'bg-white-300 dark:bg-black-300 absolute bottom-0 left-0 right-0'
+            'bg-white-400 dark:bg-black-400 absolute bottom-0 left-0 right-0'
           )
         ]}
       />
@@ -80,7 +80,7 @@ export function HeroScroll<T>({
           {
             marginTop: height / 6
           },
-          tailwind('p-3 bg-white-300 dark:bg-black-300 rounded-t-3xl')
+          tailwind('p-3 bg-white-400 dark:bg-black-400 rounded-t-3xl')
         ]}
         // Sets padding
         ListFooterComponent={<View />}

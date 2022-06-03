@@ -17,13 +17,13 @@ PODS:
     - ExpoModulesCore
   - EXImagePicker (12.0.2):
     - ExpoModulesCore
-  - EXJSONUtils (0.2.0)
+  - EXJSONUtils (0.2.1)
   - EXKeepAwake (10.0.2):
     - ExpoModulesCore
   - EXLocation (14.0.2):
     - ExpoModulesCore
     - UMTaskManagerInterface
-  - EXManifests (0.2.2):
+  - EXManifests (0.2.4):
     - EXJSONUtils
   - Expo (44.0.6):
     - ExpoModulesCore
@@ -38,13 +38,13 @@ PODS:
     - ExpoModulesCore
     - React-Core
   - EXStructuredHeaders (2.1.1)
-  - EXUpdates (0.11.6):
+  - EXUpdates (0.11.7):
     - EXManifests
     - ExpoModulesCore
     - EXStructuredHeaders
     - EXUpdatesInterface
     - React-Core
-  - EXUpdatesInterface (0.5.1)
+  - EXUpdatesInterface (0.5.2)
   - FBLazyVector (0.64.3)
   - FBReactNativeSpec (0.64.3):
     - RCT-Folly (= 2020.01.13.00)
@@ -53,10 +53,65 @@ PODS:
     - React-Core (= 0.64.3)
     - React-jsi (= 0.64.3)
     - ReactCommon/turbomodule/core (= 0.64.3)
+  - Firebase/CoreOnly (8.15.0):
+    - FirebaseCore (= 8.15.0)
+  - Firebase/Messaging (8.15.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 8.15.0)
+  - FirebaseCore (8.15.0):
+    - FirebaseCoreDiagnostics (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Logger (~> 7.7)
+  - FirebaseCoreDiagnostics (8.15.0):
+    - GoogleDataTransport (~> 9.1)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Logger (~> 7.7)
+    - nanopb (~> 2.30908.0)
+  - FirebaseInstallations (8.15.0):
+    - FirebaseCore (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/UserDefaults (~> 7.7)
+    - PromisesObjC (< 3.0, >= 1.2)
+  - FirebaseMessaging (8.15.0):
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GoogleDataTransport (~> 9.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Reachability (~> 7.7)
+    - GoogleUtilities/UserDefaults (~> 7.7)
+    - nanopb (~> 2.30908.0)
   - glog (0.3.5)
+  - GoogleDataTransport (9.1.4):
+    - GoogleUtilities/Environment (~> 7.7)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/AppDelegateSwizzler (7.7.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+  - GoogleUtilities/Environment (7.7.0):
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/Logger (7.7.0):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/Network (7.7.0):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (7.7.0)"
+  - GoogleUtilities/Reachability (7.7.0):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/UserDefaults (7.7.0):
+    - GoogleUtilities/Logger
   - Mapbox-iOS-SDK (5.9.0):
     - MapboxMobileEvents (= 0.10.2)
   - MapboxMobileEvents (0.10.2)
+  - nanopb (2.30908.0):
+    - nanopb/decode (= 2.30908.0)
+    - nanopb/encode (= 2.30908.0)
+  - nanopb/decode (2.30908.0)
+  - nanopb/encode (2.30908.0)
+  - PromisesObjC (2.1.0)
   - RCT-Folly (2020.01.13.00):
     - boost-for-react-native
     - DoubleConversion
@@ -332,11 +387,18 @@ PODS:
     - React-perflogger (= 0.64.3)
   - RNCAsyncStorage (1.15.17):
     - React-Core
+  - RNFBApp (14.11.0):
+    - Firebase/CoreOnly (= 8.15.0)
+    - React-Core
+  - RNFBMessaging (14.11.0):
+    - Firebase/Messaging (= 8.15.0)
+    - React-Core
+    - RNFBApp
   - RNGestureHandler (2.1.3):
     - React-Core
-  - RNLocalize (2.2.1):
+  - RNLocalize (2.2.2):
     - React-Core
-  - RNReanimated (2.3.3):
+  - RNReanimated (2.8.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -344,7 +406,6 @@ PODS:
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
-    - React
     - React-callinvoker
     - React-Core
     - React-Core/DevSupport
@@ -424,6 +485,8 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
+  - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -434,8 +497,17 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
+    - Firebase
+    - FirebaseCore
+    - FirebaseCoreDiagnostics
+    - FirebaseInstallations
+    - FirebaseMessaging
+    - GoogleDataTransport
+    - GoogleUtilities
     - Mapbox-iOS-SDK
     - MapboxMobileEvents
+    - nanopb
+    - PromisesObjC
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -538,6 +610,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNFBApp:
+    :path: "../node_modules/@react-native-firebase/app"
+  RNFBMessaging:
+    :path: "../node_modules/@react-native-firebase/messaging"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNLocalize:
@@ -562,23 +638,32 @@ SPEC CHECKSUMS:
   EXFileSystem: 08a3033ac372b6346becf07839e1ccef26fb1058
   EXFont: 2597c10ac85a69d348d44d7873eccf5a7576ef5e
   EXImagePicker: bf4d62532cc2bf217edbe4abbb0014e73e079eac
-  EXJSONUtils: f515cf71710855d7ba5bfc6752af3b9a6f6aad01
+  EXJSONUtils: 5ee0d5cf76da70ad86f0be1a41cc70f47d69e06f
   EXKeepAwake: bf48d7f740a5cd2befed6cf9a49911d385c6c47d
   EXLocation: 013b5d07cca26c2d15d998766322e70b7a228b57
-  EXManifests: 50e42e01335df4e54109dee7be5a91bfd37347db
+  EXManifests: d3464cd2278f4a19cd80c1aa673231570b534c11
   Expo: 534e51e607aba8229293297da5585f4b26f50fa1
   ExpoLinearGradient: fd591c223c81f6779036ed4cef4deb20ecb87c50
   ExpoLocalization: 72b4524c167da6c4e2a0bbe09176ff8b2c4eddbe
   ExpoModulesCore: 32c0ccb47f477d330ee93db72505380adf0de09a
   EXSplashScreen: 21669e598804ee810547dbb6692c8deb5dd8dbf3
   EXStructuredHeaders: 4993087b2010dbcc510f5d92555b36f523425e8d
-  EXUpdates: bd5fa64f02685ed3e96be86b5ca350cdc2cd8d02
-  EXUpdatesInterface: a9814f422d3cd6e7cfd260d13c27786148ece20e
+  EXUpdates: a83e036243b0f6ece53a8c1cb883b6751c88a5f8
+  EXUpdatesInterface: 13270752afb8c61f83a09117e6b04a682b2db9eb
   FBLazyVector: c71c5917ec0ad2de41d5d06a5855f6d5eda06971
   FBReactNativeSpec: 3f3dff9c7338d2025edd07a8a48af366e461d00e
+  Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
+  FirebaseCore: 5743c5785c074a794d35f2fff7ecc254a91e08b1
+  FirebaseCoreDiagnostics: 92e07a649aeb66352b319d43bdd2ee3942af84cb
+  FirebaseInstallations: 40bd9054049b2eae9a2c38ef1c3dd213df3605cd
+  FirebaseMessaging: 5e5118a2383b3531e730d974680954c679ca0a13
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
+  GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
+  GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   Mapbox-iOS-SDK: a5915700ec84bc1a7f8b3e746d474789e35b7956
   MapboxMobileEvents: 2bc0ca2eedb627b73cf403258dce2b2fa98074a6
+  nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: d34bf57e17cb6e3b2681f4809b13843c021feb6c
   RCTTypeSafety: 8dab4933124ed39bb0c1d88d74d61b1eb950f28f
@@ -605,9 +690,11 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 493d9abb8b23c3f84e19ae221eeba92cadcb70dc
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
   RNCAsyncStorage: 6bd5a7ba3dde1c3facba418aa273f449bdc5437a
+  RNFBApp: b1b5a80a676a07dea17e778bda7c1e8b69b2f5ec
+  RNFBMessaging: 3f327c8019ec2578b9da937ba6c01db48c81a457
   RNGestureHandler: e1099204721a17a89c81fcd1cc2e92143dc040fb
-  RNLocalize: cbcb55d0e19c78086ea4eea20e03fe8000bbbced
-  RNReanimated: 0e5ef4a7e4e79f84efbe5b40771c31044c51e7d0
+  RNLocalize: 95a43f85e41a966be7bc9cff2437128911c52da0
+  RNReanimated: 7f3eef39b48facdb0b053873abdaafaa6a953b0d
   RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
   UMTaskManagerInterface: 3184c93ecc290bd422c6e344badc89b601e9c29b
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749

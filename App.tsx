@@ -7,7 +7,14 @@ import {
 } from '@react-navigation/native-stack'
 import { StatusBar } from 'expo-status-bar'
 import React, { useContext, useEffect, useState } from 'react'
-import { Linking, LogBox, Switch, useColorScheme, View } from 'react-native'
+import {
+  Linking,
+  LogBox,
+  NativeModules,
+  Switch,
+  useColorScheme,
+  View
+} from 'react-native'
 import {
   SafeAreaProvider,
   useSafeAreaInsets
@@ -40,6 +47,8 @@ import { Moneymatches } from './src/screens/Moneymatches'
 import { CreateMoneymatch } from './src/screens/CreateMoneymatch'
 import { Moneymatch } from './src/screens/Moneymatch'
 import { Text } from './src/components/Text'
+import { Settings } from './src/screens/Settings'
+import messaging from '@react-native-firebase/messaging'
 
 dayjs.extend(updateLocale)
 dayjs.extend(relativeTime)
@@ -274,7 +283,7 @@ const Router = () => {
       />
       <Tab.Screen
         name="ProfileTab"
-        component={NoopScreen}
+        component={Settings}
         options={{
           header: () => undefined,
           tabBarLabel: () => undefined,
@@ -330,7 +339,53 @@ export function Root() {
           prefixes: ['smashpros://'],
           config: {
             screens: {
-              ResetPassword: 'reset/:token'
+              ResetPassword: 'reset/:token',
+              HomeTabs: {
+                screens: {
+                  Tournament: 'tournament/:id'
+                }
+              }
+            }
+          },
+          // If notification is clicked but app is closed
+          async getInitialURL() {
+            const url = await Linking.getInitialURL()
+            console.log(url)
+
+            if (url != null) {
+              return url
+            }
+
+            const message = await messaging().getInitialNotification()
+            console.log('getInitialURL()')
+            console.log(message)
+            return message?.data?.link
+          },
+          // If notification is clicked but app is in background
+          subscribe(listener) {
+            const onReceiveURL = ({ url }: { url: string }) => listener(url)
+            // Listen to incoming links from deep linking
+            Linking.addEventListener('url', onReceiveURL)
+
+            // Listen to firebase push notifications
+            const unsubscribeNotification = messaging().onNotificationOpenedApp(
+              (message) => {
+                console.log('subscribe()')
+                console.log(message)
+                const url = message?.data?.link
+
+                if (url) {
+                  // Any custom logic to check whether the URL needs to be handled
+                  // Call the listener to let React Navigation handle the URL
+                  listener(url)
+                }
+              }
+            )
+
+            return () => {
+              // Clean up the event listeners
+              Linking.removeEventListener('url', onReceiveURL)
+              unsubscribeNotification()
             }
           }
         }}
@@ -374,7 +429,7 @@ export default function App() {
                 <TailwindProvider utilities={utilities} colorScheme={scheme}>
                   <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
                   <Root />
-                  {__DEV__ && <Switchr scheme={scheme} setScheme={setScheme} />}
+                  {/* {__DEV__ && <Switchr scheme={scheme} setScheme={setScheme} />} */}
                 </TailwindProvider>
               </SafeAreaProvider>
             )}

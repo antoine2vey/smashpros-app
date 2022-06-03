@@ -37,25 +37,25 @@ export const BattleUser: React.FC<Props> = ({
       <View style={tailwind('flex-row items-center')}>
         {isOpponent && (
           <View style={tailwind('mr-1 flex-row')}>
-            {initiatorVote.id === user.id && (
+            {initiatorVote?.id === user.id && (
               <View style={tailwind('w-3 h-3 rounded-full bg-blue-500 mr-1')} />
             )}
-            {opponentVote.id === user.id && (
+            {opponentVote?.id === user.id && (
               <View style={tailwind('w-3 h-3 rounded-full bg-red-400 mr-1')} />
             )}
           </View>
         )}
         <ProgressiveImage
-          source={{ uri: character.picture }}
+          source={{ uri: character?.picture }}
           resizeMode="contain"
           style={tailwind('h-8 w-8')}
         />
         {!isOpponent && (
           <View style={tailwind('ml-1 flex-row')}>
-            {initiatorVote.id === user.id && (
+            {initiatorVote?.id === user.id && (
               <View style={tailwind('w-3 h-3 rounded-full bg-blue-500 ml-1')} />
             )}
-            {opponentVote.id === user.id && (
+            {opponentVote?.id === user.id && (
               <View style={tailwind('w-3 h-3 rounded-full bg-red-400 ml-1')} />
             )}
           </View>

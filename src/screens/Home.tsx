@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import dayjs from 'dayjs'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   ActivityIndicator,
@@ -29,6 +29,7 @@ import { StatusBar } from 'expo-status-bar'
 import { AnimatedStatusBar } from '../components/AnimatedStatusBar'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { TournamentsFilter } from '../components/TournamentsFilter'
+import messaging from '@react-native-firebase/messaging'
 
 export const Home = () => {
   const [refreshing, setRefreshing] = useState(false)
@@ -47,6 +48,24 @@ export const Home = () => {
   }>()
   const pageInfo = data?.tournaments?.pageInfo
   const nextTournament = nextTournamentData?.user?.nextTournament
+
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission()
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL
+    console.log(authStatus)
+    console.log(enabled)
+
+    if (enabled) {
+      const token = await messaging().getToken()
+      console.log(token)
+    }
+  }
+
+  useEffect(() => {
+    requestUserPermission()
+  }, [])
 
   return (
     <View style={tailwind('flex-1 bg-white-400 dark:bg-black-400')}>
@@ -77,7 +96,10 @@ export const Home = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={tailwind('flex-1')}
-            onPress={() => bottomSheetModalRef.current?.present()}
+            onPress={() => {
+              console.log(bottomSheetModalRef)
+              bottomSheetModalRef.current?.present()
+            }}
           >
             <Text style={tailwind('font-semibold -mb-0.5 text-sm')}>
               Filter tournaments

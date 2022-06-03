@@ -28,7 +28,7 @@ export const Participant: React.FC<Props> = ({
   return (
     <TouchableOpacity
       style={tailwind(
-        'flex-row flex p-1 mt-2 bg-white-300 dark:bg-black-300 rounded-xl'
+        'flex-row flex p-2 mt-2 bg-white-400 dark:bg-black-200 rounded-xl'
       )}
       activeOpacity={0.9}
       {...props}

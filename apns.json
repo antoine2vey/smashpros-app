@@ -1,0 +1,10 @@
+{
+  "aps" : {
+    "alert" : {
+      "title" : "Default title",
+      "body" : "Default body"
+    },
+    "mutable-content" : false
+  },
+  "link": "tournament/76eed56f-c4ee-490b-bae7-0dfc9398fc3d"
+}
