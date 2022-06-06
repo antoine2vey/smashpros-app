@@ -519,16 +519,15 @@ export type UserRegisterPayload = {
 };
 
 export type UserUpdatePayload = {
-  characters: Array<Scalars['ID']>;
-  email: Scalars['String'];
-  password: Scalars['String'];
+  allowNotifications?: InputMaybe<Scalars['Boolean']>;
+  allowSearchability?: InputMaybe<Scalars['Boolean']>;
+  characters?: InputMaybe<Array<Scalars['ID']>>;
+  notificationToken?: InputMaybe<Scalars['String']>;
   profilePicture?: InputMaybe<Scalars['Upload']>;
   smashGGPlayerId?: InputMaybe<Scalars['Int']>;
   smashGGSlug?: InputMaybe<Scalars['String']>;
   smashGGUserId?: InputMaybe<Scalars['Int']>;
-  tag: Scalars['String'];
-  twitchUsername?: InputMaybe<Scalars['String']>;
-  twitterUsername?: InputMaybe<Scalars['String']>;
+  tag?: InputMaybe<Scalars['String']>;
 };
 
 export type Zone = {
@@ -567,6 +566,13 @@ export type AskPasswordResetMutationVariables = Exact<{
 
 
 export type AskPasswordResetMutation = { __typename?: 'Mutation', askPasswordReset?: string | null };
+
+export type UpdateProfileMutationVariables = Exact<{
+  payload: UserUpdatePayload;
+}>;
+
+
+export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile?: { __typename?: 'User', twitch_username?: string | null, twitter_username?: string | null, smashgg_slug?: string | null, allow_notifications: boolean, allow_searchability: boolean, updated_at: any, created_at: any, id: string, profile_picture?: string | null, tag: string, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null };
 
 export type PasswordResetMutationVariables = Exact<{
   code: Scalars['String'];
@@ -955,6 +961,46 @@ export function useAskPasswordResetMutation(baseOptions?: Apollo.MutationHookOpt
 export type AskPasswordResetMutationHookResult = ReturnType<typeof useAskPasswordResetMutation>;
 export type AskPasswordResetMutationResult = Apollo.MutationResult<AskPasswordResetMutation>;
 export type AskPasswordResetMutationOptions = Apollo.BaseMutationOptions<AskPasswordResetMutation, AskPasswordResetMutationVariables>;
+export const UpdateProfileDocument = gql`
+    mutation updateProfile($payload: UserUpdatePayload!) {
+  updateProfile(payload: $payload) {
+    ...UserBase
+    twitch_username
+    twitter_username
+    smashgg_slug
+    allow_notifications
+    allow_searchability
+    updated_at
+    created_at
+  }
+}
+    ${UserBaseFragmentDoc}`;
+export type UpdateProfileMutationFn = Apollo.MutationFunction<UpdateProfileMutation, UpdateProfileMutationVariables>;
+
+/**
+ * __useUpdateProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProfileMutation, { data, loading, error }] = useUpdateProfileMutation({
+ *   variables: {
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useUpdateProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProfileMutation, UpdateProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProfileMutation, UpdateProfileMutationVariables>(UpdateProfileDocument, options);
+      }
+export type UpdateProfileMutationHookResult = ReturnType<typeof useUpdateProfileMutation>;
+export type UpdateProfileMutationResult = Apollo.MutationResult<UpdateProfileMutation>;
+export type UpdateProfileMutationOptions = Apollo.BaseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables>;
 export const PasswordResetDocument = gql`
     mutation passwordReset($code: String!, $confirmPassword: String!, $password: String!) {
   passwordReset(

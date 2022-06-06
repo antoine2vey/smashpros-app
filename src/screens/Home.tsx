@@ -22,6 +22,7 @@ import { Tournament } from '../components/Tournament'
 import {
   useNextTournamentQuery,
   useTournamentsQuery,
+  useUpdateProfileMutation,
   Zone
 } from '../generated/graphql'
 import { useColors } from '../hooks/useColors'
@@ -40,6 +41,7 @@ export const Home = () => {
   const { mediumShadow, base } = useColors()
   const { data, fetchMore, refetch } = useTournamentsQuery()
   const { data: nextTournamentData } = useNextTournamentQuery()
+  const [updateProfile] = useUpdateProfileMutation()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const [filters, setFilters] = useState<{
     zone: Zone | null
@@ -54,12 +56,18 @@ export const Home = () => {
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL
-    console.log(authStatus)
-    console.log(enabled)
 
     if (enabled) {
       const token = await messaging().getToken()
-      console.log(token)
+
+      updateProfile({
+        variables: {
+          payload: {
+            allowNotifications: enabled,
+            notificationToken: token
+          }
+        }
+      })
     }
   }
 

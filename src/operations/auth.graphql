@@ -21,6 +21,19 @@ mutation askPasswordReset($email: String!) {
   askPasswordReset(email: $email)
 }
 
+mutation updateProfile($payload: UserUpdatePayload!) {
+  updateProfile(payload: $payload) {
+    ...UserBase
+    twitch_username
+    twitter_username
+    smashgg_slug
+    allow_notifications
+    allow_searchability
+    updated_at
+    created_at
+  }
+}
+
 mutation passwordReset(
   $code: String!
   $confirmPassword: String!
