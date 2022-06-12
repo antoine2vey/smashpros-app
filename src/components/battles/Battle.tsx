@@ -1,10 +1,13 @@
 import { useMemo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { useTailwind } from 'tailwind-rn/dist'
-import { Battle as IBattle, MatchState } from '../../generated/graphql'
+import {
+  Battle as IBattle,
+  BattleState,
+  MatchState
+} from '../../generated/graphql'
 import { useColors } from '../../hooks/useColors'
 import { Button } from '../Button'
-import { ProgressiveImage } from '../ProgressiveImage'
 import { Text } from '../Text'
 import { BattleScore } from './BattleScore'
 import { BattleSeparator } from './BattleSeparator'
@@ -12,18 +15,20 @@ import { BattleUser } from './BattleUser'
 
 type Props = {
   battle: IBattle
-  gameState: MatchState
+  matchState: MatchState
   onVotedForInitiatorPress: () => void
   onVotedForOpponentPress: () => void
-  onStartGamePress: () => void
+  onStartBattlePress: () => void
+  onStopBattlePress: () => void
 }
 
 export const Battle: React.FC<Props> = ({
   battle,
   onVotedForInitiatorPress,
   onVotedForOpponentPress,
-  onStartGamePress,
-  gameState
+  onStartBattlePress,
+  onStopBattlePress,
+  matchState
 }) => {
   const tailwind = useTailwind()
   const { mediumShadow } = useColors()
@@ -33,9 +38,10 @@ export const Battle: React.FC<Props> = ({
       battle?.opponent_character &&
       battle?.initiator_character &&
       !battle?.winner_id &&
-      gameState !== MatchState.Playing
+      battle?.state === BattleState.CharacterChoice &&
+      matchState === MatchState.Started
     )
-  }, [battle, gameState])
+  }, [battle, matchState])
 
   return (
     <>
@@ -105,8 +111,14 @@ export const Battle: React.FC<Props> = ({
         </View>
       </View>
       {canStartGame && (
-        <Button text="Start game" outlined onPress={onStartGamePress} />
+        <Button text="Start game" outlined onPress={onStartBattlePress} />
       )}
+
+      {battle.state === BattleState.Playing && (
+        <Button text="Stop game" outlined onPress={onStopBattlePress} />
+      )}
+
+      {battle.state === BattleState.Voting && <Text>vote you fat fuck</Text>}
     </>
   )
 }

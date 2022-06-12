@@ -52,6 +52,8 @@ query matches {
         }
         winner_id
         battles {
+          id
+          state
           opponent_character {
             id
             picture
@@ -97,6 +99,7 @@ query Match($id: ID!) {
     state
     battles {
       id
+      state
       winner_id
       opponent_character {
         ...CharacterData
@@ -135,8 +138,13 @@ mutation updateMatch($state: MatchState!, $id: ID!) {
   }
 }
 
-mutation updateBattle($id: ID!, $character: ID, $vote: ID) {
-  updateBattle(id: $id, character: $character, vote: $vote) {
+mutation updateBattle(
+  $id: ID!
+  $character: ID
+  $vote: ID
+  $state: BattleState
+) {
+  updateBattle(id: $id, character: $character, vote: $vote, state: $state) {
     id
     winner_id
     opponent {
@@ -185,6 +193,7 @@ subscription matchUpdateState($id: ID!) {
     state
     battles {
       id
+      state
       winner_id
       opponent_character {
         ...CharacterData
@@ -220,6 +229,7 @@ subscription battleUpdate($id: ID) {
   onBattleUpdate(id: $id) {
     id
     winner_id
+    state
     opponent_character {
       ...CharacterData
     }

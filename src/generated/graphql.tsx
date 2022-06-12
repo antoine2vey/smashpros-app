@@ -36,9 +36,17 @@ export type Battle = {
   opponent?: Maybe<User>;
   opponent_character?: Maybe<Character>;
   opponent_vote?: Maybe<User>;
+  state: BattleState;
   winner?: Maybe<User>;
   winner_id?: Maybe<Scalars['String']>;
 };
+
+export enum BattleState {
+  CharacterChoice = 'CHARACTER_CHOICE',
+  Finished = 'FINISHED',
+  Playing = 'PLAYING',
+  Voting = 'VOTING'
+}
 
 export type Character = {
   __typename?: 'Character';
@@ -46,6 +54,12 @@ export type Character = {
   name: Scalars['String'];
   picture: Scalars['String'];
   users: Array<User>;
+};
+
+export type CharacterStat = {
+  __typename?: 'CharacterStat';
+  character?: Maybe<Character>;
+  stat?: Maybe<Stat>;
 };
 
 export type Crew = {
@@ -113,11 +127,10 @@ export type MatchEdge = {
 };
 
 export enum MatchState {
-  CharacterChoice = 'CHARACTER_CHOICE',
   Finished = 'FINISHED',
   Hold = 'HOLD',
-  Playing = 'PLAYING',
-  Refused = 'REFUSED'
+  Refused = 'REFUSED',
+  Started = 'STARTED'
 }
 
 export type Mutation = {
@@ -230,6 +243,7 @@ export type MutationTransferCrewOwnershipArgs = {
 export type MutationUpdateBattleArgs = {
   character?: InputMaybe<Scalars['ID']>;
   id: Scalars['ID'];
+  state?: InputMaybe<BattleState>;
   vote?: InputMaybe<Scalars['ID']>;
 };
 
@@ -275,6 +289,7 @@ export type Query = {
   crews?: Maybe<Array<Maybe<Crew>>>;
   match?: Maybe<Match>;
   matches?: Maybe<MatchConnection>;
+  stats?: Maybe<Stats>;
   suggestedName?: Maybe<SuggestedName>;
   tournament?: Maybe<Tournament>;
   tournaments?: Maybe<TournamentConnection>;
@@ -360,6 +375,20 @@ export enum RoleEnum {
   TournamentOrganizer = 'TOURNAMENT_ORGANIZER',
   User = 'USER'
 }
+
+export type Stat = {
+  __typename?: 'Stat';
+  total?: Maybe<Scalars['Int']>;
+  wins?: Maybe<Scalars['Int']>;
+};
+
+export type Stats = {
+  __typename?: 'Stats';
+  characters?: Maybe<Array<Maybe<CharacterStat>>>;
+  matches?: Maybe<Stat>;
+  sets?: Maybe<Stat>;
+  users?: Maybe<Array<Maybe<UserStat>>>;
+};
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -518,6 +547,12 @@ export type UserRegisterPayload = {
   twitterUsername?: InputMaybe<Scalars['String']>;
 };
 
+export type UserStat = {
+  __typename?: 'UserStat';
+  stat?: Maybe<Stat>;
+  user?: Maybe<User>;
+};
+
 export type UserUpdatePayload = {
   allowNotifications?: InputMaybe<Scalars['Boolean']>;
   allowSearchability?: InputMaybe<Scalars['Boolean']>;
@@ -670,14 +705,14 @@ export type SendMatchInviteMutation = { __typename?: 'Mutation', sendMatchInvite
 export type MatchesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MatchesQuery = { __typename?: 'Query', matches?: { __typename?: 'MatchConnection', edges?: Array<{ __typename?: 'MatchEdge', cursor: string, node?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, winner_id?: string | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, battles: Array<{ __typename?: 'Battle', opponent_character?: { __typename?: 'Character', id: string, picture: string } | null, initiator_character?: { __typename?: 'Character', id: string, picture: string } | null }> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null };
+export type MatchesQuery = { __typename?: 'Query', matches?: { __typename?: 'MatchConnection', edges?: Array<{ __typename?: 'MatchEdge', cursor: string, node?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, winner_id?: string | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, battles: Array<{ __typename?: 'Battle', id: string, state: BattleState, opponent_character?: { __typename?: 'Character', id: string, picture: string } | null, initiator_character?: { __typename?: 'Character', id: string, picture: string } | null }> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } | null };
 
 export type MatchQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type MatchQuery = { __typename?: 'Query', match?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, battles: Array<{ __typename?: 'Battle', id: string, winner_id?: string | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null };
+export type MatchQuery = { __typename?: 'Query', match?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, battles: Array<{ __typename?: 'Battle', id: string, state: BattleState, winner_id?: string | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null };
 
 export type UpdateMatchMutationVariables = Exact<{
   state: MatchState;
@@ -691,6 +726,7 @@ export type UpdateBattleMutationVariables = Exact<{
   id: Scalars['ID'];
   character?: InputMaybe<Scalars['ID']>;
   vote?: InputMaybe<Scalars['ID']>;
+  state?: InputMaybe<BattleState>;
 }>;
 
 
@@ -701,14 +737,14 @@ export type MatchUpdateStateSubscriptionVariables = Exact<{
 }>;
 
 
-export type MatchUpdateStateSubscription = { __typename?: 'Subscription', onMatchUpdate?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, battles: Array<{ __typename?: 'Battle', id: string, winner_id?: string | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null };
+export type MatchUpdateStateSubscription = { __typename?: 'Subscription', onMatchUpdate?: { __typename?: 'Match', id: string, total_matches: number, opponent_wins: number, initiator_wins: number, state: MatchState, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string, name: string, picture: string }> } | null, battles: Array<{ __typename?: 'Battle', id: string, state: BattleState, winner_id?: string | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null }> } | null };
 
 export type BattleUpdateSubscriptionVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
 }>;
 
 
-export type BattleUpdateSubscription = { __typename?: 'Subscription', onBattleUpdate?: { __typename?: 'Battle', id: string, winner_id?: string | null, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null } | null };
+export type BattleUpdateSubscription = { __typename?: 'Subscription', onBattleUpdate?: { __typename?: 'Battle', id: string, winner_id?: string | null, state: BattleState, opponent_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, opponent?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, initiator?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, initiator_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, opponent_vote?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null } | null };
 
 export type UserJoinSubscriptionVariables = Exact<{
   id: Scalars['ID'];
@@ -723,6 +759,11 @@ export type UserLeftSubscriptionVariables = Exact<{
 
 
 export type UserLeftSubscription = { __typename?: 'Subscription', onUserLeftMatch?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null, in_match: boolean, characters: Array<{ __typename?: 'Character', id: string }> } | null };
+
+export type StatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StatsQuery = { __typename?: 'Query', stats?: { __typename?: 'Stats', sets?: { __typename?: 'Stat', wins?: number | null, total?: number | null } | null, matches?: { __typename?: 'Stat', wins?: number | null, total?: number | null } | null, users?: Array<{ __typename?: 'UserStat', user?: { __typename?: 'User', id: string, tag: string, profile_picture?: string | null } | null, stat?: { __typename?: 'Stat', wins?: number | null, total?: number | null } | null } | null> | null, characters?: Array<{ __typename?: 'CharacterStat', character?: { __typename?: 'Character', id: string, name: string, picture: string } | null, stat?: { __typename?: 'Stat', wins?: number | null, total?: number | null } | null } | null> | null } | null };
 
 export type TournamentsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -1506,6 +1547,8 @@ export const MatchesDocument = gql`
         }
         winner_id
         battles {
+          id
+          state
           opponent_character {
             id
             picture
@@ -1579,6 +1622,7 @@ export const MatchDocument = gql`
     state
     battles {
       id
+      state
       winner_id
       opponent_character {
         ...CharacterData
@@ -1674,8 +1718,8 @@ export type UpdateMatchMutationHookResult = ReturnType<typeof useUpdateMatchMuta
 export type UpdateMatchMutationResult = Apollo.MutationResult<UpdateMatchMutation>;
 export type UpdateMatchMutationOptions = Apollo.BaseMutationOptions<UpdateMatchMutation, UpdateMatchMutationVariables>;
 export const UpdateBattleDocument = gql`
-    mutation updateBattle($id: ID!, $character: ID, $vote: ID) {
-  updateBattle(id: $id, character: $character, vote: $vote) {
+    mutation updateBattle($id: ID!, $character: ID, $vote: ID, $state: BattleState) {
+  updateBattle(id: $id, character: $character, vote: $vote, state: $state) {
     id
     winner_id
     opponent {
@@ -1715,6 +1759,7 @@ export type UpdateBattleMutationFn = Apollo.MutationFunction<UpdateBattleMutatio
  *      id: // value for 'id'
  *      character: // value for 'character'
  *      vote: // value for 'vote'
+ *      state: // value for 'state'
  *   },
  * });
  */
@@ -1753,6 +1798,7 @@ export const MatchUpdateStateDocument = gql`
     state
     battles {
       id
+      state
       winner_id
       opponent_character {
         ...CharacterData
@@ -1812,6 +1858,7 @@ export const BattleUpdateDocument = gql`
   onBattleUpdate(id: $id) {
     id
     winner_id
+    state
     opponent_character {
       ...CharacterData
     }
@@ -1936,6 +1983,69 @@ export function useUserLeftSubscription(baseOptions: Apollo.SubscriptionHookOpti
       }
 export type UserLeftSubscriptionHookResult = ReturnType<typeof useUserLeftSubscription>;
 export type UserLeftSubscriptionResult = Apollo.SubscriptionResult<UserLeftSubscription>;
+export const StatsDocument = gql`
+    query Stats {
+  stats {
+    sets {
+      wins
+      total
+    }
+    matches {
+      wins
+      total
+    }
+    users {
+      user {
+        id
+        tag
+        profile_picture
+      }
+      stat {
+        wins
+        total
+      }
+    }
+    characters {
+      character {
+        id
+        name
+        picture
+      }
+      stat {
+        wins
+        total
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useStatsQuery__
+ *
+ * To run a query within a React component, call `useStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStatsQuery(baseOptions?: Apollo.QueryHookOptions<StatsQuery, StatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
+      }
+export function useStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StatsQuery, StatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
+        }
+export type StatsQueryHookResult = ReturnType<typeof useStatsQuery>;
+export type StatsLazyQueryHookResult = ReturnType<typeof useStatsLazyQuery>;
+export type StatsQueryResult = Apollo.QueryResult<StatsQuery, StatsQueryVariables>;
 export const TournamentsDocument = gql`
     query Tournaments($cursor: String, $filters: TournamentsFilter) {
   tournaments(first: 10, after: $cursor, filters: $filters) {

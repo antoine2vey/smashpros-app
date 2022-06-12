@@ -429,7 +429,7 @@ export default function App() {
                 <TailwindProvider utilities={utilities} colorScheme={scheme}>
                   <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
                   <Root />
-                  {/* {__DEV__ && <Switchr scheme={scheme} setScheme={setScheme} />} */}
+                  {__DEV__ && <Switchr scheme={scheme} setScheme={setScheme} />}
                 </TailwindProvider>
               </SafeAreaProvider>
             )}

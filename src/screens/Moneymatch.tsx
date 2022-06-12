@@ -15,6 +15,7 @@ import { MatchHeaderScore } from '../components/matches/MatchHeaderScore'
 import { ProgressiveImage } from '../components/ProgressiveImage'
 import { Text } from '../components/Text'
 import {
+  BattleState,
   MatchState,
   useBattleUpdateSubscription,
   useMatchQuery,
@@ -159,7 +160,7 @@ export const Moneymatch: React.FC = () => {
                 updateMatch({
                   variables: {
                     id: params.id,
-                    state: MatchState.CharacterChoice
+                    state: MatchState.Started
                   }
                 })
               }}
@@ -171,7 +172,7 @@ export const Moneymatch: React.FC = () => {
             </Text>
           )
         ) : (
-          match?.state === MatchState.CharacterChoice && (
+          match?.state === MatchState.Started && (
             <View style={tailwind('')}>
               <Text style={tailwind('text-xl font-bold')}>
                 Character choice
@@ -204,6 +205,7 @@ export const Moneymatch: React.FC = () => {
           <Battle
             key={battle.id}
             battle={battle}
+            matchState={match?.state}
             onVotedForInitiatorPress={() => {
               updateBattle({
                 variables: {
@@ -220,11 +222,19 @@ export const Moneymatch: React.FC = () => {
                 }
               })
             }}
-            onStartGamePress={() => {
-              updateMatch({
+            onStartBattlePress={() => {
+              updateBattle({
                 variables: {
-                  id: params.id,
-                  state: MatchState.Playing
+                  id: latestBattle?.id!,
+                  state: BattleState.Playing
+                }
+              })
+            }}
+            onStopBattlePress={() => {
+              updateBattle({
+                variables: {
+                  id: latestBattle?.id!,
+                  state: BattleState.Voting
                 }
               })
             }}

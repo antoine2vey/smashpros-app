@@ -84,6 +84,7 @@ export const CreateMoneymatch = () => {
           tournament
         },
         update(cache, { data }) {
+          console.log(cache)
           cache.modify({
             fields: {
               matches(existings, { toReference }) {
@@ -92,7 +93,13 @@ export const CreateMoneymatch = () => {
                 // Append to edges
                 return {
                   ...existings,
-                  edges: [...existings.edges, ref]
+                  edges: [
+                    ...existings.edges,
+                    {
+                      cursor: data?.sendMatchInvite?.id,
+                      node: ref
+                    }
+                  ]
                 }
               }
             }

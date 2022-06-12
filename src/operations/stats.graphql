@@ -1,0 +1,34 @@
+query Stats {
+  stats {
+    sets {
+      wins
+      total
+    }
+    matches {
+      wins
+      total
+    }
+    users {
+      user {
+        id
+        tag
+        profile_picture
+      }
+      stat {
+        wins
+        total
+      }
+    }
+    characters {
+      character {
+        id
+        name
+        picture
+      }
+      stat {
+        wins
+        total
+      }
+    }
+  }
+}
